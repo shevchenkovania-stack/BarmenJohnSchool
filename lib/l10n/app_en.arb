@@ -1,0 +1,210 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Cocktails",
+
+  "tabHome": "Home",
+  "tabSearch": "Search",
+  "tabFavorites": "Favorites",
+  "tabBar": "Bar",
+  "tabSettings": "Settings",
+
+  "homeSubtitle": "Discover your next drink",
+  "homeSectionLabel": "COCKTAIL OF THE MOMENT",
+  "homeViewRecipe": "View Recipe",
+  "homeBrowseAll": "Browse all cocktails",
+  "homeLoadError": "Could not load cocktail",
+
+  "searchAppBarTitle": "Search",
+  "searchInputHint": "Cocktail name...",
+  "searchNoResults": "No results for \"{query}\"",
+  "@searchNoResults": {
+    "placeholders": {
+      "query": { "type": "String" }
+    }
+  },
+  "searchPlaceholderText": "Type a cocktail name to search",
+  "searchPlaceholderHint": "e.g. Margarita, Mojito, Negroni",
+
+  "favoritesTitle": "Favorites",
+  "favoritesEmpty": "No favorites yet",
+  "favoritesEmptyHint": "Tap \u2665 on any cocktail to save it here",
+
+  "detailIngredients": "Ingredients",
+  "detailInstructions": "Instructions",
+
+  "cocktailListTitle": "All Cocktails",
+  "cocktailListFilterHint": "Filter by name...",
+  "cocktailListEmpty": "No cocktails found",
+  "cocktailListLoadingCount": "Loading... {count} cocktails so far",
+  "@cocktailListLoadingCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "barTitle": "Bar Manager",
+  "stopListTitle": "Stop List",
+  "stopListSubtitle": "Unavailable today",
+  "stopListEmpty": "Stop list is empty",
+  "stopListEmptyHint": "Add ingredients that ran out today",
+  "stopListAddHint": "Ingredient name...",
+  "stopListClearAll": "Clear All",
+
+  "inventoryTitle": "Inventory",
+  "inventorySubtitle": "What you have in stock",
+  "inventoryEmpty": "Inventory is empty",
+  "inventoryEmptyHint": "Add ingredients available at your bar",
+  "inventoryAddHint": "Ingredient name...",
+  "inventorySearchHint": "Search ingredients...",
+  "inventoryLoadingCatalog": "Loading ingredient catalog...",
+  "inventoryNoCatalog": "Catalog not loaded yet",
+  "inventoryNoCatalogHint": "Wait a moment while the database loads",
+  "inventorySelected": "{count} in stock",
+  "@inventorySelected": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "inventoryTabCatalog": "Catalog",
+  "inventoryTabCustom": "Custom",
+  "inventoryAddCustom": "Add custom ingredient",
+
+  "dashboardTitle": "Dashboard",
+
+  "recipeModeSection": "Recipe Mode",
+  "recipeModeStarter": "🔰 Starter",
+  "recipeModeExpert": "🏆 Expert",
+  "recipeModeDesc": "Select default mode for recipes",
+
+  "canMakeTitle": "Can Make Now",
+  "canMakeSubtitle": "Based on your inventory",
+  "canMakeEmpty": "No cocktails match your inventory",
+  "canMakeEmptyHint": "Add ingredients to inventory first",
+  "canMakeLoading": "Loading cocktail database...",
+
+  "myRecipesTitle": "My Recipes",
+  "myRecipesSubtitle": "Your bar's signature cocktails",
+  "myRecipesEmpty": "No recipes yet",
+  "myRecipesEmptyHint": "Add your bar's signature cocktails",
+
+  "addRecipeTitle": "New Recipe",
+  "editRecipeTitle": "Edit Recipe",
+  "recipeNameHint": "Cocktail name",
+  "recipeGlassHint": "Glass type (e.g. Martini glass)",
+  "recipeInstructionsHint": "Step-by-step preparation...",
+  "recipeIngredientHint": "Ingredient",
+  "recipeMeasureHint": "Amount (e.g. 50 ml)",
+  "addIngredientRow": "Add ingredient",
+  "recipeIngredientsSection": "Ingredients",
+
+  "settingsTitle": "Settings",
+  "settingsLanguageSection": "Language",
+
+  "actionSave": "Save",
+  "actionCancel": "Cancel",
+  "actionDelete": "Delete",
+  "actionAdd": "Add",
+  "actionRetry": "Retry",
+  "actionConfirmDelete": "Delete this item?",
+
+  "menuBuilderTitle": "Menu Builder",
+  "menuBuilderSubtitle": "Create a printable menu",
+  "menuBuilderEmpty": "No favorites to build a menu",
+  "menuBuilderEmptyHint": "Add cocktails to Favorites first",
+  "menuBuilderVenueHint": "Bar / Restaurant name",
+  "menuBuilderSelectAll": "Select all",
+  "menuBuilderDeselectAll": "Deselect all",
+  "menuBuilderPreview": "Preview PDF",
+  "menuBuilderPrint": "Print",
+  "menuBuilderThemeClassic": "Classic",
+  "menuBuilderThemeModern": "Modern",
+  "menuBuilderThemeMinimal": "Minimal",
+  "menuBuilderSelected": "{count} cocktails selected",
+  "@menuBuilderSelected": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "priceBookTitle": "Price Book",
+  "priceBookSubtitle": "Ingredient costs",
+  "priceBookEmpty": "No prices yet",
+  "priceBookEmptyHint": "Add ingredient prices to calculate cocktail costs",
+  "priceBookAddTitle": "Add Ingredient Price",
+  "priceBookEditTitle": "Edit Price",
+  "priceBookIngredientHint": "Ingredient name (e.g. Ron Barcelo)",
+  "priceBookBottlePriceHint": "Bottle price (e.g. 25)",
+  "priceBookBottlePriceLabel": "Bottle price",
+  "priceBookBottleSizeHint": "Bottle size ml (e.g. 700)",
+  "priceBookBottleSizeLabel": "Volume ml",
+  "priceBookCurrencyHint": "Currency (e.g. $)",
+  "priceBookCurrencyLabel": "Currency",
+  "priceBookPerMl": "per ml",
+  "recipeCostSection": "Cost Calculator",
+  "recipeCostNotAvailable": "Add ingredient prices in Price Book to see cost",
+  "recipeCostTotal": "Cost per cocktail",
+  "recipeCostSelling": "Selling price",
+  "recipeCostMargin": "Margin",
+  "recipeCostSellingHint": "0.00",
+
+  "kioskTitle": "Digital Menu",
+  "kioskSubtitle": "Interactive tablet menu for guests",
+  "kioskSetupTitle": "Kiosk Setup",
+  "kioskSetupHint": "Select cocktails and set guest-facing prices",
+  "kioskLaunch": "Launch Kiosk",
+  "kioskSave": "Save Setup",
+  "kioskExitTitle": "Exit Kiosk?",
+  "kioskExitMessage": "Guests will no longer see the menu on this screen.",
+  "kioskExitConfirm": "Exit",
+  "kioskFilterAll": "All",
+  "kioskFilterAlcoholic": "Alcoholic",
+  "kioskFilterNonAlcoholic": "Non-Alcoholic",
+  "kioskEmpty": "No cocktails in menu",
+  "kioskEmptyHint": "Go back and select cocktails for the kiosk",
+  "kioskCocktailCount": "{count} cocktails",
+  "@kioskCocktailCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "kioskPriceCurrency": "MDL",
+  "kioskCurrencyLabel": "Currency",
+  "kioskSelectCocktail": "Select at least one cocktail",
+  "kioskVenueHint": "Bar Alchemy",
+
+  "aiRecipeModeStarter": "🔰 Starter",
+  "aiRecipeModeExpert": "🏆 Expert",
+  "aiRecipeLoading": "AI is preparing your recipe...",
+  "aiRecipeError": "Failed to load AI recipe",
+  "aiRecipeTryAgain": "Try Again",
+  "aiRecipeBasicInstructions": "Basic Instructions",
+  "aiRecipePreparation": "Preparation",
+  "aiRecipeToolsNeeded": "Tools Needed",
+  "aiRecipeCommonMistakes": "Common Mistakes",
+  "aiRecipeProTips": "Pro Tips",
+  "aiRecipeHistory": "History",
+  "aiRecipeTechniques": "Techniques",
+  "aiRecipePremiumIngredients": "Premium Recommendations",
+  "aiRecipeProSecrets": "Chef Secrets",
+  "aiRecipeVariations": "Variations",
+  "aiRecipeFoodPairing": "Food Pairing",
+  "aiRecipeCostBreakdown": "Cost Breakdown",
+  "aiRecipeEstimatedCost": "Estimated Cost",
+  "aiRecipeSuggestedPrice": "Selling Price",
+  "aiRecipeStartTimer": "Start Timer",
+  "aiRecipeStepOf": "Step {current} of {total}",
+  "@aiRecipeStepOf": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "modeSchool": "BARTENDER SCHOOL",
+  "modeSchoolSubtitle": "Lessons • Quizzes • XP • Diploma",
+  "modeCocktails": "COCKTAIL BASE",
+  "modeCocktailsSubtitle": "300+ recipes • Search • Favorites",
+  "modeMyBar": "MY BAR",
+  "modeMyBarSubtitle": "Constructor • Inventory • Custom recipes"
+}

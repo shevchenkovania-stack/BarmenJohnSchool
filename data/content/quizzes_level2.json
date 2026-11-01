@@ -1,0 +1,166 @@
+[
+  {
+    "lessonId":"lesson_D_13","title":"Читай спецификацию как бармен","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_d13_01","type":"singleChoice","question":"Что нужно сделать до первого налива?","options":["Прочитать весь рецепт и подготовить станцию","Добавить лёд","Выбрать красивый гарниш","Запустить таймер"],"correctAnswerIndex":0,"explanation":"Полное чтение заранее выявляет отсутствующие продукты, посуду и этапы."},
+      {"id":"q_d13_02","type":"multipleChoice","question":"Что входит в полную спецификацию?","options":["Объёмы","Метод","Лёд и бокал","Гарниш","Настроение бармена"],"correctAnswerIndices":[0,1,2,3],"explanation":"Спецификация описывает воспроизводимый напиток, а не личное настроение."},
+      {"id":"q_d13_03","type":"trueFalse","question":"Два одинаковых состава с разными методами всегда дают одинаковый результат.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Метод меняет температуру, разбавление, аэрацию и текстуру."},
+      {"id":"q_d13_04","type":"singleChoice","question":"В середине сборки выяснилось, что бокал не охлаждён. Главная профилактика?","options":["Больше льда в напиток","Мысленная репетиция и mise en place","Сильнее shake","Другой гарниш"],"correctAnswerIndex":1,"explanation":"Подготовка бокала и инструмента выполняется до налива."},
+      {"id":"q_d13_05","type":"singleChoice","question":"Что означает повторяемое качество?","options":["Каждый раз новый вкус","Одинаковый стандарт при одинаковом заказе","Только быстрый сервис","Самый дорогой состав"],"correctAnswerIndex":1,"explanation":"Стандарт нужен, чтобы разные смены выдавали ожидаемый напиток."},
+      {"id":"q_d13_06","type":"trueFalse","question":"Гарниш можно считать необязательным, даже если он указан в карте.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Гарниш влияет на аромат, внешний вид и ожидание гостя."},
+      {"id":"q_d13_07","type":"singleChoice","question":"Когда лучше проверить стоп-лист?","options":["После смешивания","До начала сборки","После подачи","Только в конце смены"],"correctAnswerIndex":1,"explanation":"Доступность ингредиентов проверяют до того, как напиток уже нельзя вернуть."},
+      {"id":"q_d13_08","type":"multipleChoice","question":"Что проверить перед передачей напитка?","options":["Соответствие карте","Чистую кромку","Температуру и подачу","Количество лайков рецепта"],"correctAnswerIndices":[0,1,2],"explanation":"Финальный контроль относится к напитку и подаче, а не к популярности."}
+    ]
+  },
+  {
+    "lessonId":"lesson_D_14","title":"Замены без потери баланса","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_d14_01","type":"singleChoice","question":"С чего начинается решение о замене?","options":["С похожего цвета","С роли ингредиента","С самой дешёвой бутылки","С названия бренда"],"correctAnswerIndex":1,"explanation":"Нужно понять вклад: кислоту, сладость, крепость, горечь, аромат или текстуру."},
+      {"id":"q_d14_02","type":"trueFalse","question":"Лимон и лайм можно всегда заменять 1:1 без повторной пробы.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Их кислотность и аромат меняются; универсального коэффициента нет."},
+      {"id":"q_d14_03","type":"multipleChoice","question":"Что проверить при замене сиропа?","options":["Концентрацию","Собственный аромат","Текстуру","Цвет униформы"],"correctAnswerIndices":[0,1,2],"explanation":"Сироп меняет не только сладость, но и аромат с плотностью."},
+      {"id":"q_d14_04","type":"singleChoice","question":"Сухого vermouth нет для Martini. Лучшее действие?","options":["Молча налить сладкий","Предложить честную альтернативу","Заменить водой","Удвоить gin"],"correctAnswerIndex":1,"explanation":"Ключевая замена меняет напиток; гость должен выбрать осознанно."},
+      {"id":"q_d14_05","type":"trueFalse","question":"Заметную замену ингредиента нужно сообщить гостю.","options":["Верно","Неверно"],"correctAnswerIndex":0,"explanation":"Это защищает ожидания и помогает учесть ограничения."},
+      {"id":"q_d14_06","type":"singleChoice","question":"Почему bitters и bitter aperitif нельзя автоматически менять местами?","options":["Разный цвет","Разная концентрация и функция","Разная форма бутылки","Нельзя хранить рядом"],"correctAnswerIndex":1,"explanation":"Дэши концентрированных bitters не равны полной доле горько-сладкого аперитива."},
+      {"id":"q_d14_07","type":"multipleChoice","question":"Правильный цикл коррекции замены?","options":["Изменить одну переменную","Сделать малую пробу","Зафиксировать решение","Одновременно заменить всё"],"correctAnswerIndices":[0,1,2],"explanation":"Одна переменная позволяет понять причину результата."},
+      {"id":"q_d14_08","type":"singleChoice","question":"Когда у вариации должно появиться другое название?","options":["Когда заметно изменена ключевая структура","Всегда при новом гарнише","При другом размере льда","Никогда"],"correctAnswerIndex":0,"explanation":"Название не должно обещать гостю классический профиль после существенной замены."}
+    ]
+  },
+  {
+    "lessonId":"lesson_D_15","title":"Текстура и процеживание","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_d15_01","type":"singleChoice","question":"Что shake добавляет текстуре?","options":["Аэрацию","Только цвет","Только сладость","Горечь"],"correctAnswerIndex":0,"explanation":"Встряхивание захватывает воздух вместе с охлаждением и разбавлением."},
+      {"id":"q_d15_02","type":"trueFalse","question":"Fine strain обязателен для каждого коктейля.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Он нужен только когда спецификация требует удалить мелкий лёд или частицы."},
+      {"id":"q_d15_03","type":"multipleChoice","question":"Что может удалить мелкое сито?","options":["Осколки льда","Мякоть","Частицы трав","Алкоголь"],"correctAnswerIndices":[0,1,2],"explanation":"Сито удерживает твёрдые частицы, но не отделяет растворённый алкоголь."},
+      {"id":"q_d15_04","type":"singleChoice","question":"Что выполняется первым в классическом dry shake?","options":["Shake без льда","Stir со льдом","Гарниш","Процеживание"],"correctAnswerIndex":0,"explanation":"Сначала строят аэрацию без льда, затем охлаждают со льдом."},
+      {"id":"q_d15_05","type":"trueFalse","question":"Белок для неготового напитка должен соответствовать безопасному стандарту.","options":["Верно","Неверно"],"correctAnswerIndex":0,"explanation":"Используют пастеризованный продукт или утверждённую альтернативу."},
+      {"id":"q_d15_06","type":"singleChoice","question":"Почему stir обычно прозрачнее shake?","options":["Меньше аэрации и дробления льда","Больше сахара","Нет воды","Используется другой gin"],"correctAnswerIndex":0,"explanation":"Спокойное перемешивание захватывает меньше воздуха."},
+      {"id":"q_d15_07","type":"multipleChoice","question":"Что проверить перед сильным shake?","options":["Герметичность","Свободный объём","Чистоту шейкера","Громкость музыки"],"correctAnswerIndices":[0,1,2],"explanation":"Безопасная техника начинается с исправного и не переполненного шейкера."},
+      {"id":"q_d15_08","type":"singleChoice","question":"Как выбрать технику?","options":["По желаемой текстуре и спецификации","По моде","Всегда dry shake","По цвету напитка"],"correctAnswerIndex":0,"explanation":"Инструмент следует за результатом, а не наоборот."}
+    ]
+  },
+  {
+    "lessonId":"lesson_D_16","title":"Температура, лёд и разбавление","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_d16_01","type":"multipleChoice","question":"Что лёд делает в коктейле?","options":["Охлаждает","Добавляет воду","Меняет текстуру","Повышает крепость"],"correctAnswerIndices":[0,1,2],"explanation":"Таяние не повышает крепость; оно охлаждает и разбавляет."},
+      {"id":"q_d16_02","type":"trueFalse","question":"Разбавление всегда означает ошибку.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Контролируемая вода смягчает спирт и объединяет вкус."},
+      {"id":"q_d16_03","type":"singleChoice","question":"Какой лёд обычно даёт больше контроля?","options":["Холодный плотный","Тёплый мокрый","С посторонним запахом","Полностью растаявший"],"correctAnswerIndex":0,"explanation":"Плотный холодный лёд ведёт себя предсказуемее."},
+      {"id":"q_d16_04","type":"multipleChoice","question":"Что влияет на разбавление?","options":["Температура ингредиентов","Качество льда","Техника","Посуда"],"correctAnswerIndices":[0,1,2,3],"explanation":"Теплообмен зависит от всей системы, а не только секундомера."},
+      {"id":"q_d16_05","type":"singleChoice","question":"Перелит сироп. Надёжное исправление крупной ошибки?","options":["Долить воды","Пересобрать по стандарту","Спрятать гарнишем","Добавить лёд в подачу"],"correctAnswerIndex":1,"explanation":"Вода снижает крепость, но не восстанавливает исходное соотношение."},
+      {"id":"q_d16_06","type":"trueFalse","question":"Совок можно хранить внутри льда ручкой вниз.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Совок хранят чисто и отдельно, чтобы не загрязнять пищевой лёд."},
+      {"id":"q_d16_07","type":"singleChoice","question":"Зачем заранее охлаждать бокал?","options":["Чтобы подача дольше сохраняла температуру","Чтобы добавить сладость","Чтобы изменить цвет","Только для фото"],"correctAnswerIndex":0,"explanation":"Тёплый бокал быстро забирает холод у готового напитка."},
+      {"id":"q_d16_08","type":"trueFalse","question":"Одно время shake гарантирует одинаковый результат с любым льдом.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Состояние льда и стартовая температура меняют процесс."}
+    ]
+  },
+  {
+    "lessonId":"lesson_E_17","title":"Whiskey Sour: кислота и пена","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_e17_01","type":"singleChoice","question":"Какая опорная пропорция Whiskey Sour дана в уроке?","options":["45/25/20","60/10/10","30/30/30","50/20/15"],"correctAnswerIndex":0,"explanation":"IBA указывает 45 мл bourbon, 25 мл lemon и 20 мл syrup."},
+      {"id":"q_e17_02","type":"trueFalse","question":"Egg white в этой спецификации обязателен.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"IBA указывает его как опциональный."},
+      {"id":"q_e17_03","type":"singleChoice","question":"Какой белок подходит для напитка без тепловой обработки?","options":["Пастеризованный по стандарту","Любой сырой","Тёплый со станции","С неизвестной датой"],"correctAnswerIndex":0,"explanation":"Безопасность требует пастеризованного продукта или утверждённой альтернативы."},
+      {"id":"q_e17_04","type":"multipleChoice","question":"Что проверяет Whiskey Sour?","options":["Баланс","Shake","Пену","Аллергенную безопасность"],"correctAnswerIndices":[0,1,2,3],"explanation":"Классика объединяет вкус, технику и безопасность."},
+      {"id":"q_e17_05","type":"trueFalse","question":"Высокая пена способна исправить неверный баланс основы.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Текстура меняет ощущение, но не исправляет пропорции."},
+      {"id":"q_e17_06","type":"singleChoice","question":"Какой цитрус используется в опорной версии?","options":["Лимон","Лайм","Грейпфрут","Апельсин"],"correctAnswerIndex":0,"explanation":"Whiskey Sour строится на свежем лимонном соке."},
+      {"id":"q_e17_07","type":"multipleChoice","question":"После контакта с белком нужно?","options":["Очистить инвентарь","Избежать перекрёстного контакта","Проверить хранение","Продолжить тем же ситом для всех"],"correctAnswerIndices":[0,1,2],"explanation":"Инвентарь и станция должны быть безопасно очищены."},
+      {"id":"q_e17_08","type":"singleChoice","question":"Что важнее сантиметров пены?","options":["Гармоничный безопасный напиток","Больше сахара","Дорогой бокал","Длинная история"],"correctAnswerIndex":0,"explanation":"Пена служит напитку, а не заменяет его качество."}
+    ]
+  },
+  {
+    "lessonId":"lesson_E_18","title":"Old Fashioned: точность минимума","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_e18_01","type":"multipleChoice","question":"Что входит в опорный Old Fashioned?","options":["Whiskey","Sugar","Angostura","Water","Lemon juice"],"correctAnswerIndices":[0,1,2,3],"explanation":"Классическая формула не требует лимонного сока."},
+      {"id":"q_e18_02","type":"singleChoice","question":"Почему сахар нужно растворить?","options":["Чтобы сладость была однородной","Чтобы повысить ABV","Чтобы сделать пену","Чтобы окрасить лёд"],"correctAnswerIndex":0,"explanation":"Кристаллы на дне дают случайные слишком сладкие глотки."},
+      {"id":"q_e18_03","type":"trueFalse","question":"Если карта требует zest, апельсин нужно размять в напитке.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Zest даёт эфирные масла; сок и мякоть заметно меняют структуру."},
+      {"id":"q_e18_04","type":"singleChoice","question":"Как завершить апельсиновую цедру?","options":["Выразить масла над поверхностью","Сварить","Опустить с мякотью","Посыпать сахаром"],"correctAnswerIndex":0,"explanation":"Ароматические масла направляют над готовым напитком."},
+      {"id":"q_e18_05","type":"trueFalse","question":"Мало ингредиентов означает, что точность менее важна.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"В минималистичном коктейле каждое отклонение слышнее."},
+      {"id":"q_e18_06","type":"singleChoice","question":"Какая база указана IBA?","options":["Bourbon или rye","Gin","Rum","Tequila"],"correctAnswerIndex":0,"explanation":"Опорная версия допускает bourbon или rye whiskey."},
+      {"id":"q_e18_07","type":"multipleChoice","question":"Признаки готового Old Fashioned?","options":["Сахар растворён","Whiskey слышен","Напиток холодный","Кромка чистая"],"correctAnswerIndices":[0,1,2,3],"explanation":"Все четыре признака относятся к вкусу и подаче."},
+      {"id":"q_e18_08","type":"singleChoice","question":"Какой метод указан в уроке?","options":["Build и gentle stir","Hard shake","Blend","Layer"],"correctAnswerIndex":0,"explanation":"Сахарную часть собирают в бокале и мягко перемешивают со льдом."}
+    ]
+  },
+  {
+    "lessonId":"lesson_E_19","title":"Dry Martini: холод и прозрачность","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_e19_01","type":"singleChoice","question":"Какая опорная пропорция Dry Martini?","options":["60 gin / 10 dry vermouth","30/30","45 whiskey / 25 lemon","50 tequila / 20 liqueur"],"correctAnswerIndex":0,"explanation":"Это текущая опорная спецификация IBA."},
+      {"id":"q_e19_02","type":"singleChoice","question":"Почему открытый vermouth хранят охлаждённым?","options":["Это вино, которое окисляется","Чтобы повысить крепость","Чтобы сделать его слаще","Только ради цвета"],"correctAnswerIndex":0,"explanation":"Свежесть ароматизированного вина заметно влияет на Martini."},
+      {"id":"q_e19_03","type":"trueFalse","question":"Stir обычно сохраняет более гладкую прозрачную текстуру, чем shake.","options":["Верно","Неверно"],"correctAnswerIndex":0,"explanation":"Перемешивание даёт меньше аэрации и ледяной крошки."},
+      {"id":"q_e19_04","type":"multipleChoice","question":"Что нужно подготовить заранее?","options":["Охлаждённый бокал","Свежий vermouth","Достаточный лёд","Согласованный гарниш"],"correctAnswerIndices":[0,1,2,3],"explanation":"Martini подают сразу, поэтому подготовка выполняется до сборки."},
+      {"id":"q_e19_05","type":"singleChoice","question":"Какой гарниш допускает IBA?","options":["Lemon oils или green olive","Mint sprig","Salt rim","Pineapple"],"correctAnswerIndex":0,"explanation":"Выбор уточняют у гостя или следуют карте."},
+      {"id":"q_e19_06","type":"trueFalse","question":"Единственное вечное соотношение Martini существует для всех баров.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Ratios исторически различаются; важна заявленная house-spec."},
+      {"id":"q_e19_07","type":"singleChoice","question":"Когда процедить Martini?","options":["Сразу после нужного холода и разбавления","Через десять минут","После нагрева бокала","После добавления сока"],"correctAnswerIndex":0,"explanation":"Ожидание продолжает таяние льда и портит температуру подачи."},
+      {"id":"q_e19_08","type":"multipleChoice","question":"Признаки ошибки Martini?","options":["Тёплый бокал","Окисленный vermouth","Осколки льда","Чистая прозрачность"],"correctAnswerIndices":[0,1,2],"explanation":"Прозрачность — желаемый результат, остальные пункты снижают качество."}
+    ]
+  },
+  {
+    "lessonId":"lesson_E_20","title":"Margarita: текила, лайм, соль","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_e20_01","type":"singleChoice","question":"Какая опорная спецификация Margarita?","options":["50 tequila / 20 triple sec / 15 lime","45/25/20 whiskey sour","60 gin / 10 vermouth","30/30/30"],"correctAnswerIndex":0,"explanation":"Такую формулу указывает IBA для Margarita."},
+      {"id":"q_e20_02","type":"trueFalse","question":"Соляная кромка в IBA обязательна по всему бокалу.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Половинная соляная кромка указана как опциональная."},
+      {"id":"q_e20_03","type":"singleChoice","question":"Когда делать соляную кромку?","options":["До наполнения бокала","После подачи","Во время shake","После первого глотка"],"correctAnswerIndex":0,"explanation":"Так соль не попадает бесконтрольно в готовый напиток."},
+      {"id":"q_e20_04","type":"multipleChoice","question":"Что проверяют перед подачей Margarita?","options":["Tequila слышна","Lime свежий","Соль снаружи и аккуратна","Бокал чистый"],"correctAnswerIndices":[0,1,2,3],"explanation":"Вкус и чистота подачи оцениваются отдельно."},
+      {"id":"q_e20_05","type":"trueFalse","question":"Triple sec уже вносит сладость в напиток.","options":["Верно","Неверно"],"correctAnswerIndex":0,"explanation":"Поэтому дополнительный сироп нельзя добавлять автоматически."},
+      {"id":"q_e20_06","type":"singleChoice","question":"Зачем делать половину кромки?","options":["Оставить гостю выбор глотка с солью или без","Сэкономить соль","Скрыть скол","Поднять ABV"],"correctAnswerIndex":0,"explanation":"Гость контролирует влияние соли на каждый глоток."},
+      {"id":"q_e20_07","type":"singleChoice","question":"Какой метод используется?","options":["Shake and strain","Stir only","Build without ice","Blend"],"correctAnswerIndex":0,"explanation":"Ингредиенты встряхивают со льдом и процеживают."},
+      {"id":"q_e20_08","type":"trueFalse","question":"Соль должна стать главным вкусом Margarita.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Она подчёркивает баланс, но не должна заглушать tequila и lime."}
+    ]
+  },
+  {
+    "lessonId":"lesson_F_21","title":"Prep, маркировка и безопасность","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_f21_01","type":"multipleChoice","question":"Что должно быть на этикетке заготовки?","options":["Название","Дата и время","Срок по процедуре","Инициалы"],"correctAnswerIndices":[0,1,2,3],"explanation":"Этикетка делает происхождение и допустимость продукта проверяемыми."},
+      {"id":"q_f21_02","type":"trueFalse","question":"Хороший запах доказывает безопасность неподписанной заготовки.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Безопасность подтверждается процедурой, сроком и хранением, а не запахом."},
+      {"id":"q_f21_03","type":"singleChoice","question":"Что делать с продуктом неизвестной даты?","options":["Списать по процедуре","Попробовать гостем","Смешать с новым","Перелить в красивую бутылку"],"correctAnswerIndex":0,"explanation":"Неопределённый продукт нельзя безопасно подавать."},
+      {"id":"q_f21_04","type":"multipleChoice","question":"Как снизить риск после работы с белком?","options":["Вымыть и санитизировать инвентарь","Сменить или очистить контактные предметы","Вымыть руки","Использовать то же сито без очистки"],"correctAnswerIndices":[0,1,2],"explanation":"Чистота разрывает путь перекрёстного контакта."},
+      {"id":"q_f21_05","type":"singleChoice","question":"Какой белок использовать для сырого напитка?","options":["Пастеризованный или утверждённую альтернативу","Любой","С треснувшим яйцом","Без маркировки"],"correctAnswerIndex":0,"explanation":"Пастеризация снижает риск Salmonella."},
+      {"id":"q_f21_06","type":"trueFalse","question":"Новый сироп можно всегда доливать в остаток старого.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Смешение партий нарушает датировку, если процедура явно не разрешает его."},
+      {"id":"q_f21_07","type":"singleChoice","question":"Где хранить совок для льда?","options":["Чисто и отдельно от пищевого льда","Внутри льда","На полу","В раковине"],"correctAnswerIndex":0,"explanation":"Ручка и внешние поверхности не должны загрязнять лёд."},
+      {"id":"q_f21_08","type":"multipleChoice","question":"Что входит в открытие станции?","options":["Чистота","Температура","Сроки","Запас","Случайная дегустация"],"correctAnswerIndices":[0,1,2,3],"explanation":"Проверяется фактическое безопасное состояние станции."}
+    ]
+  },
+  {
+    "lessonId":"lesson_F_22","title":"Бриф гостя и ответственная подача","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_f22_01","type":"multipleChoice","question":"Что уточнить в коротком брифе?","options":["Вкус","Крепость","Аллергии","Классика или новое"],"correctAnswerIndices":[0,1,2,3],"explanation":"Эти вопросы дают достаточно данных для безопасной рекомендации."},
+      {"id":"q_f22_02","type":"trueFalse","question":"Аллергию можно определить по внешности гостя.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Ограничения уточняют прямо и проверяют по составу."},
+      {"id":"q_f22_03","type":"singleChoice","question":"Нельзя исключить перекрёстный контакт. Что сказать?","options":["Честно сообщить и предложить безопасную альтернативу","Пообещать отсутствие следов","Промолчать","Убрать гарниш"],"correctAnswerIndex":0,"explanation":"Нельзя гарантировать безопасность, которую станция не обеспечивает."},
+      {"id":"q_f22_04","type":"multipleChoice","question":"Какие признаки требуют срочной эскалации?","options":["Потеря сознания","Судороги","Проблемы с дыханием","Спокойная просьба воды"],"correctAnswerIndices":[0,1,2],"explanation":"Это возможные признаки алкогольной передозировки."},
+      {"id":"q_f22_05","type":"trueFalse","question":"Кофе является лечением алкогольной передозировки.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Нужны прекращение подачи и экстренная помощь по местной процедуре."},
+      {"id":"q_f22_06","type":"singleChoice","question":"Как завершить бриф?","options":["Кратко повторить выбор и получить подтверждение","Сразу молча собирать","Добавить дорогой ингредиент","Уйти"],"correctAnswerIndex":0,"explanation":"Подтверждение снижает риск неверного ожидания."},
+      {"id":"q_f22_07","type":"multipleChoice","question":"При заявленной аллергии нужно проверить?","options":["Рецепт","Этикетки","Чистый инвентарь","Риск контакта"],"correctAnswerIndices":[0,1,2,3],"explanation":"Безопасность зависит от всего пути приготовления."},
+      {"id":"q_f22_08","type":"singleChoice","question":"На что опираться при отказе в подаче?","options":["Местный закон и политику заведения","Личную симпатию","Цена заказа","Популярность гостя"],"correctAnswerIndex":0,"explanation":"Ответственная подача выполняется по установленной процедуре."}
+    ]
+  },
+  {
+    "lessonId":"lesson_F_23","title":"Сервис в запару","questionsPerAttempt":6,"passingScore":5,
+    "questions":[
+      {"id":"q_f23_01","type":"singleChoice","question":"Первое действие с новым тикетом?","options":["Прочитать весь тикет","Сразу налить первую строку","Добавить лёд во все бокалы","Закрыть тикет"],"correctAnswerIndex":0,"explanation":"Полный обзор позволяет построить порядок и увидеть ограничения."},
+      {"id":"q_f23_02","type":"multipleChoice","question":"Что можно безопасно группировать?","options":["Охлаждение бокалов","Подготовку одинаковых гарнишей","Совместимые действия по стандарту","Аллергенный и безаллергенный заказ одним грязным инструментом"],"correctAnswerIndices":[0,1,2],"explanation":"Аллергенные пути требуют разделения и очистки."},
+      {"id":"q_f23_03","type":"trueFalse","question":"Очередь отменяет точное измерение ради скорости.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Скорость без повторяемости создаёт возвраты и замедляет сервис."},
+      {"id":"q_f23_04","type":"singleChoice","question":"Когда подготовить кромку Margarita?","options":["До начала жидкой сборки","После передачи","После первого глотка","Не готовить"],"correctAnswerIndex":0,"explanation":"Подачу готовят заранее, чтобы напиток не стоял и не теплел."},
+      {"id":"q_f23_05","type":"trueFalse","question":"Готовый Martini можно оставить ждать остальные напитки тикета.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Он быстро теряет температуру; порядок должен минимизировать ожидание."},
+      {"id":"q_f23_06","type":"multipleChoice","question":"Что проверить при передаче?","options":["Бокал","Гарниш","Кромку","Полноту тикета"],"correctAnswerIndices":[0,1,2,3],"explanation":"Передача — последняя контрольная точка заказа."},
+      {"id":"q_f23_07","type":"singleChoice","question":"Откуда берётся устойчивая скорость?","options":["Из mise en place и порядка","Из угадывания","Из пропуска мойки","Из отказа читать тикет"],"correctAnswerIndex":0,"explanation":"Подготовка убирает лишние движения и переделки."},
+      {"id":"q_f23_08","type":"trueFalse","question":"Совместимые shaken-позиции можно объединять только если это разрешает стандарт бара.","options":["Верно","Неверно"],"correctAnswerIndex":0,"explanation":"Batching без стандарта создаёт ошибки объёма и разделения заказов."}
+    ]
+  },
+  {
+    "lessonId":"lesson_F_24","title":"Итоговый экзамен Level 2","questionsPerAttempt":16,"passingScore":12,
+    "questions":[
+      {"id":"q_f24_01","type":"singleChoice","question":"Что сделать до первого налива?","options":["Прочитать спецификацию целиком","Выбрать музыку","Добавить гарниш","Закрыть тикет"],"correctAnswerIndex":0,"explanation":"Полная инструкция читается до сборки."},
+      {"id":"q_f24_02","type":"singleChoice","question":"Основа разумной замены?","options":["Функция ингредиента","Цвет","Цена","Форма бутылки"],"correctAnswerIndex":0,"explanation":"Заменяют роль с контролем нового профиля."},
+      {"id":"q_f24_03","type":"trueFalse","question":"Fine strain нужен каждому напитку.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Он используется по задаче и спецификации."},
+      {"id":"q_f24_04","type":"multipleChoice","question":"Что контролирует лёд?","options":["Холод","Разбавление","Текстуру","Название"],"correctAnswerIndices":[0,1,2],"explanation":"Название льдом не определяется."},
+      {"id":"q_f24_05","type":"singleChoice","question":"Спецификация Whiskey Sour?","options":["45 bourbon / 25 lemon / 20 syrup","60 gin / 10 vermouth","50 tequila / 20 triple sec / 15 lime","30/30/30"],"correctAnswerIndex":0,"explanation":"Это опорная формула урока."},
+      {"id":"q_f24_06","type":"trueFalse","question":"Белок в Whiskey Sour опционален, но при использовании должен быть безопасным.","options":["Верно","Неверно"],"correctAnswerIndex":0,"explanation":"Используется пастеризованный продукт или утверждённая альтернатива."},
+      {"id":"q_f24_07","type":"multipleChoice","question":"Old Fashioned содержит?","options":["Whiskey","Sugar","Bitters","Water","Lime"],"correctAnswerIndices":[0,1,2,3],"explanation":"Lime не входит в опорную формулу."},
+      {"id":"q_f24_08","type":"singleChoice","question":"Dry Martini по уроку?","options":["60 gin / 10 dry vermouth, stir","60 whiskey / sugar, build","50 tequila / lime, shake","Rum / mint, muddle"],"correctAnswerIndex":0,"explanation":"Martini перемешивают и процеживают в холодный бокал."},
+      {"id":"q_f24_09","type":"singleChoice","question":"Margarita по уроку?","options":["50 tequila / 20 triple sec / 15 lime","45 bourbon / 25 lemon / 20 syrup","60 gin / 10 vermouth","45 whiskey / sugar"],"correctAnswerIndex":0,"explanation":"Это опорная спецификация IBA."},
+      {"id":"q_f24_10","type":"trueFalse","question":"Неподписанная заготовка безопасна, если пахнет нормально.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Нужны подтверждённые срок и хранение."},
+      {"id":"q_f24_11","type":"multipleChoice","question":"Что проверить при аллергии?","options":["Рецепт","Этикетку","Инвентарь","Перекрёстный контакт"],"correctAnswerIndices":[0,1,2,3],"explanation":"Проверяется весь путь приготовления."},
+      {"id":"q_f24_12","type":"singleChoice","question":"Гость теряет сознание и плохо дышит. Первое решение?","options":["Прекратить подачу и вызвать помощь по процедуре","Дать кофе","Оставить спать","Продать воду"],"correctAnswerIndex":0,"explanation":"Это возможная передозировка и экстренная ситуация."},
+      {"id":"q_f24_13","type":"singleChoice","question":"Как начинается работа с тикетом?","options":["Полное чтение и план","Первая строка без просмотра","Случайный порядок","Гарниш"],"correctAnswerIndex":0,"explanation":"План предотвращает ожидание и повторные движения."},
+      {"id":"q_f24_14","type":"trueFalse","question":"Критическую ошибку безопасности можно компенсировать тремя звёздами за вкус.","options":["Верно","Неверно"],"correctAnswerIndex":1,"explanation":"Безопасность является обязательным порогом."},
+      {"id":"q_f24_15","type":"multipleChoice","question":"Что входит в финал Level 2?","options":["Теория","Четыре классики","Сервисный сценарий","Безопасность"],"correctAnswerIndices":[0,1,2,3],"explanation":"Экзамен проверяет полный цикл работы."},
+      {"id":"q_f24_16","type":"singleChoice","question":"Как поступить, заметив ошибку в процессе?","options":["Назвать, остановиться и исправить","Скрыть гарнишем","Ускориться","Передать как есть"],"correctAnswerIndex":0,"explanation":"Осознанная коррекция профессиональнее сокрытия."}
+    ]
+  }
+]

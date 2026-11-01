@@ -1,0 +1,144 @@
+# 📋 TODO LIST - Cocktail App
+
+## 🚀 SPRINТ 1 - КРИТИЧНО ДЛЯ РЕЛИЗА (Google Play)
+
+### 🔴 BLOCKERS
+- [ ] Создать экран ввода API Key (Settings → OpenAI API Key)
+- [ ] Добавить Onboarding (3-4 экрана при первом запуске)
+- [ ] Исправить захардкоженные строки локализации:
+  - [ ] "Конструктор" в main_shell.dart → l10n.tabConstructor
+  - [ ] Проверить все экраны на hardcoded Russian text
+- [ ] Добавить offline fallback (если нет интернета при первом запуске)
+
+### 🟡 PLAY STORE READY
+- [ ] Создать App Icon (flutter_launcher_icons)
+- [ ] Написать Privacy Policy (GitHub Pages)
+- [ ] Добавить in_app_review package
+- [ ] Сделать скриншоты для Google Play (5-8 шт)
+- [ ] Заполнить app description для Play Console
+
+---
+
+## 🟢 ЖЕЛАТЕЛЬНО (Улучшат конверсию)
+
+- [ ] Добавить "Share Recipe" в cocktail detail screen
+- [ ] Добавить splash screen с логотипом
+- [ ] Протестировать на 3-5 разных девайсах
+- [ ] Проверить все тексты на ошибки (RU, RO, EN)
+- [ ] Оптимизировать размер APK (< 50MB)
+
+---
+
+## 📱 ОТЛОЖЕНО (НЕ для v1.0 MVP)
+
+### ❌ Coffee Section
+- [ ] Coffee list screen
+- [ ] Coffee single screen
+- [ ] Coffee tasting notes
+- Причина: Отдельный продукт, не относится к коктейлям
+- Когда: После релиза cocktail app v1.0
+
+### ❌ Dashboard (B2B Analytics)
+- [ ] Sales dashboard
+- [ ] Inventory analytics
+- [ ] Popular cocktails chart
+- Причина: Слишком сложно для MVP, нужно больше B2B пользователей
+- Когда: После validation B2B спроса
+
+### ❌ QR Menu Server
+- [ ] Shelf HTTP server для WiFi меню
+- [ ] HTML menu generation
+- Причина: Сложная инфраструктура, не core функционал
+- Когда: Когда будет стабильная база пользователей
+
+### ❌ Bartender School Level 2 & 3
+- [ ] Level 2 lessons (advanced techniques)
+- [ ] Level 3 lessons (master class)
+- [ ] Advanced quizzes
+- Причина: Level 1 достаточно для MVP
+- Когда: После сбора feedback от пользователей
+
+### ❌ AI Recipe Enhancement
+- [ ] AI улучшение рецептов
+- [ ] AI pairing suggestions
+- Причина: Требует API key, demo mode достаточно
+- Когда: Когда будет больше пользователей с API keys
+
+### ❌ Push Notifications
+- [ ] Firebase setup
+- [ ] "Cocktail of the day" notification
+- [ ] "New lesson available" notification
+- Причина: Низкий ROI для MVP
+- Когда: После 1000+ активных пользователей
+
+### ❌ Analytics
+- [ ] Firebase Analytics integration
+- [ ] Track feature usage
+- [ ] Track conversion funnel
+- Причина: Можно собрать feedback вручную сначала
+- Когда: Когда нужно будет принимать data-driven решения
+
+### ❌ Advanced B2B Features
+- [ ] Cost Calculator (полная версия)
+- [ ] Menu Builder (полная версия)
+- [ ] Price Book (расширенный каталог)
+- Причина: B2B не целевая аудитория для v1
+- Когда: После validation B2B product-market fit
+
+### ❌ Social Features
+- [ ] User accounts / authentication
+- [ ] Share custom recipes community
+- [ ] Recipe ratings & reviews
+- Причина: Слишком сложно для MVP
+- Когда: После 5000+ пользователей
+
+### ❌ Monetization
+- [ ] In-app purchases (Premium unlock)
+- [ ] Subscription model
+- [ ] Ad integration
+- Причина: Сначала нужно набрать базу пользователей
+- Когда: После 1000+ активных пользователей
+
+### ❌ Advanced Features
+- [ ] Cocktail video tutorials
+- [ ] AR cocktail visualization
+- [ ] Voice commands
+- Причина: Nice-to-have, не core value
+- Когда: Когда будут ресурсы
+
+---
+
+## 🐛 KNOWN ISSUES
+
+- [ ] Проверить что API key сохраняется безопасно (flutter_secure_storage)
+- [ ] Проверить работу offline mode без кэша
+- [ ] Test на Android 8, 9, 10, 11, 12, 13, 14
+- [ ] Проверить что все изображения кэшируются корректно
+
+---
+
+## 📊 METRICS TO TRACK (после релиза)
+
+- [ ] Daily Active Users (DAU)
+- [ ] Retention rate (Day 1, Day 7, Day 30)
+- [ ] Most used feature
+- [ ] Crash rate
+- [ ] Average session duration
+- [ ] Conversion rate (free → premium)
+
+---
+
+## 📝 NOTES
+
+- MVP фокус: B2C пользователи (домашние бармены)
+- B2B функционал отложить до validation спроса
+- Coffee section = отдельный продукт
+- Rule-based AI конструктор = главное преимущество (без API costs!)
+- Школа бармана = gamification для retention
+- Offline-first = ключевое отличие от конкурентов
+- Навигация v1: "Мудрость старого бармена" показывать только кнопкой на главной, не дублировать в Мастерской.
+- "Полка бармена" временно скрыта из Мастерской; позже решить, где она должна жить: профиль, коллекция или отдельный раздел прогресса.
+
+---
+
+Последнее обновление: 2025-04-11

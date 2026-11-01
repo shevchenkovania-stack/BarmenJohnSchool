@@ -1,0 +1,401 @@
+# OFFLINE СТРАТЕГИЯ - КОНСТРУКТОР КОКТЕЙЛЕЙ
+
+## ТЕКУЩЕЕ СОСТОЯНИЕ
+
+### Что ЕСТЬ:
+✅ CocktailRepository.preloadAll() - загружает A-Z в память при старте
+✅ In-memory кэш (_letterCache) - быстрый доступ пока приложение открыто
+❌ НЕТ persistent storage - при закрытии приложения кэш теряется
+❌ НЕТ offline fallback - без интернета конструктор НЕ работает
+
+### Проблема:
+```
+User открывает приложение без интернета
+↓
+preloadAll() → FAIL (нет сети)
+↓
+_cocktailRepo.getAllCached() → [] (пусто)
+↓
+Matcher: "База коктейлей не загружена"
+↓
+User: "⚠️ Проверьте интернет" ← КОНСТРУКТОР НЕ РАБОТАЕТ!
+```
+
+---
+
+## ЧТО НУЖНО ПОЛЬЗОВАТЕЛЮ
+
+### Сценарий 1: Бар в подвале (нет WiFi)
+- Бармен хочет: "У меня Vodka, Lime, Mint - что сделать?"
+- Без offline: ❌ Ничего не работает
+- С offline: ✅ Показывает Mojito, Vodka Lime и т.д.
+
+### Сценарий 2: Дома (интернет есть, но медленный)
+- User хочет:快速 посмотреть рецепты
+- Без offline: ⏳ Ждет загрузку 5-10 секунд
+- С offline: ⚡ Мгновенно из локальной базы
+
+### Сценарий 3: Travel (роуминг, нет данных)
+- User хочет: показать рецепты друзьям
+- Без offline: ❌ "Нет интернета"
+- С offline: ✅ Полная база работает
+
+---
+
+## РЕШЕНИЕ: 3-УРОВНЕВАЯ АРХИТЕКТУРА
+
+```
+┌──────────────────────────────────────────┐
+│  Level 1: AI Mode (Online + API Key)    │
+│  - AI Enhancer добавляет tips/facts      │
+│  - Требует интернет + ключ               │
+│  -fallback → Level 2                     │
+└──────────────────────────────────────────┘
+                    ↓ fail
+┌──────────────────────────────────────────┐
+│  Level 2: Matcher Mode (Online/Offline) │
+│  - Ищет в локальной базе                 │
+│  - Работает БЕЗ интернета                │
+│  - Требует скачанную базу                │
+│  -fallback → Level 3                     │
+└──────────────────────────────────────────┘
+                    ↓ no data
+┌──────────────────────────────────────────┐
+│  Level 3: Empty State (Offline)         │
+│  - "Скачайте базу при первом запуске"   │
+│  - Показывает кнопку "Скачать"          │
+│  - Прогресс загрузки                    │
+└──────────────────────────────────────────┘
+```
+
+---
+
+## ПЛАН РЕАЛИЗАЦИИ
+
+### ЭТАП 1: Добавить Hive для cocktail cache (3 часа)
+
+**Файл:** `lib/core/services/cocktail_cache_service.dart`
+
+```dart
+import 'package:hive/hive.dart';
+import 'package:coin/core/models/cocktail.dart';
+
+class CocktailCacheService {
+  static const String _boxName = 'cocktails_cache';
+  
+  /// Сохранить все коктейли в Hive
+  Future<void> saveAll(List<Cocktail> cocktails) async {
+    final box = await Hive.openBox(_boxName);
+    await box.clear();
+    
+    for (final cocktail in cocktails) {
+      await box.put(cocktail.idDrink, cocktail.toJson());
+    }
+    
+    await box.put('last_updated', DateTime.now().toIso8601String());
+    print('💾 Saved ${cocktails.length} cocktails to Hive');
+  }
+  
+  /// Загрузить из Hive (offline)
+  List<Cocktail> loadAll() {
+    final box = Hive.openBox(_boxName);
+    final cocktails = <Cocktail>[];
+    
+    for (final key in box.keys) {
+      if (key == 'last_updated') continue;
+      
+      final data = box.get(key) as Map<String, dynamic>;
+      cocktails.add(Cocktail.fromJson(data));
+    }
+    
+    print('📂 Loaded ${cocktails.length} cocktails from Hive');
+    return cocktails;
+  }
+  
+  /// Проверить когда было последнее обновление
+  DateTime? getLastUpdated() {
+    final box = Hive.openBox(_boxName);
+    final iso = box.get('last_updated') as String?;
+    return iso != null ? DateTime.parse(iso) : null;
+  }
+  
+  /// Кэш старше 7 дней = stale
+  bool isStale() {
+    final last = getLastUpdated();
+    if (last == null) return true;
+    
+    return DateTime.now().difference(last) > Duration(days: 7);
+  }
+}
+```
+
+### ЭТАП 2: Изменить CocktailRepository (2 часа)
+
+**Файл:** `lib/core/repositories/cocktail_repository.dart`
+
+```dart
+class CocktailRepository {
+  final _api = CocktailApi();
+  final _cache = CocktailCacheService();  ← НОВОЕ
+  final Map<String, List<Cocktail>> _letterCache = {};
+  List<Cocktail>? _allCocktails;  ← НОВОЕ
+
+  /// Загрузить все коктейли (API → Cache → Memory)
+  Future<List<Cocktail>> getAll() async {
+    // 1. Попробовать из memory
+    if (_allCocktails != null) {
+      return _allCocktails!;
+    }
+    
+    // 2. Попробовать из Hive (offline)
+    final cached = _cache.loadAll();
+    if (cached.isNotEmpty) {
+      _allCocktails = cached;
+      print('✅ Loaded from Hive cache (offline)');
+      
+      // Если кэш старый - обновить в фоне
+      if (_cache.isStale()) {
+        _refreshInBackground();
+      }
+      
+      return cached;
+    }
+    
+    // 3. Загрузить из API (нужен интернет)
+    try {
+      await preloadAll();
+      _allCocktails = getAllCached();
+      
+      // Сохранить в Hive для offline
+      await _cache.saveAll(_allCocktails!);
+      print('✅ Loaded from API and cached to Hive');
+      
+      return _allCocktails!;
+    } catch (e) {
+      throw Exception('Нет интернета и нет локальной базы. Скачайте базу при первом запуске.');
+    }
+  }
+
+  /// Обновить кэш в фоне
+  Future<void> _refreshInBackground() async {
+    try {
+      await preloadAll();
+      final all = getAllCached();
+      await _cache.saveAll(all);
+      print('✅ Cache refreshed in background');
+    } catch (e) {
+      print('⚠️ Background refresh failed: $e');
+    }
+  }
+
+  /// Проверить доступен ли offline mode
+  bool get isOfflineAvailable {
+    return _cache.loadAll().isNotEmpty;
+  }
+}
+```
+
+### ЭТАП 3: Добавить UI для скачивания базы (2 часа)
+
+**Файл:** `lib/features/cocktail_builder/view/screens/builder_form_screen.dart`
+
+```dart
+// В build() добавить:
+
+if (!viewModel.isDatabaseLoaded) {
+  if (viewModel.isOfflineAvailable) {
+    return _OfflineModeBanner();  ← Показываем что offline работает
+  } else {
+    return _DownloadDatabaseCard();  ← Просим скачать
+  }
+}
+
+/// Карточка "Скачать базу коктейлей"
+class _DownloadDatabaseCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [...]),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.cloud_download, size: 64, color: Colors.white),
+          SizedBox(height: 16),
+          Text(
+            'Скачайте базу коктейлей',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Text(
+            '2000+ рецептов будут работать без интернета',
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton.icon(
+            icon: Icon(Icons.download),
+            label: Text('Скачать сейчас (5 MB)'),
+            onPressed: () => _downloadDatabase(context),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Future<void> _downloadDatabase(BuildContext context) async {
+    // Показать прогресс
+    showDialog(
+      context: context,
+      builder: (_) => _DownloadProgressDialog(),
+    );
+    
+    try {
+      final repo = context.read<CocktailRepository>();
+      await repo.preloadAll();
+      
+      // Закрыть прогресс
+      Navigator.pop(context);
+      
+      // Показать успех
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('✅ База загружена! Работает без интернета'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('❌ Ошибка: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+}
+```
+
+### ЭТАП 4: AI Enhancer с offline fallback (1 час)
+
+**Файл:** `lib/features/cocktail_builder/services/ai_enhancer_service.dart`
+
+```dart
+class AiEnhancerService {
+  Future<GeneratedCocktail> enhance(GeneratedCocktail base) async {
+    // 1. Проверить интернет
+    final hasInternet = await _checkInternet();
+    
+    if (!hasInternet) {
+      print('⚠️ No internet - AI Enhancer skipped');
+      return base;  ← Вернуть без улучшений (НЕ ошибка!)
+    }
+    
+    // 2. Проверить API ключ
+    if (apiKey == null) {
+      return base;  ← Вернуть без улучшений
+    }
+    
+    // 3. Вызвать AI
+    try {
+      final enhanced = await _callOpenAI(base);
+      return enhanced;
+    } catch (e) {
+      print('⚠️ AI Enhancer failed: $e');
+      return base;  ← Fallback к базовому рецепту
+    }
+  }
+}
+```
+
+---
+
+## UX FLOW
+
+### Первый запуск (есть интернет):
+```
+1. Открывает приложение
+2. PreloadAll() загружает 2000+ коктейлей
+3. Сохраняет в Hive (5 MB)
+4. Конструктор работает ✅
+```
+
+### Второй запуск (НЕТ интернета):
+```
+1. Открывает приложение
+2. PreloadAll() → FAIL
+3. LoadAll() из Hive → SUCCESS (2000 коктейлей)
+4. Конструктор работает ✅ (matcher без AI)
+5. Показывает banner: "📴 Offline mode"
+```
+
+### Первый запуск (НЕТ интернета):
+```
+1. Открывает приложение
+2. PreloadAll() → FAIL
+3. LoadAll() из Hive → FAIL (пусто)
+4. Показывает: "Скачайте базу коктейлей"
+5. User жмет "Скачать" → ERROR "Нет интернета"
+6. Показывает: "Подключитесь к WiFi и откройте приложение"
+```
+
+### С AI ключом (есть интернет):
+```
+1. User выбирает ингредиенты
+2. Matcher находит "Mojito"
+3. AI Enhancer добавляет tips/facts/secrets
+4. ResultScreen показывает всё ✅
+```
+
+### С AI ключом (НЕТ интернета):
+```
+1. User выбирает ингредиенты
+2. Matcher находит "Mojito"
+3. AI Enhancer → skip (нет интернета)
+4. ResultScreen показывает рецепт БЕЗ tips
+5. User видит: "💡 AI режим недоступен offline"
+```
+
+---
+
+## РАЗМЕР БАЗЫ
+
+**TheCocktailDB:**
+- ~2000 коктейлей
+- JSON размер: ~5 MB
+- Hive размер: ~3 MB (сжатие)
+- Загрузка: 10-30 секунд (зависит от сети)
+
+**Хранение:**
+- Hive box: cocktails_cache
+- TTL: 7 дней (auto-refresh)
+- Размер: приемлемо для мобильного
+
+---
+
+## ПРИОРИТЕТ
+
+1. 🔥 ЭТАП 1: Hive cache service (3 часа)
+2. 🔥 ЭТАП 2: Изменить Repository (2 часа)
+3. ⚡ ЭТАП 3: UI для скачивания (2 часа)
+4. ⚡ ЭТАП 4: AI offline fallback (1 час)
+
+**ИТОГО:** ~8 часов
+
+---
+
+## РЕЗУЛЬТАТ
+
+### ДО:
+❌ Без интернета = конструктор НЕ работает  
+❌ При закрытии приложения = кэш теряется  
+❌ User frustrated = uninstall  
+
+### ПОСЛЕ:
+✅ Без интернета = работает из Hive  
+✅ При закрытии = кэш сохраняется  
+✅ User happy = 5 звезда в Play Store  
+
+**Offline-first = профессиональное приложение**

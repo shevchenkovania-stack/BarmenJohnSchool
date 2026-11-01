@@ -1,0 +1,577 @@
+[
+  {
+    "lessonId": "lesson_E_01",
+    "title": "Классические схемы: твои 50 коктейлей",
+    "estimatedMinutes": 10,
+    "questionsPerAttempt": 7,
+    "passingScore": 5,
+    "questions": [
+      {
+        "id": "q_e01_01",
+        "type": "matching",
+        "question": "Сопоставь схему с рецептом:",
+        "pairs": [
+          {"left": "Sour", "right": "Ром + Лайм + Сироп"},
+          {"left": "Collins", "right": "Sour + Soda"},
+          {"left": "Spirit Forward", "right": "Бурбон + Ангостура"},
+          {"left": "Fizz", "right": "Джин + Лимон + Soda"}
+        ],
+        "explanation": "🍋 Sour = База + Кислота + Сладость\n🥤 Collins = Sour + Soda\n🥃 Spirit Forward = Крепкий + Биттеры\n✨ Fizz = Кислота + Сладость + Soda"
+      },
+      {
+        "id": "q_e01_02",
+        "type": "singleChoice",
+        "question": "Tom Collins — это...?",
+        "options": [
+          "Sour + Soda",
+          "Spirit Forward + Soda",
+          "Только джин и сода",
+          "Бурбон + вермут"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Tom Collins = Джин + Лимон + Сироп + Soda = Gin Sour + Soda.\n\n❌ B — Spirit Forward не добавляют соду.\n❌ C — Это не Collins.\n❌ D — Это Manhattan."
+      },
+      {
+        "id": "q_e01_03",
+        "type": "singleChoice",
+        "question": "Whiskey Sour — это...?",
+        "options": [
+          "Spirit Forward",
+          "Sour",
+          "Collins",
+          "Fizz"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Sour! Whiskey Sour = Бурбон + Лимон + Сироп.\n\nЭто классический Sour. Никакой соды."
+      },
+      {
+        "id": "q_e01_04",
+        "type": "multipleChoice",
+        "question": "Какие из этих коктейлей — Spirit Forward?",
+        "options": [
+          "Manhattan",
+          "Martini",
+          "Negroni",
+          "Tom Collins"
+        ],
+        "correctAnswerIndices": [0, 1, 2],
+        "explanation": "✅ Manhattan, Martini, Negroni — все крепкие, stirred, без содовой.\n\n❌ Tom Collins — это Collins (Sour + Soda)."
+      },
+      {
+        "id": "q_e01_05",
+        "type": "singleChoice",
+        "question": "Manhattan — это...?",
+        "options": [
+          "Бурбон + Ангостура + Вермут",
+          "Бурбон + Лимон + Сироп",
+          "Джин + Вермут",
+          "Ром + Лайм + Сахар"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Manhattan = Бурбон + Вермут + Ангостура.\n\nЭто классический Spirit Forward."
+      },
+      {
+        "id": "q_e01_06",
+        "type": "trueFalse",
+        "question": "Все Sour коктейли требуют метода Shake.",
+        "options": ["Правда", "Ложь"],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Правда! Sour = цитрус = нужно SHAKE для смешивания.\n\nВсе классические Sour (Daiquiri, Margarita, Whiskey Sour) — Shake."
+      },
+      {
+        "id": "q_e01_07",
+        "type": "slider",
+        "question": "Сколько мл сиропа в классическом Sour (на 60 мл базы и 25 мл лимона)?",
+        "options": {
+          "min": 10,
+          "max": 30,
+          "step": 5,
+          "unit": "мл",
+          "target": 20
+        },
+        "explanation": "Формула Sour: Сироп = Кислота × 0.7-0.8\n\n25 мл × 0.8 = 20 мл\n\nИдеальный баланс: 60/25/20."
+      }
+    ]
+  },
+  {
+    "lessonId": "lesson_E_02",
+    "title": "Классические сочетания: что с чем",
+    "estimatedMinutes": 10,
+    "questionsPerAttempt": 7,
+    "passingScore": 5,
+    "questions": [
+      {
+        "id": "q_e02_01",
+        "type": "matching",
+        "question": "Сочетание спирта и дополнения:",
+        "pairs": [
+          {"left": "Джин +", "right": "Тоник"},
+          {"left": "Ром +", "right": "Лайм"},
+          {"left": "Бурбон +", "right": "Апельсин"},
+          {"left": "Текила +", "right": "Лайм + Соль"}
+        ],
+        "explanation": "🍸 Джин + Тоник = классика\n🥥 Ром + Лайм = тропикал\n🥃 Бурбон + Апельсин = Old Fashioned\n🌵 Текила + Лайм + Соль = Margarita"
+      },
+      {
+        "id": "q_e02_02",
+        "type": "singleChoice",
+        "question": "Какой ром для Mojito?",
+        "options": ["Тёмный", "Белый", "Золотой", "Чёрный"],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Белый ром для Mojito!\n\nТёмный ром даст карамельный цвет и вкус — не для Mojito."
+      },
+      {
+        "id": "q_e02_03",
+        "type": "multipleChoice",
+        "question": "Что сочетается с джином?",
+        "options": [
+          "Тоник",
+          "Лимон",
+          "Вермут",
+          "Кола",
+          "Огурец"
+        ],
+        "correctAnswerIndices": [0, 1, 2, 4],
+        "explanation": "✅ A, B, C, E — Тоник, Лимон, Вермут, Огурец.\n\n❌ D — Кола? Нет. Это для рома."
+      },
+      {
+        "id": "q_e02_04",
+        "type": "singleChoice",
+        "question": "Бурбон + Вермут + Ангостура = ?",
+        "options": ["Old Fashioned", "Manhattan", "Boulevardier", "Martini"],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Manhattan!\n\nБурбон + Вермут + Ангостура = классический Manhattan.\n\nOld Fashioned = Бурбон + Ангостура + Сахар (без вермута)."
+      },
+      {
+        "id": "q_e02_05",
+        "type": "singleChoice",
+        "question": "Что НЕ сочетается с бурбоном?",
+        "options": [
+          "Апельсиновая цедра",
+          "Вермут",
+          "Содовая",
+          "Ангостура"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "❌ Содовая! Бурбон обычно не смешивают с содовой.\n\nБурбон = Spirit Forward. Крепкий, глубокий. Сода разбавит вкус.\n\nИсключение: иногда Bourbon & Branch ( Bourbon + газированная вода)."
+      },
+      {
+        "id": "q_e02_06",
+        "type": "trueFalse",
+        "question": "Текила Reposado лучше для Margarita чем Blanco.",
+        "options": ["Правда", "Ложь"],
+        "correctAnswerIndex": 1,
+        "explanation": "❌ Ложь! Для Margarita обычно Blanco.\n\nBlanco = свежая, чистая agave.\nReposado = выдержанная, даёт ваниль. Можно, но не обязательно."
+      },
+      {
+        "id": "q_e02_07",
+        "type": "matching",
+        "question": "Сопоставь коктейль с гарнишем:",
+        "pairs": [
+          {"left": "Martini", "right": "Цедра лимона/оливка"},
+          {"left": "Old Fashioned", "right": "Цедра апельсина"},
+          {"left": "Manhattan", "right": "Вишня"},
+          {"left": "Margarita", "right": "Соль на краю"}
+        ],
+        "explanation": "🍸 Martini = лимонная цедра или оливка\n🥃 Old Fashioned = апельсиновая цедра\n🍒 Manhattan = вишня\n🌵 Margarita = соль"
+      }
+    ]
+  },
+  {
+    "lessonId": "lesson_E_03",
+    "title": "Терминология: словарь бармена",
+    "estimatedMinutes": 10,
+    "questionsPerAttempt": 7,
+    "passingScore": 5,
+    "questions": [
+      {
+        "id": "q_e03_01",
+        "type": "matching",
+        "question": "Термин и значение:",
+        "pairs": [
+          {"left": "ABV", "right": "% алкоголя"},
+          {"left": "Jigger", "right": "Мерный стакан"},
+          {"left": "Dash", "right": "2-3 капли"},
+          {"left": "Build", "right": "Собрать в стакане"}
+        ],
+        "explanation": "📊 ABV = Alcohol By Volume\n🍸 Jigger = 30/60 мл мерный стакан\n💧 Dash = 2-3 капли биттеров\n🥤 Build = метод сборки в стакане"
+      },
+      {
+        "id": "q_e03_02",
+        "type": "singleChoice",
+        "question": "Dry Martini — это...?",
+        "options": [
+          "Мартини со льдом",
+          "Мартини с меньшим количеством вермута",
+          "Мартини без вермута",
+          "Холодный мартини"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Dry = меньше вермута.\n\nExtra Dry = почти без вермута.\nPerfect = пополам сухой и сладкий вермут."
+      },
+      {
+        "id": "q_e03_03",
+        "type": "singleChoice",
+        "question": "On the Rocks — это...?",
+        "options": [
+          "Чистый спирт",
+          "Со льдом",
+          "Взбитый",
+          "С содовой"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ On the Rocks = со льдом (кубиками)."
+      },
+      {
+        "id": "q_e03_04",
+        "type": "singleChoice",
+        "question": "Neat — это...?",
+        "options": [
+          "Со льдом",
+          "Чистый, без льда",
+          "Охлаждённый",
+          "Разбавленный"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Neat = чистый спирт, комнатной температуры, без льда."
+      },
+      {
+        "id": "q_e03_05",
+        "type": "singleChoice",
+        "question": "Up (вверх) в коктейле — это...?",
+        "options": [
+          "С верхней полки",
+          "Охлаждённый, без льда",
+          "С пеной",
+          "Двойная порция"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Up = охлаждённый, без льда при подаче.\n\nПодаётся в coupe или флюте."
+      },
+      {
+        "id": "q_e03_06",
+        "type": "trueFalse",
+        "question": "Batching — это приготовление коктейлей впрок.",
+        "options": ["Правда", "Ложь"],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Правда! Batching = приготовление смеси заранее.\n\nЭкономит время на большом потоке гостей."
+      },
+      {
+        "id": "q_e03_07",
+        "type": "matching",
+        "question": "Термин и описание:",
+        "pairs": [
+          {"left": "Twist", "right": "Спираль цедры"},
+          {"left": "Float", "right": "Слой сверху"},
+          {"left": "Muddle", "right": "Раздавить"},
+          {"left": "Double Strain", "right": "Два сита"}
+        ],
+        "explanation": "🍋 Twist = спираль цедры\n🥃 Float = слой ликёра сверху\n🫧 Muddle = раздавить мяту/лайм\n🔍 Double Strain = Hawthorne + mesh strainer"
+      }
+    ]
+  },
+  {
+    "lessonId": "lesson_E_04",
+    "title": "Первый авторский: создай свой коктейль",
+    "estimatedMinutes": 10,
+    "questionsPerAttempt": 7,
+    "passingScore": 5,
+    "questions": [
+      {
+        "id": "q_e04_01",
+        "type": "singleChoice",
+        "question": "Формула автора: База + Кислота + Сладость + ?",
+        "options": [
+          "Лёд",
+          "Ароматика",
+          "Биттеры",
+          "Сода"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Ароматика (garnish) — твоя фишка!\n\nБаза, кислота, сладость = проверенная формула.\nАроматика = твоя идея."
+      },
+      {
+        "id": "q_e04_02",
+        "type": "singleChoice",
+        "question": "Коктейль слишком сладкий. Что делаем?",
+        "options": [
+          "Добавляем сироп",
+          "Добавляем лимон",
+          "Добавляем лёд",
+          "Добавляем воду"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Кислота! Лимон срежет сладость.\n\n❌ A — Ещё сироп = ещё слаще.\n❌ C, D — Разбавление не исправит баланс."
+      },
+      {
+        "id": "q_e04_03",
+        "type": "singleChoice",
+        "question": "Коктейль «плоский» на вкус. Что добавляем?",
+        "options": [
+          "Сироп",
+          "Солевой раствор (saline)",
+          "Лимон",
+          "Лёд"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Saline! «Плоский» = не хватает соли.\n\n1 капля солевого раствора раскроет вкус.\n\n❌ Сироп — для сладости.\n❌ Лимон — для кислоты."
+      },
+      {
+        "id": "q_e04_04",
+        "type": "multipleChoice",
+        "question": "Какие идеи для авторского коктейля?",
+        "options": [
+          "Классический рецепт + новая ароматика",
+          "Замена сиропа (мёд вместо сахара)",
+          "Другой цитрус (грейпфрут вместо лимона)",
+          "Водка вместо рома в любом рецепте"
+        ],
+        "correctAnswerIndices": [0, 1, 2],
+        "explanation": "✅ A, B, C — все хорошие идеи!\n\n❌ D — Замена базы = другой коктейль. Не всегда работает."
+      },
+      {
+        "id": "q_e04_05",
+        "type": "singleChoice",
+        "question": "Whiskey Sour + Имбирь = ?",
+        "options": [
+          "Old Fashioned",
+          "Ginger Sour",
+          "Manhattan",
+          "Boulevardier"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Ginger Sour = Whiskey Sour + имбирь!\n\nЭто простой твист на классике. Работает всегда."
+      },
+      {
+        "id": "q_e04_06",
+        "type": "trueFalse",
+        "question": "Всегда записывай свои эксперименты.",
+        "options": ["Правда", "Ложь"],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Правда! Без записи ты забудешь.\n\nФормат:\n• Название\n• Рецепт\n• Версия\n• Что изменил\n• Оценка"
+      },
+      {
+        "id": "q_e04_07",
+        "type": "singleChoice",
+        "question": "Коктейль «не хватает глубины». Что добавляем?",
+        "options": [
+          "Сироп",
+          "Лимон",
+          "Биттеры",
+          "Лёд"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "✅ Биттеры! «Нет глубины» = нужна complexity.\n\n2-3 дэша Angostura добавят объём.\n\n❌ Сироп — для сладости.\n❌ Лимон — для кислоты."
+      }
+    ]
+  },
+  {
+    "lessonId": "lesson_E_05",
+    "title": "Продвинутые авторские: 15 рецептов",
+    "estimatedMinutes": 10,
+    "questionsPerAttempt": 7,
+    "passingScore": 5,
+    "questions": [
+      {
+        "id": "q_e05_01",
+        "type": "singleChoice",
+        "question": "Fat-wash кокосовый ром: сколько масла на 200 мл рома?",
+        "options": ["5 г", "10 г", "20 г", "50 г"],
+        "correctAnswerIndex": 2,
+        "explanation": "✅ 20 г кокосового масла.\n\nПропорция: 10% от объёма.\n200 мл × 10% = 20 г."
+      },
+      {
+        "id": "q_e05_02",
+        "type": "singleChoice",
+        "question": "Fat-wash: сколько времени в морозилке?",
+        "options": ["30 минут", "2 часа", "24 часа", "1 неделя"],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ 2 часа в морозилке.\n\nЖир застынет, спирт останется жидким. Потом фильтруешь."
+      },
+      {
+        "id": "q_e05_03",
+        "type": "singleChoice",
+        "question": "Быстрый огуречный джин: сколько времени?",
+        "options": ["10 минут", "1 час", "4 часа", "1 неделя"],
+        "correctAnswerIndex": 2,
+        "explanation": "✅ 4 часа для лёгкого аромата.\n\n1-4 часа = лёгкий.\nНеделя = глубокий вкус."
+      },
+      {
+        "id": "q_e05_04",
+        "type": "singleChoice",
+        "question": "Espresso Martini — это...?",
+        "options": [
+          "Martini + эспрессо",
+          "Водка + кофе",
+          "Кофе без алкоголя",
+          "Ром + кофе"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Espresso Martini = Martini (джин + вермут) + эспрессо.\n\nКлассика 80-х. Водка + кофе — это просто Vodka Espresso."
+      },
+      {
+        "id": "q_e05_05",
+        "type": "singleChoice",
+        "question": "Penicillin — это...?",
+        "options": [
+          "Whiskey Sour + имбирь + дым",
+          "Виски + пенициллин",
+          "Джин + лимон + мёд",
+          "Ром + лайм + перец"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Penicillin = Whiskey Sour + имбирный сироп + дым.\n\nОдин из лучших современных классических коктейлей."
+      },
+      {
+        "id": "q_e05_06",
+        "type": "multipleChoice",
+        "question": "Что нужно для fat-wash?",
+        "options": [
+          "Спирт",
+          "Жир (масло)",
+          "Морозилка",
+          "Блендер",
+          "Фильтр"
+        ],
+        "correctAnswerIndices": [0, 1, 2, 4],
+        "explanation": "✅ Спирт, жир, морозилка, фильтр.\n\n❌ Блендер не нужен."
+      },
+      {
+        "id": "q_e05_07",
+        "type": "singleChoice",
+        "question": "Твист на классике — это...?",
+        "options": [
+          "Копия классики",
+          "Классика + один новый элемент",
+          "Полностью новый рецепт",
+          "Просто другое название"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Твист = классика + один элемент.\n\nEspresso Martini = Martini + кофе.\nPenicillin = Sour + имбирь + дым.\n\nОдин элемент = твист. Много = уже новый коктейль."
+      }
+    ]
+  },
+  {
+    "lessonId": "lesson_E_06",
+    "title": "Финальный экзамен: Миксолог",
+    "estimatedMinutes": 15,
+    "questionsPerAttempt": 10,
+    "passingScore": 8,
+    "questions": [
+      {
+        "id": "q_e06_01",
+        "type": "matching",
+        "question": "Схема коктейля:",
+        "pairs": [
+          {"left": "Sour", "right": "База + Кислота + Сладость"},
+          {"left": "Collins", "right": "Sour + Soda"},
+          {"left": "Spirit Forward", "right": "Спирт + Биттеры"},
+          {"left": "Fizz", "right": "Кислота + Сладость + Soda"}
+        ],
+        "explanation": "Все 4 схемы."
+      },
+      {
+        "id": "q_e06_02",
+        "type": "singleChoice",
+        "question": "Daiquiri = ?",
+        "options": [
+          "Ром + Лайм + Сироп",
+          "Джин + Вермут",
+          "Бурбон + Ангостура",
+          "Текила + Лайм + Соль"
+        ],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Daiquiri = Ром + Лайм + Сахарный сироп.\n\nКлассический Sour."
+      },
+      {
+        "id": "q_e06_03",
+        "type": "singleChoice",
+        "question": "Martini — какой метод?",
+        "options": ["Shake", "Stir", "Build", "Muddle"],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Stir! Martini — Spirit Forward. Stirred, не shaken.\n\nShaken Martini — это для кино. В реальности — Stir."
+      },
+      {
+        "id": "q_e06_04",
+        "type": "singleChoice",
+        "question": "Margarita — это...?",
+        "options": [
+          "Spirit Forward",
+          "Sour",
+          "Collins",
+          "Fizz"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Sour! Текила + Лайм + Трипл Сек."
+      },
+      {
+        "id": "q_e06_05",
+        "type": "singleChoice",
+        "question": "Neat — это...?",
+        "options": [
+          "Со льдом",
+          "Чистый, без льда",
+          "Охлаждённый",
+          "Разбавленный"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Neat = чистый спирт, комнатной температуры."
+      },
+      {
+        "id": "q_e06_06",
+        "type": "singleChoice",
+        "question": "Гость хочет «что-то освежающее, не крепкое». Что предложишь?",
+        "options": [
+          "Manhattan",
+          "Negroni",
+          "Tom Collins",
+          "Old Fashioned"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "✅ Tom Collins! Лонг дринк с содовой = освежающий, не крепкий.\n\n❌ Manhattan, Negroni, Old Fashioned — крепкие."
+      },
+      {
+        "id": "q_e06_07",
+        "type": "trueFalse",
+        "question": "Ром сочетается с лаймом.",
+        "options": ["Правда", "Ложь"],
+        "correctAnswerIndex": 0,
+        "explanation": "✅ Правда! Ром + Лайм = классика (Daiquiri, Mojito)."
+      },
+      {
+        "id": "q_e06_08",
+        "type": "singleChoice",
+        "question": "Коктейль «плоский». Что делаем?",
+        "options": [
+          "Сироп",
+          "Лимон",
+          "1 каплю saline",
+          "Лёд"
+        ],
+        "correctAnswerIndex": 2,
+        "explanation": "✅ Saline! «Плоский» = не хватает соли."
+      },
+      {
+        "id": "q_e06_09",
+        "type": "singleChoice",
+        "question": "Fat-wash: сколько масла на 100 мл водки?",
+        "options": ["5 г", "10 г", "15 г", "20 г"],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ 10 г (10% от объёма)."
+      },
+      {
+        "id": "q_e06_10",
+        "type": "singleChoice",
+        "question": "Espresso Martini = ?",
+        "options": [
+          "Водка + кофе",
+          "Martini + эспрессо",
+          "Джин + кофе",
+          "Ром + кофе"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "✅ Martini (джин + вермут) + эспрессо.\n\nНекоторые делают на водке, но классика — на джине."
+      }
+    ]
+  }
+]

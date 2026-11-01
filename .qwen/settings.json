@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter *)",
+      "Bash(taskkill *)",
+      "Bash(python *)"
+    ]
+  },
+  "$version": 3
+}

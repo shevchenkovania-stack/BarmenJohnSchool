@@ -1,0 +1,305 @@
+# AI РЕЖИМ В КОНСТРУКТОРЕ - ПЛАН ИНТЕГРАЦИИ
+
+## ТЕКУЩЕЕ СОСТОЯНИЕ
+
+### AI Recipe Guide (РАБОТАЕТ):
+- 📍 Где: cocktail_detail_screen.dart → кнопка "AI Рецепт"
+- 🔧 Service: RecipeAIService.expand()
+- 📦 Model: DetailedRecipe (полный рецепт от AI)
+- 🎯 Flow: 
+  1. User открывает коктейль из базы
+  2. Жмет "AI Рецепт"
+  3. RecipeAIService вызывает OpenAI API
+  4. Возвращает DetailedRecipe (пошагово, советы, история, техники)
+  5. Показывает в AiRecipeViewer
+
+### Cocktail Builder (ТОЛЬКО rule-based):
+- 📍 Где: builder_form_screen.dart → кнопка "Создать коктейль"
+- 🔧 Service: CocktailMatcherService.match()
+- 📦 Model: GeneratedCocktail (простой рецепт)
+- 🎯 Flow:
+  1. User выбирает ингредиенты
+  2. Matcher ищет совпадения в базе
+  3. Возвращает GeneratedCocktail (без AI)
+  4. Показывает в ResultScreen
+
+---
+
+## ЧТО ТАКОЕ AI ENHANCER (ЗАКОММЕНТИРОВАН В КОДЕ)
+
+```dart
+// cocktail_builder_viewmodel.dart строки 356-364
+/* -- AI ENHANCER OFF --
+final userKey = _apiKeyService.apiKey;
+if (userKey != null && userKey.isNotEmpty) {
+  final enhancer = AiEnhancerService(userKey);
+  cocktail = await enhancer.enhance(cocktail);
+}
+-- */
+```
+
+**AI Enhancer должен:**
+1. Взять GeneratedCocktail от matcher
+2. Отправить в OpenAI для улучшения
+3. Добавить: pro tips, facts, secrets, garnish, serving suggestions
+4. Вернуть улучшенный GeneratedCocktail
+
+**НО:** AiEnhancerService НЕ СУЩЕСТВУЕТ! (только ai_enhancer_service.dart файл пустой или старый)
+
+---
+
+## РАЗНИЦА МЕЖДУ РЕЖИМАМИ
+
+### БЕЗ AI КЛЮЧА (сейчас):
+```
+User: Vodka + Lime + Soda
+↓
+Matcher: ищет в базе → находит "Vodka Soda"
+↓
+GeneratedCocktail:
+  - name: "Vodka Soda"
+  - ingredients: [...]
+  - steps: [...]
+  - proTip: null          ← ПУСТО
+  - fact: null            ← ПУСТО
+  - secret: null          ← ПУСТО
+  - flavorProfile: null   ← ПУСТО
+↓
+ResultScreen: показывает рецепт БЕЗ дополнений
+```
+
+### С AI КЛЮЧОМ (надо включить):
+```
+User: Vodka + Lime + Soda
+↓
+Matcher: ищет в базе → находит "Vodka Soda"
+↓
+GeneratedCocktail (от matcher)
+↓
+AI Enhancer (OpenAI API):
+  - Добавляет proTip: "Используйте свежий лайм, не бутылочный сок"
+  - Добавляет fact: "Vodka Soda появился в 1950-х..."
+  - Добавляет secret: "Охладите бокал заранее..."
+  - Добавляет garnish: "Лайм + веточка мяты"
+  - Рассчитывает flavorProfile на основе ингредиентов
+↓
+GeneratedCocktail (улучшенный):
+  - name: "Vodka Soda"
+  - ingredients: [...]
+  - steps: [...]
+  - proTip: "Используйте свежий лайм..."  ← ЕСТЬ!
+  - fact: "Vodka Soda появился..."        ← ЕСТЬ!
+  - secret: "Охладите бокал..."            ← ЕСТЬ!
+  - flavorProfile: {strength: 4, ...}      ← ЕСТЬ!
+↓
+ResultScreen: показывает рецепт + советы + факты + секреты
+```
+
+---
+
+## ПЛАН ИНТЕГРАЦИИ (3 ЭТАПА)
+
+### ЭТАП 1: Создать AiEnhancerService (2 часа)
+**Файл:** `lib/features/cocktail_builder/services/ai_enhancer_service.dart`
+
+**Функция:**
+```dart
+class AiEnhancerService {
+  final String apiKey;
+  
+  Future<GeneratedCocktail> enhance(GeneratedCocktail base) async {
+    // 1. Build prompt
+    final prompt = '''
+      Enhance this cocktail recipe:
+      Name: ${base.name}
+      Ingredients: ${base.ingredients}
+      
+      Add:
+      - proTip (professional advice)
+      - fact (interesting history)
+      - secret (bartender trick)
+      - garnish (decoration)
+      - serving suggestion
+      - flavor profile (strength, sweetness, acidity, bitterness)
+      
+      Return JSON.
+    ''';
+    
+    // 2. Call OpenAI
+    final response = await callOpenAI(prompt);
+    
+    // 3. Parse and merge
+    return base.copyWith(
+      proTip: response['proTip'],
+      fact: response['fact'],
+      secret: response['secret'],
+      garnish: response['garnish'],
+      serving: response['serving'],
+      flavorProfile: FlavorProfile.fromJson(response['flavorProfile']),
+    );
+  }
+}
+```
+
+### ЭТАП 2: Раскомментировать AI в viewmodel (30 минут)
+**Файл:** `lib/features/cocktail_builder/viewmodel/cocktail_builder_viewmodel.dart`
+
+**Изменить:**
+```dart
+// БЫЛО (закомментировано):
+/* -- AI ENHANCER OFF --
+final userKey = _apiKeyService.apiKey;
+if (userKey != null && userKey.isNotEmpty) {
+  final enhancer = AiEnhancerService(userKey);
+  cocktail = await enhancer.enhance(cocktail);
+}
+-- */
+
+// СТАЛО (активно):
+final userKey = _apiKeyService.apiKey;
+if (userKey != null && userKey.isNotEmpty) {
+  debugPrint('🤖 AI Enhancer active...');
+  final enhancer = AiEnhancerService(userKey);
+  cocktail = await enhancer.enhance(cocktail);
+  debugPrint('✅ AI enhancement applied');
+}
+```
+
+### ЭТАП 3: Добавить AI Mode toggle в UI (1 час)
+**Файл:** `lib/features/cocktail_builder/view/screens/builder_form_screen.dart`
+
+**Добавить переключатель:**
+```dart
+// Под заголовком "Создай свой уникальный коктейль"
+Row(
+  children: [
+    const Text('🤖 AI режим'),
+    Switch(
+      value: viewModel.isAiMode,
+      onChanged: (v) => viewModel.toggleAiMode(v),
+    ),
+    if (!viewModel.hasApiKey)
+      const Text('(нет ключа)', style: TextStyle(color: Colors.grey)),
+  ],
+)
+```
+
+**ViewModel:**
+```dart
+bool _isAiMode = false;
+bool get isAiMode => _isAiMode;
+bool get hasApiKey => _apiKeyService.apiKey?.isNotEmpty ?? false;
+
+void toggleAiMode(bool value) {
+  _isAiMode = value;
+  notifyListeners();
+}
+
+// В generateVariants():
+if (isAiMode && hasApiKey) {
+  // Use AI Enhancer
+  cocktail = await enhancer.enhance(cocktail);
+}
+```
+
+---
+
+## РЕЗУЛЬТАТ
+
+### БЕЗ AI (бесплатно):
+✅ Находит коктейли из базы  
+✅ Показывает рецепт  
+✅ Показывает картинки  
+✅ Показывает замены  
+❌ Нет советов, фактов, секретов  
+
+### С AI (нужен ключ):
+✅ Всё что выше +  
+✅ Pro Tips от профессионалов  
+✅ Интересные факты  
+✅ Секреты барменов  
+✅ Flavor Profile  
+✅ Garnish suggestions  
+✅ Serving tips  
+
+---
+
+## АРХИТЕКТУРА
+
+```
+┌─────────────────────────────────────┐
+│  Cocktail Builder (UI)              │
+│  - Ingredients                      │
+│  - Sliders                          │
+│  - [🤖 AI Mode toggle] ← НОВОЕ     │
+│  - Create button                    │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│  CocktailMatcherService             │
+│  - Match ingredients to database    │
+│  - Return GeneratedCocktail         │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+        ┌───── AI Mode? ─────┐
+        │                    │
+       NO                   YES
+        │                    │
+        ▼                    ▼
+┌───────────────┐   ┌─────────────────────┐
+│ Return as is  │   │ AiEnhancerService   │
+│ (fast, free)  │   │ - Call OpenAI API   │
+│               │   │ - Add tips/facts    │
+│               │   │ - Return enhanced   │
+└───────────────┘   └─────────┬───────────┘
+                              │
+                              ▼
+                     ┌─────────────────┐
+                     │ ResultScreen    │
+                     │ - Recipe        │
+                     │ - Tips ✨       │
+                     │ - Facts 🧪      │
+                     │ - Secrets 🔮    │
+                     └─────────────────┘
+```
+
+---
+
+## ПРИОРИТЕТ
+
+1. 🔥 ЭТАП 1: Создать AiEnhancerService (2 часа)
+2. 🔥 ЭТАП 2: Раскомментировать в viewmodel (30 мин)
+3. ⚡ ЭТАП 3: Добавить toggle в UI (1 час)
+
+**ИТОГО:** ~3.5 часа работы
+
+---
+
+## ВАЖНО
+
+**AI Enhancer ≠ AI Recipe Guide**
+
+- **AI Recipe Guide** (существует): 
+  - Для ГОТОВОГО коктейля из базы
+  - Возвращает DetailedRecipe (очень подробный)
+  - Используется в cocktail_detail_screen
+
+- **AI Enhancer** (надо создать):
+  - Для cocktail builder
+  - Улучшает GeneratedCocktail
+  - Добавляет tips/facts/secrets
+  - Быстрее (меньше токенов)
+
+**НЕЛЬЗЯ использовать RecipeAIService в builder** потому что:
+- Он возвращает DetailedRecipe, не GeneratedCocktail
+- Очень дорогой (1500 токенов)
+- Медленный (ждет полный рецепт)
+- Не совместим с ResultScreen
+
+**НУЖНО создать отдельный AiEnhancerService** который:
+- Работает с GeneratedCocktail
+- Дешевый (500 токенов)
+- Быстрый
+- Совместим с ResultScreen

@@ -1,0 +1,172 @@
+{
+  "@@locale": "ru",
+
+  "appTitle": "Коктейли",
+
+  "tabHome": "Главная",
+  "tabSearch": "Поиск",
+  "tabFavorites": "Избранное",
+  "tabBar": "Бар",
+  "tabSettings": "Настройки",
+
+  "homeSubtitle": "Найди свой следующий коктейль",
+  "homeSectionLabel": "КОКТЕЙЛЬ МОМЕНТА",
+  "homeViewRecipe": "Открыть рецепт",
+  "homeBrowseAll": "Все коктейли",
+  "homeLoadError": "Не удалось загрузить коктейль",
+
+  "searchAppBarTitle": "Поиск",
+  "searchInputHint": "Название коктейля...",
+  "searchNoResults": "Ничего не найдено для \"{query}\"",
+  "searchPlaceholderText": "Введите название для поиска",
+  "searchPlaceholderHint": "напр. Margarita, Mojito, Negroni",
+
+  "favoritesTitle": "Избранное",
+  "favoritesEmpty": "Избранное пусто",
+  "favoritesEmptyHint": "Нажмите \u2665 на любой коктейль чтобы сохранить",
+
+  "detailIngredients": "Ингредиенты",
+  "detailInstructions": "Приготовление",
+
+  "cocktailListTitle": "Все коктейли",
+  "cocktailListFilterHint": "Фильтр по названию...",
+  "cocktailListEmpty": "Коктейли не найдены",
+  "cocktailListLoadingCount": "Загружено {count} коктейлей",
+
+  "barTitle": "Управление баром",
+  "stopListTitle": "Стоп-лист",
+  "stopListSubtitle": "Чего нет сегодня",
+  "stopListEmpty": "Стоп-лист пуст",
+  "stopListEmptyHint": "Добавьте ингредиенты которые закончились сегодня",
+  "stopListAddHint": "Название ингредиента...",
+  "stopListClearAll": "Очистить всё",
+
+  "inventoryTitle": "Инвентарь",
+  "inventorySubtitle": "Что есть на баре",
+  "inventoryEmpty": "Инвентарь пуст",
+  "inventoryEmptyHint": "Добавьте ингредиенты вашего бара",
+  "inventoryAddHint": "Название ингредиента...",
+  "inventorySearchHint": "Поиск ингредиентов...",
+  "inventoryLoadingCatalog": "Загрузка каталога ингредиентов...",
+  "inventoryNoCatalog": "Каталог ещё не загружен",
+  "inventoryNoCatalogHint": "Подождите пока загружается база",
+  "inventorySelected": "{count} в наличии",
+  "@inventorySelected": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "inventoryTabCatalog": "Каталог",
+  "inventoryTabCustom": "Свои",
+  "inventoryAddCustom": "Добавить свой ингредиент",
+
+  "dashboardTitle": "Дашборд",
+
+  "recipeModeSection": "Режим рецептов",
+  "recipeModeStarter": "🔰 Стажёр",
+  "recipeModeExpert": "🏆 Эксперт",
+  "recipeModeDesc": "Выберите режим по умолчанию",
+
+  "canMakeTitle": "Могу приготовить",
+  "canMakeSubtitle": "На основе инвентаря",
+  "canMakeEmpty": "Нет подходящих коктейлей",
+  "canMakeEmptyHint": "Сначала добавьте ингредиенты в инвентарь",
+  "canMakeLoading": "Загрузка базы коктейлей...",
+
+  "myRecipesTitle": "Мои рецепты",
+  "myRecipesSubtitle": "Фирменные коктейли заведения",
+  "myRecipesEmpty": "Нет рецептов",
+  "myRecipesEmptyHint": "Добавьте фирменные коктейли вашего бара",
+
+  "addRecipeTitle": "Новый рецепт",
+  "editRecipeTitle": "Редактировать рецепт",
+  "recipeNameHint": "Название коктейля",
+  "recipeGlassHint": "Вид стакана (напр. Мартини)",
+  "recipeInstructionsHint": "Пошаговое приготовление...",
+  "recipeIngredientHint": "Ингредиент",
+  "recipeMeasureHint": "Количество (напр. 50 мл)",
+  "addIngredientRow": "Добавить ингредиент",
+  "recipeIngredientsSection": "Ингредиенты",
+
+  "settingsTitle": "Настройки",
+  "settingsLanguageSection": "Язык",
+
+  "actionSave": "Сохранить",
+  "actionCancel": "Отмена",
+  "actionDelete": "Удалить",
+  "actionAdd": "Добавить",
+  "actionRetry": "Повторить",
+  "actionConfirmDelete": "Удалить этот элемент?",
+
+  "menuBuilderTitle": "Конструктор меню",
+  "menuBuilderSubtitle": "Создайте печатное меню",
+  "menuBuilderEmpty": "Нет избранных коктейлей",
+  "menuBuilderEmptyHint": "Сначала добавьте коктейли в Избранное",
+  "menuBuilderVenueHint": "Название бара / ресторана",
+  "menuBuilderSelectAll": "Выбрать все",
+  "menuBuilderDeselectAll": "Снять все",
+  "menuBuilderPreview": "Предпросмотр PDF",
+  "menuBuilderPrint": "Печать",
+  "menuBuilderThemeClassic": "Классика",
+  "menuBuilderThemeModern": "Модерн",
+  "menuBuilderThemeMinimal": "Минимализм",
+  "menuBuilderSelected": "{count} коктейлей выбрано",
+  "@menuBuilderSelected": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "priceBookTitle": "Прайс-лист",
+  "priceBookSubtitle": "Себестоимость ингредиентов",
+  "priceBookEmpty": "Прайс-лист пуст",
+  "priceBookEmptyHint": "Добавьте цены ингредиентов чтобы считать себестоимость",
+  "priceBookAddTitle": "Добавить цену",
+  "priceBookEditTitle": "Редактировать цену",
+  "priceBookIngredientHint": "Название ингредиента (напр. Ron Barcelo)",
+  "priceBookBottlePriceHint": "Цена бутылки (напр. 25)",
+  "priceBookBottlePriceLabel": "Цена бутылки",
+  "priceBookBottleSizeHint": "Объём бутылки мл (напр. 700)",
+  "priceBookBottleSizeLabel": "Объём мл",
+  "priceBookCurrencyHint": "Валюта (напр. $)",
+  "priceBookCurrencyLabel": "Валюта",
+  "priceBookPerMl": "за мл",
+  "recipeCostSection": "Себестоимость",
+  "recipeCostNotAvailable": "Добавьте цены в Прайс-лист чтобы увидеть себестоимость",
+  "recipeCostTotal": "Себестоимость коктейля",
+  "recipeCostSelling": "Цена продажи",
+  "recipeCostMargin": "Маржа",
+  "recipeCostSellingHint": "0.00",
+
+  "kioskTitle": "Цифровое меню",
+  "kioskSubtitle": "Интерактивное меню для гостей на планшете",
+  "kioskSetupTitle": "Настройка киоска",
+  "kioskSetupHint": "Выберите коктейли и укажите цены для гостей",
+  "kioskLaunch": "Запустить киоск",
+  "kioskSave": "Сохранить настройки",
+  "kioskExitTitle": "Выйти из киоска?",
+  "kioskExitMessage": "Гости больше не увидят меню на этом экране.",
+  "kioskExitConfirm": "Выйти",
+  "kioskFilterAll": "Все",
+  "kioskFilterAlcoholic": "Алкагольные",
+  "kioskFilterNonAlcoholic": "Безалкагольные",
+  "kioskEmpty": "Нет коктейлей в меню",
+  "kioskEmptyHint": "Вернитесь и выберите коктейли для киоска",
+  "kioskCocktailCount": "{count} коктейлей",
+  "@kioskCocktailCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "kioskPriceCurrency": "MDL",
+  "kioskCurrencyLabel": "Валюта",
+  "kioskSelectCocktail": "Выберите хотя бы один коктейль",
+  "kioskVenueHint": "Бар Алхимия",
+
+  "modeSchool": "ШКОЛА БАРМЕНА",
+  "modeSchoolSubtitle": "Уроки • Квизы • XP • Диплом",
+  "modeCocktails": "БАЗА КОКТЕЛЕЙ",
+  "modeCocktailsSubtitle": "300+ рецептов • Поиск • Избранное",
+  "modeMyBar": "МОЙ БАР",
+  "modeMyBarSubtitle": "Конструктор • Инвентарь • Свои рецепты"
+}

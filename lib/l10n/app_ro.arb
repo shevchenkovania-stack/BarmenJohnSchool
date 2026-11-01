@@ -1,0 +1,176 @@
+{
+  "@@locale": "ro",
+
+  "appTitle": "Cocktailuri",
+
+  "tabHome": "Acasă",
+  "tabSearch": "Căutare",
+  "tabFavorites": "Favorite",
+  "tabBar": "Bar",
+  "tabSettings": "Setări",
+
+  "homeSubtitle": "Descoperă-ți următorul cocktail",
+  "homeSectionLabel": "COCKTAILUL MOMENTULUI",
+  "homeViewRecipe": "Vezi rețeta",
+  "homeBrowseAll": "Toate cocktailurile",
+  "homeLoadError": "Nu s-a putut încărca cocktailul",
+
+  "searchAppBarTitle": "Căutare",
+  "searchInputHint": "Numele cocktailului...",
+  "searchNoResults": "Niciun rezultat pentru \"{query}\"",
+  "searchPlaceholderText": "Tastează un nume pentru a căuta",
+  "searchPlaceholderHint": "ex. Margarita, Mojito, Negroni",
+
+  "favoritesTitle": "Favorite",
+  "favoritesEmpty": "Nicio preferată",
+  "favoritesEmptyHint": "Apasă \u2665 pe orice cocktail pentru a salva",
+
+  "detailIngredients": "Ingrediente",
+  "detailInstructions": "Preparare",
+
+  "cocktailListTitle": "Toate cocktailurile",
+  "cocktailListFilterHint": "Filtrează după nume...",
+  "cocktailListEmpty": "Nu s-au găsit cocktailuri",
+  "cocktailListLoadingCount": "Încărcat {count} cocktailuri",
+
+  "barTitle": "Managementul barului",
+  "stopListTitle": "Stop-list",
+  "stopListSubtitle": "Indisponibil azi",
+  "stopListEmpty": "Stop-list gol",
+  "stopListEmptyHint": "Adaugă ingredientele terminate azi",
+  "stopListAddHint": "Numele ingredientului...",
+  "stopListClearAll": "Curăță tot",
+
+  "inventoryTitle": "Inventar",
+  "inventorySubtitle": "Ce aveți în stoc",
+  "inventoryEmpty": "Inventar gol",
+  "inventoryEmptyHint": "Adaugă ingredientele disponibile la bar",
+  "inventoryAddHint": "Numele ingredientului...",
+  "inventorySearchHint": "Caută ingrediente...",
+  "inventoryLoadingCatalog": "Se încarcă catalogul de ingrediente...",
+  "inventoryNoCatalog": "Catalogul nu este încărcat",
+  "inventoryNoCatalogHint": "Așteptați până se încarcă baza de date",
+  "inventorySelected": "{count} în stoc",
+  "@inventorySelected": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "inventoryTabCatalog": "Catalog",
+  "inventoryTabCustom": "Proprii",
+  "inventoryAddCustom": "Adaugă ingredient propriu",
+
+  "dashboardTitle": "Panou de control",
+
+  "recipeModeSection": "Mod rețete",
+  "recipeModeStarter": "🔰 Începător",
+  "recipeModeExpert": "🏆 Expert",
+  "recipeModeDesc": "Selectați modul implicit pentru rețete",
+
+  "inventoryTabCatalog": "Catalog",
+  "inventoryTabCustom": "Proprii",
+  "inventoryAddCustom": "Adaugă ingredient propriu",
+
+  "canMakeTitle": "Pot prepara acum",
+  "canMakeSubtitle": "Bazat pe inventar",
+  "canMakeEmpty": "Niciun cocktail potrivit",
+  "canMakeEmptyHint": "Adaugă mai întâi ingrediente la inventar",
+  "canMakeLoading": "Se încarcă baza de cocktailuri...",
+
+  "myRecipesTitle": "Rețetele mele",
+  "myRecipesSubtitle": "Cocktailurile specifice localului",
+  "myRecipesEmpty": "Nicio rețetă",
+  "myRecipesEmptyHint": "Adaugă cocktailurile specifice barului tău",
+
+  "addRecipeTitle": "Rețetă nouă",
+  "editRecipeTitle": "Editează rețeta",
+  "recipeNameHint": "Numele cocktailului",
+  "recipeGlassHint": "Tip pahar (ex. Martini)",
+  "recipeInstructionsHint": "Preparare pas cu pas...",
+  "recipeIngredientHint": "Ingredient",
+  "recipeMeasureHint": "Cantitate (ex. 50 ml)",
+  "addIngredientRow": "Adaugă ingredient",
+  "recipeIngredientsSection": "Ingrediente",
+
+  "settingsTitle": "Setări",
+  "settingsLanguageSection": "Limbă",
+
+  "actionSave": "Salvează",
+  "actionCancel": "Anulează",
+  "actionDelete": "Șterge",
+  "actionAdd": "Adaugă",
+  "actionRetry": "Reîncearcă",
+  "actionConfirmDelete": "Șterge acest element?",
+
+  "menuBuilderTitle": "Constructor meniu",
+  "menuBuilderSubtitle": "Crează un meniu imprimabil",
+  "menuBuilderEmpty": "Niciun favorit pentru meniu",
+  "menuBuilderEmptyHint": "Adaugă mai întâi cocktailuri la Favorite",
+  "menuBuilderVenueHint": "Numele barului / restaurantului",
+  "menuBuilderSelectAll": "Selectează tot",
+  "menuBuilderDeselectAll": "Deselectează tot",
+  "menuBuilderPreview": "Previzualizare PDF",
+  "menuBuilderPrint": "Tipărire",
+  "menuBuilderThemeClassic": "Clasic",
+  "menuBuilderThemeModern": "Modern",
+  "menuBuilderThemeMinimal": "Minimal",
+  "menuBuilderSelected": "{count} cocktailuri selectate",
+  "@menuBuilderSelected": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "priceBookTitle": "Lista de prețuri",
+  "priceBookSubtitle": "Costul ingredientelor",
+  "priceBookEmpty": "Lista de prețuri goală",
+  "priceBookEmptyHint": "Adaugă prețuri pentru a calcula costul cocktailurilor",
+  "priceBookAddTitle": "Adaugă preț",
+  "priceBookEditTitle": "Editează prețul",
+  "priceBookIngredientHint": "Numele ingredientului (ex. Ron Barcelo)",
+  "priceBookBottlePriceHint": "Prețul sticlei (ex. 25)",
+  "priceBookBottlePriceLabel": "Prețul sticlei",
+  "priceBookBottleSizeHint": "Volumul sticlei ml (ex. 700)",
+  "priceBookBottleSizeLabel": "Volum ml",
+  "priceBookCurrencyHint": "Valută (ex. $)",
+  "priceBookCurrencyLabel": "Valută",
+  "priceBookPerMl": "pe ml",
+  "recipeCostSection": "Calculator cost",
+  "recipeCostNotAvailable": "Adaugă prețuri în Lista de prețuri pentru a vedea costul",
+  "recipeCostTotal": "Costul cocktailului",
+  "recipeCostSelling": "Preț de vânzare",
+  "recipeCostMargin": "Marja",
+  "recipeCostSellingHint": "0.00",
+
+  "kioskTitle": "Meniu Digital",
+  "kioskSubtitle": "Meniu interactiv pe tabletă pentru oaspeți",
+  "kioskSetupTitle": "Configurare Kiosk",
+  "kioskSetupHint": "Selectați cocktailuri și setați prețurile pentru oaspeți",
+  "kioskLaunch": "Lansează Kiosk",
+  "kioskSave": "Salvează configurația",
+  "kioskExitTitle": "Ieși din Kiosk?",
+  "kioskExitMessage": "Oaspeții nu vor mai vedea meniul pe acest ecran.",
+  "kioskExitConfirm": "Ieși",
+  "kioskFilterAll": "Toate",
+  "kioskFilterAlcoholic": "Alcoolice",
+  "kioskFilterNonAlcoholic": "Nealcoolice",
+  "kioskEmpty": "Niciun cocktail în meniu",
+  "kioskEmptyHint": "Înapoi și selectați cocktailuri pentru kiosk",
+  "kioskCocktailCount": "{count} cocktailuri",
+  "@kioskCocktailCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "kioskPriceCurrency": "MDL",
+  "kioskCurrencyLabel": "Valută",
+  "kioskSelectCocktail": "Selectați cel puțin un cocktail",
+  "kioskVenueHint": "Bar Alchemy",
+
+  "modeSchool": "ȘCOALA BARTENDER",
+  "modeSchoolSubtitle": "Lecții • Quiz • XP • Diplomă",
+  "modeCocktails": "BAZA DE COCKTAILURI",
+  "modeCocktailsSubtitle": "300+ rețete • Căutare • Favorite",
+  "modeMyBar": "BARUL MEU",
+  "modeMyBarSubtitle": "Constructor • Inventar • Rețete proprii"
+}
