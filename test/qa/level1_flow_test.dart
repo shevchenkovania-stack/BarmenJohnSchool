@@ -815,6 +815,50 @@ void main() {
     }
   });
 
+  testWidgets('Тест терминов: не переполняется после ответа', (tester) async {
+    _silenceFontNoise();
+    final h = await _boot(tester, const SizedBox.shrink(), wisdom: true);
+    final lesson = h.lessons.getLesson('lesson_A_01')!;
+    addTearDown(() => tester.platformDispatcher.clearTextScaleFactorTestValue());
+    for (final scale in const [1.0, 1.3]) {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      for (final size in const [
+        Size(411, 891),
+        Size(360, 640),
+        Size(320, 568),
+      ]) {
+        final label = '${size.width.round()}×${size.height.round()} '
+            'scale $scale';
+        await _boot(
+          tester,
+          TermQuizScreen(lesson: lesson, onComplete: () {}),
+          reuse: h,
+          surface: size,
+          settle: false,
+        );
+        await tester.pump(const Duration(milliseconds: 400));
+        _drain(tester, 'TermQuiz $label');
+        final options = find.descendant(
+          of: find.byType(TermQuizScreen),
+          matching: find.byType(InkWell),
+        );
+        if (_n(options) == 0) {
+          say('[TermQuiz] $label: вариантов ответа нет');
+          continue;
+        }
+        // После ответа появляются подсказка и кнопка «Дальше →» — именно
+        // этот кадр раньше давал RenderFlex overflowed at the bottom.
+        await tester.tap(options.first, warnIfMissed: false);
+        await tester.pump(const Duration(milliseconds: 600));
+        _drain(tester, 'TermQuiz $label answered');
+        if (_n(find.textContaining('Дальше')) == 0 &&
+            _n(find.textContaining('Завершить')) == 0) {
+          say('[TermQuiz] $label: нет кнопки перехода после ответа');
+        }
+      }
+    }
+  });
+
   testWidgets('ДИАГНОСТИКА: что реально на экране урока и практики', (tester) async {
     _silenceFontNoise();
     final h = await _boot(tester, const SizedBox.shrink());

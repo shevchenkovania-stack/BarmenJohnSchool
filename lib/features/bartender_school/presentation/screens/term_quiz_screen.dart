@@ -150,7 +150,10 @@ class _TermQuizScreenState extends State<TermQuizScreen>
       body: JohnRoomBackground(
         room: room,
         child: SafeArea(
-          child: Padding(
+          // Экран прокручивается целиком: после ответа появляются подсказка
+          // и кнопка «Дальше», и фиксированный Column со Spacer уезжал
+          // вниз (RenderFlex overflowed at the bottom).
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
@@ -355,7 +358,7 @@ class _TermQuizScreenState extends State<TermQuizScreen>
                   );
                 }),
 
-                const Spacer(),
+                const SizedBox(height: 24),
 
                 // Feedback + Next button
                 if (_showResult) ...[

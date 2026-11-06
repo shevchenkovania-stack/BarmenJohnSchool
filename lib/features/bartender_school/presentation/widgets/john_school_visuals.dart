@@ -470,6 +470,9 @@ class JohnThemedAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leading,
       title: Text(
         title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: style.onDark,
           fontFamily: 'serif',
