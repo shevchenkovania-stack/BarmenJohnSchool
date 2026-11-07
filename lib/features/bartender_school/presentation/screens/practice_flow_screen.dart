@@ -463,7 +463,16 @@ class _IngredientsStep extends StatelessWidget {
             style:
                 const TextStyle(fontSize: 13, color: AppColors.textSecondary),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
+          // Напарник рядом: подсказывает ход мысли, а не правильный ответ.
+          _JohnWhisper(
+            text: johnPracticeHint(
+              JohnPracticeMoment.ingredients,
+              selectedCount: selected.length,
+              expectedCount: challenge.correctIngredients.length,
+            ),
+          ),
+          const SizedBox(height: 14),
 
           Expanded(
             child: Wrap(
@@ -577,7 +586,9 @@ class _MethodStep extends StatelessWidget {
             'Как будешь готовить?',
             style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
+          _JohnWhisper(text: johnPracticeHint(JohnPracticeMoment.method)),
+          const SizedBox(height: 14),
 
           Expanded(
             child: GridView.count(
@@ -960,6 +971,49 @@ class _AssemblyStep extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ── Джон рядом ──────────────────────────────────────────────────────────────
+
+/// Короткая реплика Джона на шаге практики.
+///
+/// Не плашка «подсказка», а голос напарника: маленький, без рамки,
+/// чтобы не отвлекать от задания.
+class _JohnWhisper extends StatelessWidget {
+  final String text;
+
+  const _JohnWhisper({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipOval(
+          child: Image.asset(
+            'images/barista_john.png',
+            width: 24,
+            height: 24,
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+            errorBuilder: (_, __, ___) => const SizedBox(width: 24),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 12.5,
+              height: 1.4,
+              fontStyle: FontStyle.italic,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

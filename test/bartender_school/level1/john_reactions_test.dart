@@ -82,5 +82,57 @@ void main() {
       expect(daysSince(DateTime(2026, 11, 6, 1), now), 1);
       expect(daysSince(DateTime(2026, 10, 30, 12), now), 8);
     });
+
+    test('подсказка в мастерской реагирует на число выбранного', () {
+      final empty = johnPracticeHint(JohnPracticeMoment.ingredients);
+      final tooMany = johnPracticeHint(
+        JohnPracticeMoment.ingredients,
+        selectedCount: 5,
+        expectedCount: 3,
+      );
+      final exact = johnPracticeHint(
+        JohnPracticeMoment.ingredients,
+        selectedCount: 3,
+        expectedCount: 3,
+      );
+
+      expect(empty, isNot(tooMany));
+      expect(tooMany, isNot(exact));
+      expect(exact, isNot(empty));
+    });
+
+    test('подсказка не называет правильный ответ', () {
+      // Простой запрет: подсказка не должна перечислять ингредиенты —
+      // иначе задание превращается в «спиши со стены».
+      const ingredientWords = ['ром', 'джин', 'водка', 'кампари', 'вермут'];
+
+      final hints = [
+        johnPracticeHint(JohnPracticeMoment.ingredients),
+        johnPracticeHint(
+          JohnPracticeMoment.ingredients,
+          selectedCount: 1,
+          expectedCount: 3,
+        ),
+        johnPracticeHint(
+          JohnPracticeMoment.ingredients,
+          selectedCount: 4,
+          expectedCount: 3,
+        ),
+        johnPracticeHint(
+          JohnPracticeMoment.ingredients,
+          selectedCount: 3,
+          expectedCount: 3,
+        ),
+        johnPracticeHint(JohnPracticeMoment.method),
+      ];
+
+      for (final hint in hints) {
+        final lower = hint.toLowerCase();
+        for (final word in ingredientWords) {
+          expect(lower.contains(word), isFalse,
+              reason: 'подсказка «$hint» называет ингредиент «$word»');
+        }
+      }
+    });
   });
 }
