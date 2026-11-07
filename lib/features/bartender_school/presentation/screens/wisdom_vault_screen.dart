@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import 'package:coin/features/bartender_school/data/lesson_repository.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
-import 'package:coin/features/bartender_school/data/school_config.dart';
 import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 import 'package:coin/features/bartender_school/presentation/screens/lesson_screen.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/wisdom_visuals.dart';
@@ -116,6 +115,10 @@ class _WisdomVaultScreenState extends State<WisdomVaultScreen>
                           progress.isWisdomAvailable(lesson.lessonNumber),
                       canAfford: progress.canAffordWisdom(lesson.lessonNumber),
                       price: progress.getWisdomPrice(lesson.lessonNumber),
+                      requiredLessons:
+                          progress.wisdomRequiredLessons(lesson.lessonNumber),
+                      sequenceLocked: !progress
+                          .isWisdomSequenceUnlocked(lesson.lessonNumber),
                       onTap: () => _openLesson(context, lesson, progress),
                     );
                   },
@@ -407,6 +410,8 @@ class _WisdomMapCard extends StatelessWidget {
   final bool isAvailable;
   final bool canAfford;
   final int price;
+  final int requiredLessons;
+  final bool sequenceLocked;
   final VoidCallback onTap;
 
   const _WisdomMapCard({
@@ -416,6 +421,8 @@ class _WisdomMapCard extends StatelessWidget {
     required this.isAvailable,
     required this.canAfford,
     required this.price,
+    required this.requiredLessons,
+    required this.sequenceLocked,
     required this.onTap,
   });
 
@@ -578,10 +585,10 @@ class _WisdomMapCard extends StatelessWidget {
   String _statusText(bool locked) {
     if (isPurchased) return 'Печать снята • читать';
     if (locked) {
-      final required =
-          BartenderSchoolConfig.wisdomLessonRequirements[lesson.lessonNumber] ??
-              0;
-      return 'Откроется после урока $required';
+      if (sequenceLocked) {
+        return 'Сначала завершите запись ${lesson.lessonNumber - 1}';
+      }
+      return 'Откроется после урока $requiredLessons';
     }
     if (!canAfford) return 'Нужно $price монет';
     return '$price монет • сломать печать';

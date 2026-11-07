@@ -82,15 +82,22 @@ class ProgressService extends ChangeNotifier {
   /// Whether the entire school is completed (all blocks A, B, C done).
   /// Used to gate diploma access.
   bool isSchoolCompleted({required LessonRepository lessonRepo}) {
+    final level1Lessons = lessonRepo.lessons
+        .where((lesson) => const ['A', 'B', 'C'].contains(lesson.blockId))
+        .toList();
+
+    // A partially loaded curriculum must never issue a diploma.
+    if (level1Lessons.length != BartenderSchoolConfig.level1LessonCount) {
+      return false;
+    }
+
     // Check all lessons in blocks A, B, C are completed
-    for (final blockId in ['A', 'B', 'C']) {
-      for (final lesson
-          in lessonRepo.lessons.where((l) => l.blockId == blockId)) {
-        if (getLessonStatus(lesson.id) != LessonStatus.completed) {
-          return false;
-        }
+    for (final lesson in level1Lessons) {
+      if (getLessonStatus(lesson.id) != LessonStatus.completed) {
+        return false;
       }
     }
+
     // Diploma practice must be demonstrated, not merely attempted once.
     return level1DiplomaChallengeIds
         .every((challengeId) => getPracticeStars(challengeId) >= 2);
@@ -102,7 +109,9 @@ class ProgressService extends ChangeNotifier {
     final level2Lessons = lessonRepo.lessons
         .where((lesson) => const ['D', 'E', 'F'].contains(lesson.blockId))
         .toList();
-    if (level2Lessons.length != 12) return false;
+    if (level2Lessons.length != BartenderSchoolConfig.level2LessonCount) {
+      return false;
+    }
     if (level2Lessons.any(
       (lesson) => getLessonStatus(lesson.id) != LessonStatus.completed,
     )) {
@@ -131,23 +140,39 @@ class ProgressService extends ChangeNotifier {
   /// based on lesson progress (not coins).
   int get wisdomLevel {
     int count = 0;
-    for (final entry in BartenderSchoolConfig.wisdomLessonRequirements.entries) {
+    for (final entry
+        in BartenderSchoolConfig.wisdomLessonRequirements.entries) {
       if (completedRegularLessons >= entry.value) count++;
     }
     return count;
   }
 
   /// Total wisdom fragments available.
-  int get wisdomTotal => 7;
+  int get wisdomTotal => BartenderSchoolConfig.wisdomFragmentCount;
+
+  /// How many Level 1 lessons are required to unlock this fragment.
+  int wisdomRequiredLessons(int wisdomNumber) {
+    return BartenderSchoolConfig.wisdomLessonRequirements[wisdomNumber] ?? 999;
+  }
+
+  /// Whether the previous Wisdom fragment has been fully read.
+  ///
+  /// The vault is a story: fragments open one after another, not all at once
+  /// when the next Level 1 milestone is reached.
+  bool isWisdomSequenceUnlocked(int wisdomNumber) {
+    if (wisdomNumber <= 1) return true;
+    final previousId =
+        'lesson_W_${(wisdomNumber - 1).toString().padLeft(2, '0')}';
+    return getLessonStatus(previousId) == LessonStatus.completed;
+  }
 
   /// Whether a wisdom fragment is available for purchase.
-  /// Requires: lesson progress met AND not yet purchased.
+  /// Requires: Level 1 milestone met, previous fragment read, not purchased.
   bool isWisdomAvailable(int wisdomNumber) {
     if (BartenderSchoolConfig.DEBUG_UNLOCK_ALL) return true;
     if (isWisdomPurchased(wisdomNumber)) return false;
-    final requiredLessons =
-        BartenderSchoolConfig.wisdomLessonRequirements[wisdomNumber] ?? 999;
-    return completedRegularLessons >= requiredLessons;
+    if (!isWisdomSequenceUnlocked(wisdomNumber)) return false;
+    return completedRegularLessons >= wisdomRequiredLessons(wisdomNumber);
   }
 
   /// Whether a wisdom fragment has been purchased.
@@ -205,9 +230,8 @@ class ProgressService extends ChangeNotifier {
   /// Проверить, завершён ли весь блок (все уроки блока пройдены).
   bool isBlockCompleted(String blockId) {
     if (_lessonRepo == null) return false;
-    final blockLessons = _lessonRepo.lessons
-        .where((l) => l.blockId == blockId)
-        .toList();
+    final blockLessons =
+        _lessonRepo.lessons.where((l) => l.blockId == blockId).toList();
     if (blockLessons.isEmpty) return false;
     return blockLessons.every(
       (l) => getLessonStatus(l.id) == LessonStatus.completed,
@@ -618,7 +642,8 @@ class ProgressService extends ChangeNotifier {
     }
 
     // Начисляем монеты за практику: 25 монет за каждую новую звезду
-    final coinsEarned = improvedStars * BartenderSchoolConfig.coinsPerPracticeStar;
+    final coinsEarned =
+        improvedStars * BartenderSchoolConfig.coinsPerPracticeStar;
     if (coinsEarned > 0) {
       _progress.coins += coinsEarned;
     }

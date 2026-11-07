@@ -680,6 +680,9 @@ class _SlideWidget extends StatelessWidget {
       case SlideType.barTip:
       case SlideType.failure:
       case SlideType.quote:
+      case SlideType.observation:
+      case SlideType.choice:
+      case SlideType.silence:
         return 'images/barista_john_teach.png';
     }
   }
@@ -928,6 +931,9 @@ class _SlideWidget extends StatelessWidget {
       SlideType.interactive => 'images/ui_icon_play_card.png',
       SlideType.failure => 'images/ui_icon_book_theory.png',
       SlideType.quote => 'images/ui_icon_term_medal.png',
+      SlideType.observation => 'images/ui_icon_book_theory.png',
+      SlideType.choice => 'images/ui_icon_play_card.png',
+      SlideType.silence => 'images/ui_icon_tip_citrus.png',
     };
 
     return SingleChildScrollView(
@@ -1066,6 +1072,22 @@ class _SlideWidget extends StatelessWidget {
                     ),
                   ),
                 ],
+                if (slide.type == SlideType.choice && slide.choices.isNotEmpty)
+                  _WisdomChoiceList(choices: slide.choices),
+                if (slide.type == SlideType.silence)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 22),
+                    child: Center(
+                      child: Text(
+                        '◆ ◆ ◆',
+                        style: TextStyle(
+                          color: WisdomPalette.antiqueGold,
+                          fontSize: 13,
+                          letterSpacing: 6,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -1390,6 +1412,153 @@ class _WisdomPaperCard extends StatelessWidget {
   }
 }
 
+/// Сцена из записной книжки: варианты хода и объяснение выбранного.
+///
+/// Ошибка здесь ничего не блокирует и не отнимает очки — это разговор с
+/// Джоном, а не экзамен. Поэтому после выбора показываются все объяснения.
+class _WisdomChoiceList extends StatefulWidget {
+  final List<SlideChoice> choices;
+
+  const _WisdomChoiceList({required this.choices});
+
+  @override
+  State<_WisdomChoiceList> createState() => _WisdomChoiceListState();
+}
+
+class _WisdomChoiceListState extends State<_WisdomChoiceList> {
+  String? _pickedId;
+
+  /// В части сцен верных ходов несколько: у сервиса не всегда один
+  /// правильный ответ. Говорим об этом заранее, чтобы выбор не выглядел
+  /// ловушкой.
+  String _rightMovesHint() {
+    final right = widget.choices.where((choice) => choice.isCorrect).length;
+    return right > 1
+        ? 'Выбери свой ход. Верных решений здесь может быть больше одного.'
+        : 'Выбери свой ход. Верное решение одно.';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        const Text(
+          'ТВОЙ ХОД',
+          style: TextStyle(
+            color: WisdomPalette.oldGold,
+            fontSize: 11,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.2,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          _rightMovesHint(),
+          style: const TextStyle(
+            color: WisdomPalette.ink,
+            fontSize: 13,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...widget.choices.map((choice) {
+          final picked = _pickedId == choice.id;
+          final revealed = _pickedId != null;
+          final marksRight = revealed && choice.isCorrect;
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: revealed
+                  ? null
+                  : () => setState(() => _pickedId = choice.id),
+              child: Container(
+                padding: const EdgeInsets.all(13),
+                decoration: BoxDecoration(
+                  color: marksRight
+                      ? WisdomPalette.antiqueGold.withAlpha(38)
+                      : picked
+                          ? WisdomPalette.wax.withAlpha(24)
+                          : WisdomPalette.parchmentLight.withAlpha(90),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: marksRight
+                        ? WisdomPalette.antiqueGold
+                        : picked
+                            ? WisdomPalette.wax
+                            : WisdomPalette.parchmentDark,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            choice.text,
+                            style: const TextStyle(
+                              color: WisdomPalette.ink,
+                              fontSize: 15,
+                              height: 1.45,
+                            ),
+                          ),
+                        ),
+                        if (marksRight)
+                          const Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Icon(Icons.check_circle,
+                                size: 18, color: WisdomPalette.oldGold),
+                          ),
+                      ],
+                    ),
+                    if (revealed &&
+                        choice.explanation != null &&
+                        choice.explanation!.trim().isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        choice.explanation!,
+                        style: const TextStyle(
+                          color: WisdomPalette.oldGold,
+                          fontSize: 14,
+                          height: 1.45,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          );
+        }),
+        if (_pickedId != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => setState(() => _pickedId = null),
+                  child: const Text(
+                    'Пройти сцену ещё раз',
+                    style: TextStyle(
+                      color: WisdomPalette.oldGold,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
 class _WisdomMentorNoteCard extends StatelessWidget {
   final String text;
   final String assetPath;
@@ -1522,6 +1691,15 @@ class _SlideTypeIcon extends StatelessWidget {
         break;
       case SlideType.quote:
         assetPath = 'images/ui_icon_term_medal.png';
+        break;
+      case SlideType.observation:
+        assetPath = 'images/ui_icon_book_theory.png';
+        break;
+      case SlideType.choice:
+        assetPath = 'images/ui_icon_play_card.png';
+        break;
+      case SlideType.silence:
+        assetPath = 'images/ui_icon_tip_citrus.png';
         break;
     }
 

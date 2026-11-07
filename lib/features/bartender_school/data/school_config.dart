@@ -5,6 +5,13 @@ class BartenderSchoolConfig {
   /// Set to false in production.
   static const bool DEBUG_UNLOCK_ALL = false; // Production mode
 
+  /// Expected number of lessons in each level.
+  static const int level1LessonCount = 13;
+  static const int level2LessonCount = 12;
+
+  /// Number of Wisdom fragments in the vault.
+  static const int wisdomFragmentCount = 7;
+
   /// XP earned per completed lesson (cumulative, for rank)
   static const int xpPerLesson = 50;
 

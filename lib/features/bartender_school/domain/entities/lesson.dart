@@ -104,6 +104,11 @@ class LessonSlide {
   final String? mentorNote;
   final String? author;
 
+  /// Варианты для слайда-выбора (`SlideType.choice`).
+  ///
+  /// Пусто для остальных типов слайдов.
+  final List<SlideChoice> choices;
+
   LessonSlide({
     required this.type,
     required this.title,
@@ -112,22 +117,68 @@ class LessonSlide {
     this.bulletPoints,
     this.mentorNote,
     this.author,
+    this.choices = const [],
   });
 
   factory LessonSlide.fromJson(Map<String, dynamic> json) {
+    final rawChoices = json['choices'];
     return LessonSlide(
-      type: SlideType.values.firstWhere(
-        (e) => e.toString() == 'SlideType.${json['type']}',
-        orElse: () => SlideType.theory,
-      ),
+      type: _slideTypeFrom(json['type'] as String?),
       title: json['title'] as String,
       content: json['content'] as String,
       imageUrl: json['imageUrl'] as String?,
       bulletPoints: (json['bulletPoints'] as List?)?.cast<String>(),
       mentorNote: json['mentorNote'] as String?,
       author: json['author'] as String?,
+      choices: rawChoices is List && rawChoices.isNotEmpty
+          ? rawChoices
+              .map((c) => SlideChoice.fromJson(Map<String, dynamic>.from(c)))
+              .toList()
+          : const [],
     );
   }
+}
+
+/// Один вариант ответа на слайде-выборе.
+class SlideChoice {
+  final String id;
+  final String text;
+  final bool isCorrect;
+  final String? explanation;
+
+  const SlideChoice({
+    required this.id,
+    required this.text,
+    this.isCorrect = false,
+    this.explanation,
+  });
+
+  factory SlideChoice.fromJson(Map<String, dynamic> json) {
+    return SlideChoice(
+      id: json['id'] as String? ?? '',
+      text: json['text'] as String? ?? '',
+      isCorrect: json['isCorrect'] as bool? ?? false,
+      explanation: json['explanation'] as String?,
+    );
+  }
+}
+
+/// Разбор строкового типа слайда в [SlideType].
+///
+/// Неизвестный тип — это ошибка данных, а не повод молча показать
+/// «теорию»: раньше `observation`, `choice` и `silence` из уроков мудрости
+/// так и теряли свой вид. Теперь такой слайд отображается как теория, но о
+/// проблеме сообщается в консоль, чтобы её поймали до релиза.
+SlideType _slideTypeFrom(String? raw) {
+  final name = (raw ?? '').trim();
+  for (final type in SlideType.values) {
+    if (type.name == name) return type;
+  }
+  if (name.isNotEmpty) {
+    // ignore: avoid_print
+    print('⚠️ Неизвестный тип слайда "$name" — показан как теория');
+  }
+  return SlideType.theory;
 }
 
 /// Types of lesson slides.
@@ -142,4 +193,7 @@ enum SlideType {
   interactive, // Interactive calibration with sliders (acid dose)
   failure, // «Моя ошибка» — личная история-провал Джона
   quote, // «Золотое правило» — цитата с автором
+  observation, // «Барменский радар» — что видеть в госте
+  choice, // Сцена с выбором: один правильный ход из нескольких
+  silence, // Пауза: короткий слайд-вдох без задания
 }
