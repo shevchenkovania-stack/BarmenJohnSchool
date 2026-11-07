@@ -1,0 +1,17 @@
+# Образец ключа подписи релиза.
+#
+# Как пользоваться:
+#   1. Создать ключ (один раз, хранить в надёжном месте):
+#      keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA \
+#              -keysize 2048 -validity 10000 -alias upload
+#   2. Скопировать этот файл в android/key.properties и заполнить значения.
+#   3. Положить .jks рядом (android/app/upload-keystore.jks) или указать
+#      абсолютный путь в storeFile.
+#
+# Файлы key.properties, *.jks и *.keystore уже в android/.gitignore —
+# в репозиторий они не попадут.
+
+storeFile=app/upload-keystore.jks
+storePassword=ЗАМЕНИТЬ
+keyAlias=upload
+keyPassword=ЗАМЕНИТЬ

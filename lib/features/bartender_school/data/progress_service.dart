@@ -458,7 +458,10 @@ class ProgressService extends ChangeNotifier {
     }
   }
 
-  /// Resets all progress (for testing).
+  /// Сбрасывает прогресс школы.
+  ///
+  /// Используется кнопкой «Начать обучение заново» в «О приложении»:
+  /// удаляет сохранение прогресса, чтобы экран перечитал пустое состояние.
   Future<void> resetProgress() async {
     _progress = SchoolProgress.empty();
     await _prefs.remove('bartender_school_progress');

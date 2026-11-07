@@ -1,4 +1,4 @@
-package com.example.coin
+package com.shevchenkovania.bartenderschool
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -7,6 +7,7 @@ import 'package:coin/core/services/cocktail_cache_service.dart';
 import 'package:coin/core/services/thumbnail_preloader_service.dart';
 import 'package:coin/core/repositories/cocktail_repository.dart';
 import 'package:coin/core/theme/app_theme.dart';
+import 'package:coin/features/settings/view/about_screen.dart';
 
 /// Экран настроек приложения.
 ///
@@ -211,6 +212,28 @@ class SettingsScreen extends StatelessWidget {
           _DatabaseManagementTile(),
 
           const Divider(height: 32),
+
+          // ── Секция «О приложении» ──────────────────────────────────────────
+          ListTile(
+            leading: const Icon(Icons.info_outline, color: AppColors.primary),
+            title: const Text(
+              'О приложении',
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            subtitle: const Text(
+              'Версия, где хранятся данные, начало заново',
+              style: TextStyle(fontSize: 12),
+            ),
+            trailing: const Icon(Icons.chevron_right,
+                color: AppColors.textSecondary),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const AboutScreen()),
+            ),
+          ),
+          const SizedBox(height: 20),
         ],
       ),
     );
