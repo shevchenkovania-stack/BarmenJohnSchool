@@ -5,8 +5,10 @@
 1. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — единая каноническая память проекта.
 2. [MASTER_PLAN.md](MASTER_PLAN.md) — порядок работ, Definition of Done и текущий статус.
 3. [RELEASE_QA_CHECKLIST.md](RELEASE_QA_CHECKLIST.md) — приёмка перед первым релизом: блокеры сборки, чек-лист по каждому экрану, кнопкам и текстам.
-4. [review/00_INDEX.md](review/00_INDEX.md) — критический аудит пятью ревьюерами (дизайн, бармен, редактор, методист, продакт) и решения по каталогу коктейлей и AI.
-5. [08_LEVEL2_IMPLEMENTATION.md](08_LEVEL2_IMPLEMENTATION.md) — реализованный Level 2, источники, практика, изображения и проверка.
+4. [RELEASE_STAGES_V1_RU.md](RELEASE_STAGES_V1_RU.md) — ветка `release/v1-ru`: что сделано по этапам и что осталось до публикации.
+5. [GAMIFICATION_PLAN.md](GAMIFICATION_PLAN.md) — план «живого приложения»: реплики Джона, свет комнаты, недельный контракт, фан без пошлости.
+6. [review/00_INDEX.md](review/00_INDEX.md) — критический аудит пятью ревьюерами (дизайн, бармен, редактор, методист, продакт) и решения по каталогу коктейлей и AI.
+7. [08_LEVEL2_IMPLEMENTATION.md](08_LEVEL2_IMPLEMENTATION.md) — реализованный Level 2, источники, практика, изображения и проверка.
 
 ## Тематические документы
 
