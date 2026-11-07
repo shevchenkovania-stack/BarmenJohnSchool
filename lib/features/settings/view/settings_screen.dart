@@ -7,66 +7,24 @@ import 'package:coin/core/services/cocktail_cache_service.dart';
 import 'package:coin/core/services/thumbnail_preloader_service.dart';
 import 'package:coin/core/repositories/cocktail_repository.dart';
 import 'package:coin/core/theme/app_theme.dart';
-import 'package:coin/l10n/app_localizations.dart';
 
 /// Экран настроек приложения.
 ///
-/// Содержит переключатель языка, размер шрифта, единицы измерения, базу рецептов.
+/// Содержит размер шрифта, единицы измерения и базу рецептов. Язык в v1
+/// не переключается — интерфейс только русский (см.
+/// `docs/review/06_AI_SCOPE_DECISION.md` и `docs/RELEASE_QA_CHECKLIST.md`).
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final settings = context.watch<SettingsService>();
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: Text(l10n.settingsTitle)),
+      appBar: AppBar(title: const Text('Настройки')),
       body: ListView(
         children: [
-          // ── Секция "Язык" ────────────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-            child: Text(
-              l10n.settingsLanguageSection.toUpperCase(),
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 11,
-                letterSpacing: 1.4,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-
-          // Список языков — каждый с радио-кружком
-          ...SettingsService.supportedLanguages.map(
-            (lang) {
-              final (code, displayName) = lang;
-              final isSelected = settings.locale.languageCode == code;
-
-              return RadioListTile<String>(
-                value: code,
-                groupValue: settings.locale.languageCode,
-                onChanged: (value) {
-                  if (value != null) settings.setLocale(value);
-                },
-                title: Text(
-                  displayName,
-                  style: TextStyle(
-                    // Выбранный язык — золотой, остальные обычный
-                    color:
-                        isSelected ? AppColors.primary : AppColors.textPrimary,
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.normal,
-                  ),
-                ),
-                activeColor: AppColors.primary,
-              );
-            },
-          ),
-          const Divider(height: 32),
-
           // ── Секция "Размер шрифта" ───────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),

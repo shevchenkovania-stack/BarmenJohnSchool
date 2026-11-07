@@ -652,7 +652,7 @@ class CertificateDocument extends StatelessWidget {
   String get _bodyText {
     switch (level) {
       case 1:
-        return 'Подтверждает успешное прохождение базового курса\nбарменского мастерства и освоение основ баланса коктейлей.';
+        return 'Подтверждает успешное прохождение базового курса\nбарменского мастерства и освоение основ баланса коктейлей.\nЭто учебный диплом, а не лицензия на продажу алкоголя.';
       case 2:
         return 'Подтверждает профессиональное владение техниками\nзамены ингредиентов и сочетания вкусов.';
       case 3:
@@ -701,7 +701,7 @@ class CertificateDocument extends StatelessWidget {
             Positioned.fill(
               child: Center(
                 child: Text(
-                  'JR',
+                  'JD',
                   style: GoogleFonts.cinzel(
                     fontSize: 120,
                     fontWeight: FontWeight.w900,
