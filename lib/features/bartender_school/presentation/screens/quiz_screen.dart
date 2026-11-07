@@ -7,6 +7,7 @@ import 'package:coin/features/bartender_school/data/quiz_repository.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/block_rewards.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
+import 'package:coin/features/bartender_school/domain/entities/progress.dart';
 import 'package:coin/features/bartender_school/domain/entities/quiz.dart';
 import 'package:coin/features/bartender_school/domain/services/quiz_answer_evaluator.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/block_reward_dialog.dart';
@@ -274,7 +275,15 @@ class _QuizScreenState extends State<QuizScreen> {
         Provider.of<ProgressService>(context, listen: false);
     final percentage =
         _questions.isEmpty ? 100 : (_score / _questions.length * 100);
-    final passed = percentage >= BartenderSchoolConfig.quizPassingScore;
+
+    // Порог берём из данных квиза (passingScore — число верных ответов),
+    // а если его там нет — общий процент школы. Так один и тот же урок
+    // не может «провалиться» из-за разного числа вопросов в попытке.
+    final quiz = context.read<QuizRepository>().getQuiz(widget.lessonId);
+    final requiredCorrect = quiz?.passingScore;
+    final passed = requiredCorrect != null
+        ? _score >= requiredCorrect
+        : percentage >= BartenderSchoolConfig.quizPassingScore;
     final xpEarned = passed ? BartenderSchoolConfig.xpPerLesson : 0;
 
     // Coins earned based on performance (base + quiz bonus)
@@ -324,6 +333,11 @@ class _QuizScreenState extends State<QuizScreen> {
 
     // Calculate trophies based on score
     final trophies = (percentage / 100 * 3).round();
+    // Повторный проход не должен превращать уже засчитанный урок в
+    // «проваленный»: статус и XP не откатываются.
+    final alreadyCompleted =
+        progressService.getLessonStatus(widget.lessonId) ==
+            LessonStatus.completed;
     final lesson = Provider.of<LessonRepository>(
       context,
       listen: false,
@@ -367,7 +381,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 const SizedBox(height: 16),
                 // Title
                 Text(
-                  passed ? 'УРОВЕНЬ ПРОЙДЕН!' : 'ПОПРОБУЙ ЕЩЁ!',
+                  passed ? 'УРОК ЗАСЧИТАН' : 'ПОПРОБУЙ ЕЩЁ!',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -405,6 +419,32 @@ class _QuizScreenState extends State<QuizScreen> {
                           color: passed ? Colors.green : Colors.orange,
                         ),
                       ),
+                      // Если урок уже был засчитан, провал попытки ничего
+                      // не отменяет — говорим об этом прямо, чтобы ученик
+                      // не думал, что потерял прогресс.
+                      if (!passed && alreadyCompleted)
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text(
+                            'Урок уже засчитан — прогресс сохранён.\nЭту попытку можно считать тренировкой.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      if (passed && requiredCorrect != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            'Порог урока: $requiredCorrect из ${_questions.length}',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

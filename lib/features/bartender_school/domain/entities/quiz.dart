@@ -4,10 +4,17 @@ class Quiz {
   final List<QuizQuestion> questionPool;
   final int questionsPerAttempt;
 
+  /// Минимальное число верных ответов, чтобы засчитать урок.
+  ///
+  /// null — в данных порог не задан, тогда используется общий процент
+  /// из `BartenderSchoolConfig.quizPassingScore`.
+  final int? passingScore;
+
   Quiz({
     required this.lessonId,
     required this.questionPool,
     this.questionsPerAttempt = 5,
+    this.passingScore,
   });
 
   factory Quiz.fromJson(Map<String, dynamic> json) {
@@ -17,6 +24,7 @@ class Quiz {
           .map((q) => QuizQuestion.fromJson(q))
           .toList(),
       questionsPerAttempt: json['questionsPerAttempt'] as int? ?? 5,
+      passingScore: json['passingScore'] as int?,
     );
   }
 }

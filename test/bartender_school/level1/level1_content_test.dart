@@ -57,6 +57,40 @@ void main() {
       expect(quizLessonIds, equals(lessonIds));
     });
 
+    test('every Level 1 quiz declares a passing score inside the attempt', () {
+      for (final quiz in quizzes) {
+        final attempt = quiz['questionsPerAttempt'] as int;
+        final passing = quiz['passingScore'] as int?;
+
+        expect(
+          passing,
+          isNotNull,
+          reason: '${quiz['lessonId']} has no passingScore, so the pass/fail '
+              'rule silently falls back to a percentage',
+        );
+        // Порог — около 75% попытки: не ниже двух третей и не выше попытки.
+        expect(
+          passing!,
+          inInclusiveRange((attempt * 2 / 3).ceil(), attempt),
+          reason: '${quiz['lessonId']}: $passing из $attempt',
+        );
+      }
+    });
+
+    test('quiz thresholds match the numbers promised in lessons', () {
+      final exam = quizzes.singleWhere(
+        (quiz) => quiz['lessonId'] == 'lesson_C_12',
+      );
+      final attempt = exam['questionsPerAttempt'] as int;
+      final passing = exam['passingScore'] as int;
+
+      // В тексте экзамена обещано 70%; в данных — целое число вопросов.
+      // Проверяем, что честное округление даёт ровно 70% ± 1 вопрос.
+      final percent = passing / attempt * 100;
+      expect(percent, inInclusiveRange(65, 80),
+          reason: 'exam threshold $passing/$attempt = $percent%');
+    });
+
     test('uses valid unlock prerequisites', () {
       final lessonIds = lessons.map((lesson) => lesson['id']).toSet();
 

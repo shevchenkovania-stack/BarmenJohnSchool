@@ -4,6 +4,7 @@
     "title": "Проверь свою палитру",
     "estimatedMinutes": 3,
     "questionsPerAttempt": 7,
+    "passingScore": 5,
     "questions": [
       {
         "id": "q_01_01",
@@ -114,6 +115,7 @@
   {
     "lessonId": "lesson_A_02",
     "questionsPerAttempt": 5,
+    "passingScore": 4,
     "questions": [
       {
         "id": "q_02_01",
@@ -290,6 +292,7 @@
   {
     "lessonId": "lesson_A_03",
     "questionsPerAttempt": 5,
+    "passingScore": 4,
     "questions": [
       {
         "id": "q_03_01",
@@ -466,6 +469,7 @@
   {
     "lessonId": "lesson_A_04",
     "questionsPerAttempt": 5,
+    "passingScore": 4,
     "questions": [
       {
         "id": "q_04_01",
@@ -1060,6 +1064,7 @@
     "title": "Твоя станция",
     "estimatedMinutes": 3,
     "questionsPerAttempt": 5,
+    "passingScore": 4,
     "questions": [
       {
         "id": "q_b09_01",
