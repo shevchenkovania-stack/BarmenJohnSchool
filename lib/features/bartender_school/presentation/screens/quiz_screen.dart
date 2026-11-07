@@ -7,6 +7,7 @@ import 'package:coin/features/bartender_school/data/quiz_repository.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/block_rewards.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
+import 'package:coin/features/bartender_school/data/john_reactions.dart';
 import 'package:coin/features/bartender_school/domain/entities/progress.dart';
 import 'package:coin/features/bartender_school/domain/entities/quiz.dart';
 import 'package:coin/features/bartender_school/domain/services/quiz_answer_evaluator.dart';
@@ -284,6 +285,22 @@ class _QuizScreenState extends State<QuizScreen> {
     final passed = requiredCorrect != null
         ? _score >= requiredCorrect
         : percentage >= BartenderSchoolConfig.quizPassingScore;
+
+    // Сколько раз этот квиз уже проваливали до текущей попытки: от этого
+    // зависит, что Джон скажет — «пойдём ещё раз» или «дело не в памяти».
+    final failedBefore = progressService.quizFailedAttempts(widget.lessonId);
+    if (!passed) progressService.registerQuizFailure(widget.lessonId);
+
+    // Реплика Джона вместо безликого «Попробуй ещё»: он не оценивает
+    // результат, а предлагает следующий шаг.
+    final johnLine = johnReaction(
+      passed
+          ? JohnMoment.quizPassed
+          : (failedBefore == 0
+              ? JohnMoment.quizFailedFirstTime
+              : JohnMoment.quizFailedAgain),
+      JohnContext(failedAttemptsBefore: failedBefore, streak: progressService.streak),
+    );
     final xpEarned = passed ? BartenderSchoolConfig.xpPerLesson : 0;
 
     // Coins earned based on performance (base + quiz bonus)
@@ -388,7 +405,41 @@ class _QuizScreenState extends State<QuizScreen> {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 14),
+                // Джон говорит по делу: не «молодец», а что делать дальше.
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withAlpha(18),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.primary.withAlpha(70)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'images/barista_john.png',
+                        width: 28,
+                        height: 28,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
+                        errorBuilder: (_, __, ___) => const SizedBox(width: 28),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          johnLine,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            height: 1.4,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 18),
                 // Score display
                 Container(
                   padding: const EdgeInsets.all(16),

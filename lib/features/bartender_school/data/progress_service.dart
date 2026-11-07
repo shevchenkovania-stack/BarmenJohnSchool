@@ -465,7 +465,28 @@ class ProgressService extends ChangeNotifier {
   Future<void> resetProgress() async {
     _progress = SchoolProgress.empty();
     await _prefs.remove('bartender_school_progress');
+    // Счётчики провалов живут отдельно — их тоже нужно убрать, иначе
+    // после сброса Джон начнёт разговор с «третий раз».
+    final keys = _prefs.getKeys().where((k) => k.startsWith(_quizFailKey));
+    for (final key in keys.toList()) {
+      await _prefs.remove(key);
+    }
     notifyListeners();
+  }
+
+  // ── Провалы квизов ───────────────────────────────────────────────────────
+
+  static const String _quizFailKey = 'quiz_failed_';
+
+  /// Сколько раз ученик проваливал квиз урока.
+  int quizFailedAttempts(String lessonId) =>
+      _prefs.getInt('$_quizFailKey$lessonId') ?? 0;
+
+  /// Отмечает провал квиза. Нужен только для тона Джона: на прогресс,
+  /// XP и доступ к урокам не влияет.
+  void registerQuizFailure(String lessonId) {
+    final next = quizFailedAttempts(lessonId) + 1;
+    _prefs.setInt('$_quizFailKey$lessonId', next);
   }
 
   // ── Daily Cocktail Tracking ──────────────────────────────────────────────

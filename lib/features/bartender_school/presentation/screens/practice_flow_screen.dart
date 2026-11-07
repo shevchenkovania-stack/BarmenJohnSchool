@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/practice_challenges.dart';
+import 'package:coin/features/bartender_school/data/john_reactions.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
 
@@ -1206,8 +1207,11 @@ class _ResultStep extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    result!.feedbackText,
-                    style: TextStyle(
+                    // Разбор ошибки + короткая реплика Джона по числу звёзд:
+                    // сухая техника без второго голоса ощущалась как чек-лист.
+                    '${result!.feedbackText}\n\n'
+                    '${johnReaction(JohnMoment.cocktailBuilt, JohnContext(stars: result!.stars))}',
+                    style: const TextStyle(
                       fontSize: 13,
                       color: AppColors.textPrimary,
                       height: 1.45,

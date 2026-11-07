@@ -2,11 +2,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:coin/core/models/cocktail.dart';
 import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/home/home_viewmodel.dart';
 import 'package:coin/l10n/app_localizations.dart';
+import 'package:coin/features/bartender_school/data/john_reactions.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/presentation/screens/level1_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/glossary_screen.dart';
@@ -45,12 +47,15 @@ class HomeScreen extends StatelessWidget {
         room: JohnSchoolRoom.foyer,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final isCompactHeight = constraints.maxHeight < 560;
+            // Порог поднят с 560: карточка Джона добавила строку, и на
+            // экранах 640 px высотой фиксированная колонка упиралась в низ.
+            final isCompactHeight = constraints.maxHeight < 640;
             final children = <Widget>[
               _SchoolHeroHeader(topPad: topPad),
-              const SizedBox(height: 16),
+              const _JohnSays(),
+              const SizedBox(height: 12),
               if (isCompactHeight)
-                SizedBox(height: 260, child: dailyChallenge)
+                SizedBox(height: 240, child: dailyChallenge)
               else
                 Expanded(child: dailyChallenge),
               const SizedBox(height: 16),
@@ -188,8 +193,131 @@ class _SchoolHeroHeader extends StatelessWidget {
   }
 }
 
-// ── Level Cards Row (горизонтальная линия) ────────────────────────────────────
+// ── Джон говорит ─────────────────────────────────────────────────────────────
 
+/// Короткая реплика Джона под шапкой.
+///
+/// Это первый слой «живого приложения»: текст зависит от того, когда человек
+/// заходил в последний раз и какая у него серия. Никакой случайности — при
+/// одном и том же состоянии фраза одна и та же, поэтому её можно проверить.
+class _JohnSays extends StatefulWidget {
+  const _JohnSays();
+
+  @override
+  State<_JohnSays> createState() => _JohnSaysState();
+}
+
+class _JohnSaysState extends State<_JohnSays> {
+  static const _lastVisitKey = 'john_last_visit_day';
+
+  String _text = '';
+  bool _ready = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _pickLine());
+  }
+
+  Future<void> _pickLine() async {
+    if (!mounted) return;
+    final progress = context.read<ProgressService>();
+    final prefs = context.read<SharedPreferences>();
+    final now = DateTime.now();
+
+    final lastRaw = prefs.getString(_lastVisitKey);
+    final lastVisit = lastRaw == null ? null : DateTime.tryParse(lastRaw);
+    final gap = daysSince(lastVisit, now);
+
+    final JohnMoment moment;
+    if (progress.completedRegularLessons == 0 && (gap == null || gap > 0)) {
+      moment = JohnMoment.freshStart;
+    } else if (gap == null) {
+      moment = JohnMoment.freshStart;
+    } else if (gap == 0) {
+      moment = JohnMoment.returningToday;
+    } else if (gap >= 2) {
+      moment = JohnMoment.returningAfterBreak;
+    } else {
+      moment = JohnMoment.streak;
+    }
+
+    // Запоминаем сегодняшний день уже после выбора фразы, иначе повторный
+    // заход сегодня выглядел бы как «вернулся после паузы».
+    await prefs.setString(
+      _lastVisitKey,
+      DateTime(now.year, now.month, now.day).toIso8601String(),
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _text = johnReaction(
+        moment,
+        JohnContext(streak: progress.streak, daysSinceLastVisit: gap),
+      );
+      _ready = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final style = JohnRoomStyle.forRoom(JohnSchoolRoom.foyer);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: style.surface.withAlpha(190),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: style.accent.withAlpha(90)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipOval(
+              child: Image.asset(
+                'images/barista_john.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                errorBuilder: (_, __, ___) => const SizedBox(width: 32),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ДЖОН',
+                    style: TextStyle(
+                      color: style.accent,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    _ready ? _text : 'Джон протирает стойку…',
+                    style: TextStyle(
+                      color: style.onDark,
+                      fontSize: 13,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Level Cards Row (горизонтальная линия) ────────────────────────────────────
 class _LevelCardsRow extends StatelessWidget {
   const _LevelCardsRow();
 
