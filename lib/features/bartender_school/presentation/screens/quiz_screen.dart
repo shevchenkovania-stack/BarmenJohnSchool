@@ -529,7 +529,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     'Вы прошли урок!',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Color(0xFFB8A8D8),
+                      color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -574,7 +574,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           child: Text(
                             'Не сдавайся! Попробуй ещё раз — повтори материал урока.',
                             style: TextStyle(
-                                fontSize: 14, color: Color(0xFFB8A8D8)),
+                                fontSize: 14, color: AppColors.textSecondary),
                           ),
                         ),
                       ],
@@ -594,23 +594,28 @@ class _QuizScreenState extends State<QuizScreen> {
                   height: 56,
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: passed
-                          ? const LinearGradient(
-                              colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )
-                          : const LinearGradient(
-                              colors: [Color(0xFFFF6B9D), Color(0xFFFF8E53)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
+                      // Бирюза/розовый были из другого (неонового) набора и
+                      // спорили с золотом школы. Держим одну палитру: золото
+                      // для успеха, янтарь для «попробуй ещё».
+                      gradient: LinearGradient(
+                        colors: passed
+                            ? const [
+                                Color(0xFFD9A54A),
+                                Color(0xFFB8821A),
+                              ]
+                            : const [
+                                Color(0xFFD0824A),
+                                Color(0xFF9E5A2A),
+                              ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
                           color: (passed
-                                  ? const Color(0xFF4ECDC4)
-                                  : const Color(0xFFFF6B9D))
+                                  ? const Color(0xFFD9A54A)
+                                  : const Color(0xFFD0824A))
                               .withAlpha(80),
                           blurRadius: 16,
                           offset: const Offset(0, 6),
@@ -686,13 +691,14 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _buildMatchingQuestion(QuizQuestion question) {
+    final style = _currentStyle;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Выбери пару для каждой карточки:',
           style: TextStyle(
-            color: AppColors.textSecondary,
+            color: style.onDark.withAlpha(185),
             fontSize: 16,
           ),
         ),
@@ -712,12 +718,12 @@ class _QuizScreenState extends State<QuizScreen> {
                   ? (isPairCorrect
                       ? Colors.green.withAlpha(30)
                       : Colors.red.withAlpha(30))
-                  : AppColors.surface,
+                  : style.surfaceLight.withAlpha(150),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: _answered
                     ? (isPairCorrect ? Colors.green : Colors.red)
-                    : AppColors.divider,
+                    : style.accent.withAlpha(120),
                 width: 2,
               ),
             ),
@@ -726,23 +732,38 @@ class _QuizScreenState extends State<QuizScreen> {
               children: [
                 Text(
                   left,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: style.onDark,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 10),
                 InputDecorator(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Соответствие',
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: style.onDark.withAlpha(170)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: style.accent.withAlpha(120),
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: style.accent),
+                    ),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       value: selectedRight,
                       isExpanded: true,
-                      hint: const Text('Выбери вариант'),
+                      dropdownColor: style.surfaceLight,
+                      style: TextStyle(color: style.onDark, fontSize: 15),
+                      hint: Text(
+                        'Выбери вариант',
+                        style: TextStyle(color: style.onDark.withAlpha(140)),
+                      ),
                       items: _matchingOptions
                           .map(
                             (option) => DropdownMenuItem<String>(
@@ -766,8 +787,10 @@ class _QuizScreenState extends State<QuizScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Правильно: $correctRight',
-                    style: const TextStyle(
-                      color: Colors.green,
+                    style: TextStyle(
+                      color: style.ink.computeLuminance() > 0.5
+                          ? const Color(0xFF9ED97B)
+                          : const Color(0xFF2F7A3D),
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                     ),
@@ -787,12 +810,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   : null,
               icon: const Icon(Icons.check),
               label: const Text('Проверить пары'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              style: _buttonStyle(style),
             ),
           ),
       ],
@@ -800,13 +818,14 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _buildMultipleChoiceQuestion(QuizQuestion question) {
+    final style = _currentStyle;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Можно выбрать несколько ответов:',
           style: TextStyle(
-            color: AppColors.textSecondary,
+            color: style.onDark.withAlpha(185),
             fontSize: 14,
             fontStyle: FontStyle.italic,
           ),
@@ -830,13 +849,15 @@ class _QuizScreenState extends State<QuizScreen> {
               borderColor = Colors.red;
               backgroundColor = Colors.red.withAlpha(30);
             } else {
-              borderColor = AppColors.divider;
+              borderColor = style.onDark.withAlpha(60);
               backgroundColor = Colors.transparent;
             }
           } else {
-            borderColor = isSelected ? AppColors.primary : AppColors.divider;
+            borderColor = isSelected
+                ? style.accent
+                : style.onDark.withAlpha(60);
             backgroundColor = isSelected
-                ? AppColors.primary.withAlpha(30)
+                ? style.accent.withAlpha(30)
                 : Colors.transparent;
           }
 
@@ -866,8 +887,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       Expanded(
                         child: Text(
                           option,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: style.onDark,
                             fontSize: 15,
                           ),
                         ),
@@ -890,17 +911,32 @@ class _QuizScreenState extends State<QuizScreen> {
                       : null,
               icon: const Icon(Icons.check),
               label: const Text('Проверить'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              style: _buttonStyle(style),
             ),
           ),
       ],
     );
   }
+
+  /// Цвета комнаты Джона для экрана квиза: тело экрана лежит на деревянной
+  /// панели, поэтому дефолтные фиолетовые подписи темы здесь выпадают из
+  /// палитры.
+  JohnRoomStyle get _currentStyle {
+    final lesson =
+        context.read<LessonRepository>().getLesson(widget.lessonId);
+    return JohnRoomStyle.forRoom(JohnRoomStyle.roomForBlock(lesson?.blockId));
+  }
+
+  ButtonStyle _buttonStyle(JohnRoomStyle style) => ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        backgroundColor: style.accent,
+        foregroundColor: style.ink,
+        disabledBackgroundColor: style.accent.withAlpha(60),
+        disabledForegroundColor: style.ink.withAlpha(140),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
 
   void _checkMultipleChoice() {
     if (_answered) return;
@@ -927,13 +963,14 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _buildSequenceQuestion(QuizQuestion question) {
+    final style = _currentStyle;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Расставь шаги в правильном порядке:',
           style: TextStyle(
-            color: AppColors.textSecondary,
+            color: style.onDark.withAlpha(185),
             fontSize: 16,
           ),
         ),
@@ -965,12 +1002,12 @@ class _QuizScreenState extends State<QuizScreen> {
                     ? (isStepCorrect
                         ? Colors.green.withAlpha(30)
                         : Colors.red.withAlpha(30))
-                    : AppColors.surface,
+                    : style.surfaceLight.withAlpha(150),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: _answered
                       ? (isStepCorrect ? Colors.green : Colors.red)
-                      : AppColors.divider,
+                      : style.accent.withAlpha(120),
                   width: 2,
                 ),
               ),
@@ -982,14 +1019,14 @@ class _QuizScreenState extends State<QuizScreen> {
                     decoration: BoxDecoration(
                       color: _answered
                           ? (isStepCorrect ? Colors.green : Colors.red)
-                          : AppColors.primary,
+                          : style.accent,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '${index + 1}',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: style.ink,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -999,8 +1036,8 @@ class _QuizScreenState extends State<QuizScreen> {
                   Expanded(
                     child: Text(
                       step,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: style.onDark,
                         fontSize: 15,
                       ),
                     ),
@@ -1008,11 +1045,11 @@ class _QuizScreenState extends State<QuizScreen> {
                   if (!_answered)
                     ReorderableDragStartListener(
                       index: index,
-                      child: const Padding(
-                        padding: EdgeInsets.all(8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
                         child: Icon(
                           Icons.drag_handle,
-                          color: AppColors.textSecondary,
+                          color: style.onDark.withAlpha(150),
                         ),
                       ),
                     ),
@@ -1036,7 +1073,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Text(
                     '${entry.key + 1}. ${entry.value}',
-                    style: const TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(color: style.onDark.withAlpha(185)),
                   ),
                 ),
               ),
@@ -1049,12 +1086,7 @@ class _QuizScreenState extends State<QuizScreen> {
               onPressed: _submitSequenceAnswer,
               icon: const Icon(Icons.check),
               label: const Text('Проверить порядок'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              style: _buttonStyle(style),
             ),
           ),
       ],
@@ -1062,13 +1094,14 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _buildSliderQuestion(QuizQuestion question) {
+    final style = _currentStyle;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Настройте баланс ползунками:',
           style: TextStyle(
-            color: AppColors.textSecondary,
+            color: style.onDark.withAlpha(185),
             fontSize: 16,
           ),
         ),
@@ -1089,12 +1122,12 @@ class _QuizScreenState extends State<QuizScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.surface.withAlpha(60),
+                color: style.surfaceLight.withAlpha(120),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: _answered
                       ? (inRange ? Colors.green : Colors.red).withAlpha(120)
-                      : AppColors.divider.withAlpha(80),
+                      : style.accent.withAlpha(110),
                   width: 1.5,
                 ),
               ),
@@ -1106,8 +1139,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       Expanded(
                         child: Text(
                           name,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: style.onDark,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -1122,8 +1155,10 @@ class _QuizScreenState extends State<QuizScreen> {
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: inRange
-                              ? Colors.green
-                              : AppColors.textSecondary,
+                              ? (style.ink.computeLuminance() > 0.5
+                                  ? const Color(0xFF9ED97B)
+                                  : const Color(0xFF2F7A3D))
+                              : style.onDark.withAlpha(170),
                         ),
                       ),
                       if (!_answered && inRange)
@@ -1165,12 +1200,7 @@ class _QuizScreenState extends State<QuizScreen> {
               onPressed: _submitSliderAnswer,
               icon: const Icon(Icons.check),
               label: const Text('Готово'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              style: _buttonStyle(style),
             ),
           ),
       ],
@@ -1432,6 +1462,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         answered: _answered,
                         isLastQuestion:
                             _currentQuestionIndex == _questions.length - 1,
+                        style: schoolStyle,
                         onNext: _nextQuestion,
                         onSubmit: _submitCurrentInteractiveAnswer,
                       ),
@@ -1565,6 +1596,7 @@ class _QuizBottomButton extends StatelessWidget {
   final QuizQuestion question;
   final bool answered;
   final bool isLastQuestion;
+  final JohnRoomStyle style;
   final VoidCallback onNext;
   final VoidCallback onSubmit;
 
@@ -1572,6 +1604,7 @@ class _QuizBottomButton extends StatelessWidget {
     required this.question,
     required this.answered,
     required this.isLastQuestion,
+    required this.style,
     required this.onNext,
     required this.onSubmit,
   });
@@ -1598,6 +1631,10 @@ class _QuizBottomButton extends StatelessWidget {
       ),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 14),
+        backgroundColor: style.accent,
+        foregroundColor: style.ink,
+        disabledBackgroundColor: style.accent.withAlpha(60),
+        disabledForegroundColor: style.ink.withAlpha(140),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),

@@ -27,6 +27,15 @@ final appTheme = ThemeData(
     surface: AppColors.surface,
     primary: AppColors.primary,
     onPrimary: Colors.black,
+    // Material 3 без явных secondary/tertiary берёт их из сид-цвета — в
+    // интерфейсе это давало лиловые рамки, чекбоксы и подписи. Тёплые
+    // оттенки вместо системного фиолета.
+    secondary: AppColors.primaryDark,
+    onSecondary: Colors.white,
+    secondaryContainer: AppColors.surfaceLight,
+    onSecondaryContainer: AppColors.textPrimary,
+    tertiary: AppColors.primaryDark,
+    onTertiary: Colors.white,
     onSurface: AppColors.textPrimary,
   ),
 

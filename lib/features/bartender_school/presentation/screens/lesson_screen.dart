@@ -691,7 +691,7 @@ class _SlideWidget extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: _MentorNoteCard(
             text: mentorText,
             assetPath: _mentorAssetPath,
@@ -703,6 +703,27 @@ class _SlideWidget extends StatelessWidget {
     );
   }
 
+  /// Уровень 1 лежит поверх фотографии комнаты. Обычная теория печатается на
+  /// деревянной панели, а тренажёры/tool visual/bar tip — нет: без панели их
+  /// светлый текст и полупрозрачные плашки сливаются с фоном. Укрываем теми же
+  /// досками и интерактивные слайды. Отступы подобраны так, чтобы ширина
+  /// контента осталась прежней (8 + 16 = 24): иначе на экране 320px ряды
+  /// внутри тренажёров начинают переполняться.
+  Widget _onDesk(Widget child) {
+    if (schoolRoom == null) return child;
+    const radius = BorderRadius.all(Radius.circular(18));
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 12),
+      child: JohnWoodPanel(
+        room: schoolRoom!,
+        highlighted: true,
+        padding: EdgeInsets.zero,
+        borderRadius: radius,
+        child: ClipRRect(borderRadius: radius, child: child),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isWisdomLesson) {
@@ -710,47 +731,50 @@ class _SlideWidget extends StatelessWidget {
     }
 
     if (slide.type == SlideType.barTip) {
-      return _withMentor(_buildBarTipSlide());
+      return _onDesk(_withMentor(_buildBarTipSlide()));
     }
 
     if (slide.type == SlideType.balanceTrainer) {
-      return _withMentor(_BalanceTrainerSlide(slide: slide));
+      return _onDesk(_withMentor(_BalanceTrainerSlide(slide: slide)));
     }
 
     if (slide.type == SlideType.toolVisual) {
-      return _withMentor(_ToolVisualSlide(slide: slide));
+      return _onDesk(_withMentor(_ToolVisualSlide(slide: slide)));
     }
 
     if (slide.type == SlideType.interactive) {
+      final Widget body;
       if (slide.title.contains('Кислот')) {
-        return _withMentor(_AcidCalibrationSlide(slide: slide));
+        body = _AcidCalibrationSlide(slide: slide);
       } else if (slide.title.contains('сладость') ||
           slide.title.contains('Сладость')) {
-        return _withMentor(_SweetnessCalibrationSlide(slide: slide));
+        body = _SweetnessCalibrationSlide(slide: slide);
       } else if (slide.title.contains('горечь') ||
           slide.title.contains('Горечь') ||
           slide.title.contains('биттер')) {
-        return _withMentor(_BitterCalibrationSlide(slide: slide));
+        body = _BitterCalibrationSlide(slide: slide);
       } else if (slide.title.contains('станцию') ||
           slide.title.contains('Собери')) {
-        return _withMentor(_StationBuilderSlide(slide: slide));
+        body = _StationBuilderSlide(slide: slide);
       } else if (slide.title.contains('джиггер') ||
           slide.title.contains('налей') ||
           (slide.title.contains('Практика') &&
               slide.content.contains('джиггер'))) {
-        return _withMentor(_JiggerMeasurementSlide(slide: slide));
+        body = _JiggerMeasurementSlide(slide: slide);
       } else if (slide.title.contains('шейк') ||
           slide.title.contains('тайминг') ||
           slide.title.contains('встрях')) {
-        return _withMentor(_ShakeTimingSlide(slide: slide));
+        body = _ShakeTimingSlide(slide: slide);
       } else if (slide.title.contains('dilution') ||
           slide.title.contains('Дильюш')) {
-        return _withMentor(_DilutionCalculatorSlide(slide: slide));
+        body = _DilutionCalculatorSlide(slide: slide);
       } else if (slide.title.contains('Практика') &&
           slide.content.contains('Шаг')) {
-        return _withMentor(_CocktailBuilderSlide(slide: slide));
+        body = _CocktailBuilderSlide(slide: slide);
+      } else {
+        body = _AcidCalibrationSlide(slide: slide);
       }
-      return _withMentor(_AcidCalibrationSlide(slide: slide));
+      return _onDesk(_withMentor(body));
     }
 
     final schoolStyle =
@@ -791,8 +815,7 @@ class _SlideWidget extends StatelessWidget {
               color: (schoolStyle?.accent ?? AppColors.primary).withAlpha(24),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color:
-                    (schoolStyle?.accent ?? AppColors.primary).withAlpha(90),
+                color: (schoolStyle?.accent ?? AppColors.primary).withAlpha(90),
               ),
             ),
             child: Column(
@@ -837,8 +860,8 @@ class _SlideWidget extends StatelessWidget {
           Text(
             slide.content,
             style: TextStyle(
-              color: schoolStyle?.onDark.withAlpha(205) ??
-                  AppColors.textSecondary,
+              color:
+                  schoolStyle?.onDark.withAlpha(205) ?? AppColors.textSecondary,
               fontSize: 16,
               height: 1.6,
             ),
@@ -880,15 +903,16 @@ class _SlideWidget extends StatelessWidget {
       ],
     );
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: schoolRoom == null
-          ? content
-          : JohnWoodPanel(
-              room: schoolRoom!,
-              highlighted: true,
-              child: content,
-            ),
+    // Панель должна занимать всю страницу, а не только высоту текста:
+    // иначе под коротким слайдом просвечивает фотография комнаты и страница
+    // выглядит «прозрачной». Скролл живёт внутри панели, как у тренажёров.
+    return _onDesk(
+      SingleChildScrollView(
+        padding: schoolRoom == null
+            ? const EdgeInsets.all(24)
+            : const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        child: content,
+      ),
     );
   }
 
@@ -1056,8 +1080,18 @@ class _SlideWidget extends StatelessWidget {
   }
 
   Widget _buildBarTipSlide() {
+    // Слайд лежит поверх панели комнаты: общая тема (янтарь #E8A838 на
+    // тёмном) спорит с золотом комнаты, поэтому берём её палитру.
+    final style = schoolRoom == null
+        ? null
+        : JohnRoomStyle.forRoom(schoolRoom!);
+    final accent = style?.accent ?? AppColors.primary;
+    final ink = style?.ink ?? AppColors.textPrimary;
+    final body = style?.onDark ?? AppColors.textPrimary;
+    final surface = style?.surfaceLight ?? AppColors.surface;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1066,16 +1100,13 @@ class _SlideWidget extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  AppColors.primary.withAlpha(40),
-                  AppColors.primary.withAlpha(20),
-                ],
+                colors: [accent.withAlpha(40), accent.withAlpha(20)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: AppColors.primary.withAlpha(100),
+                color: accent.withAlpha(100),
                 width: 2,
               ),
             ),
@@ -1084,7 +1115,7 @@ class _SlideWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: accent,
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
@@ -1099,10 +1130,10 @@ class _SlideWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'БАРНЫЙ ЛАЙФХАК',
                         style: TextStyle(
-                          color: AppColors.primary,
+                          color: accent,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.5,
@@ -1111,8 +1142,8 @@ class _SlideWidget extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         slide.title,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: body,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -1130,13 +1161,13 @@ class _SlideWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: surface,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
               slide.content,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: body,
                 fontSize: 16,
                 height: 1.6,
                 fontStyle: FontStyle.italic,
@@ -1154,17 +1185,15 @@ class _SlideWidget extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.star_rounded,
-                        size: 16,
-                        color: AppColors.primary,
-                      ),
+                      Icon(Icons.star_rounded, size: 16, color: accent),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           point,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: ink.computeLuminance() > 0.5
+                                ? ink
+                                : body.withAlpha(210),
                             fontSize: 14,
                             height: 1.5,
                           ),
@@ -1677,7 +1706,7 @@ class _ToolVisualSlide extends StatelessWidget {
     final parts = _getToolParts();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -2011,7 +2040,7 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
     final cocktail = _cocktails[_selectedCocktailIndex];
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -2555,7 +2584,7 @@ class _AcidCalibrationSlideState extends State<_AcidCalibrationSlide> {
     final cocktail = _cocktails[_selectedCocktailIndex];
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -3120,7 +3149,7 @@ class _SweetnessCalibrationSlideState
     final cocktail = _cocktails[_selectedCocktailIndex];
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -3394,12 +3423,15 @@ class _SweetnessCalibrationSlideState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '📏 Дозировка (мл)',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+              // Expanded, иначе на 320px подпись с бейджем не влезают в ряд.
+              const Expanded(
+                child: Text(
+                  '📏 Дозировка (мл)',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
               Container(
@@ -3708,7 +3740,7 @@ class _BitterCalibrationSlideState extends State<_BitterCalibrationSlide> {
   Widget build(BuildContext context) {
     final c = _cocktails[_idx];
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -3836,11 +3868,14 @@ class _BitterCalibrationSlideState extends State<_BitterCalibrationSlide> {
                             color: _color(),
                             size: 20),
                         const SizedBox(width: 8),
-                        Text(_desc(),
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: _color(),
-                                fontWeight: FontWeight.bold)),
+                        // Flexible: на 320px длинное описание влезает с переносом.
+                        Flexible(
+                            child: Text(_desc(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: _color(),
+                                    fontWeight: FontWeight.bold))),
                       ])),
             ]),
           ),
@@ -3852,11 +3887,13 @@ class _BitterCalibrationSlideState extends State<_BitterCalibrationSlide> {
                 borderRadius: BorderRadius.circular(16)),
             child: Column(children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                const Text('🌿 Дэши биттеров',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary)),
+                // Expanded: без него на 320px подпись и счётчик дэшей не влезают.
+                const Expanded(
+                    child: Text('🌿 Дэши биттеров',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary))),
                 Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -4014,7 +4051,7 @@ class _StationBuilderSlideState extends State<_StationBuilderSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -4228,7 +4265,7 @@ class _JiggerMeasurementSlideState extends State<_JiggerMeasurementSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -4438,7 +4475,7 @@ class _ShakeTimingSlideState extends State<_ShakeTimingSlide>
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -4596,7 +4633,7 @@ class _DilutionCalculatorSlideState extends State<_DilutionCalculatorSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -4859,7 +4896,7 @@ class _CocktailBuilderSlideState extends State<_CocktailBuilderSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
