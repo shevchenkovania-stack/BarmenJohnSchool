@@ -28,6 +28,13 @@ class PracticeChallenge {
   final Map<String, ProportionTarget> proportions;
   final PracticeFeedback feedback;
 
+  /// Правильный порядок сборки.
+  ///
+  /// Пусто — задание проверяет только ингредиенты, метод и пропорции.
+  /// Заполнено у коктейлей, где порядок реально меняет результат
+  /// (мяту мнут до льда, биттер кладут в пустой бокал и т.д.).
+  final List<String> assembly;
+
   const PracticeChallenge({
     required this.id,
     required this.lessonId,
@@ -40,7 +47,11 @@ class PracticeChallenge {
     required this.correctMethod,
     required this.proportions,
     required this.feedback,
+    this.assembly = const [],
   });
+
+  /// Проверяется ли порядок сборки в этом задании.
+  bool get checksAssembly => assembly.isNotEmpty;
 
   /// Все ингредиенты для показа (правильные + неправильные).
   ///
@@ -73,11 +84,15 @@ class PracticeFeedback {
   final String wrongMethod;
   final String wrongProportions;
 
+  /// Обратная связь по порядку сборки (если задание его проверяет).
+  final String? wrongAssembly;
+
   const PracticeFeedback({
     required this.perfect,
     required this.wrongIngredients,
     required this.wrongMethod,
     required this.wrongProportions,
+    this.wrongAssembly,
   });
 }
 
@@ -87,6 +102,9 @@ class PracticeResult {
   final bool ingredientsCorrect;
   final bool methodCorrect;
   final bool proportionsCorrect;
+
+  /// Порядок сборки. true, если задание его не проверяет.
+  final bool assemblyCorrect;
   final String feedbackText;
 
   const PracticeResult({
@@ -94,6 +112,7 @@ class PracticeResult {
     required this.methodCorrect,
     required this.proportionsCorrect,
     required this.feedbackText,
+    this.assemblyCorrect = true,
   });
 
   int get stars {
@@ -179,8 +198,9 @@ PracticeResult evaluateAttempt(
   PracticeChallenge challenge,
   Set<String> selectedIngredients,
   String selectedMethod,
-  Map<String, int> proportions,
-) {
+  Map<String, int> proportions, {
+  List<String>? assembly,
+}) {
   // 1. Ингредиенты
   final correctSet = challenge.correctIngredients.toSet();
   final ingredientsCorrect = selectedIngredients.length == correctSet.length &&
@@ -199,14 +219,27 @@ PracticeResult evaluateAttempt(
     }
   }
 
+  // 4. Порядок сборки — только если шаг реально показан ученику.
+  final assemblyCorrect = !challenge.checksAssembly ||
+      (assembly != null &&
+          assembly.length == challenge.assembly.length &&
+          Iterable<int>.generate(challenge.assembly.length)
+              .every((i) => assembly[i] == challenge.assembly[i]));
+
   // Фидбэк
   final String feedbackText;
-  if (ingredientsCorrect && methodCorrect && proportionsCorrect) {
+  if (ingredientsCorrect &&
+      methodCorrect &&
+      proportionsCorrect &&
+      assemblyCorrect) {
     feedbackText = challenge.feedback.perfect;
   } else if (!ingredientsCorrect) {
     feedbackText = challenge.feedback.wrongIngredients;
   } else if (!methodCorrect) {
     feedbackText = challenge.feedback.wrongMethod;
+  } else if (!assemblyCorrect) {
+    feedbackText = challenge.feedback.wrongAssembly ??
+        'Порядок важен: сначала ${challenge.assembly.join(', потом ')}.';
   } else {
     feedbackText = challenge.feedback.wrongProportions;
   }
@@ -215,6 +248,7 @@ PracticeResult evaluateAttempt(
     ingredientsCorrect: ingredientsCorrect,
     methodCorrect: methodCorrect,
     proportionsCorrect: proportionsCorrect,
+    assemblyCorrect: assemblyCorrect,
     feedbackText: feedbackText,
   );
 }

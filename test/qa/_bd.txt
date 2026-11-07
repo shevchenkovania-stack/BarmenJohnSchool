@@ -1,0 +1,819 @@
+﻿00:00 +0: loading C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: Level 1: ╨╜╨╕ ╨╛╨┤╨╕╨╜ ╤ü╨╗╨░╨╣╨┤ ╨╜╨╡ ╨▓╨╕╤ü╨╕╤é ╨╜╨░ ╨┐╤Ç╨╛╨╖╤Ç╨░╤ç╨╜╨╛╨╝ ╤ä╨╛╨╜╨╡
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+QA> ╨┐╤Ç╨╛╨▓╨╡╤Ç╨╡╨╜╨╛ ╤ü╨╗╨░╨╣╨┤╨╛╨▓: 74 ╨▓ 13 ╤â╤Ç╨╛╨║╨░╤à
+00:41 +1: Level 1: ╨┐╨░╨╜╨╡╨╗╤î╨╜╤ï╨╡ ╤ü╨╗╨░╨╣╨┤╤ï ╨╜╨╡ ╨╗╨╛╨╝╨░╤Ä╤é╤ü╤Å ╨╜╨░ ╤â╨╖╨║╨╛╨╝ ╤ì╨║╤Ç╨░╨╜╨╡
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+QA> [lesson_A_03 ╤ü╨╗╨░╨╣╨┤ 3 (interactive)] 320├ù568: A RenderFlex overflowed by 15 pixels on the right.
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+ΓòÉΓòÉΓòí EXCEPTION CAUGHT BY RENDERING LIBRARY Γò₧ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 15 pixels on the right.
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#8076d DISPOSED OVERFLOWING:
+  creator: MultiChildRenderObjectElement#25483(DEFUNCT) ΓåÉ MultiChildRenderObjectElement#c80b2(DEFUNCT)
+    ΓåÉ SingleChildRenderObjectElement#e0b07(DEFUNCT) ΓåÉ SingleChildRenderObjectElement#3d438(DEFUNCT) ΓåÉ
+    StatelessElement#d25b7(DEFUNCT) ΓåÉ MultiChildRenderObjectElement#7e07e(DEFUNCT) ΓåÉ
+    SingleChildRenderObjectElement#4e698(DEFUNCT) ΓåÉ _SingleChildViewportElement#42852(DEFUNCT) ΓåÉ
+    SingleChildRenderObjectElement#5c1ef(DEFUNCT) ΓåÉ SingleChildRenderObjectElement#6c870(DEFUNCT) ΓåÉ
+    SingleChildRenderObjectElement#be965(DEFUNCT) ΓåÉ SingleChildRenderObjectElement#27ec7(DEFUNCT) ΓåÉ Γï»
+  parentData: offset=Offset(0.0, 0.0); flex=null; fit=null (can use size)
+  constraints: BoxConstraints(0.0<=w<=228.4, 0.0<=h<=Infinity)
+  size: Size(228.4, 45.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: max
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+ΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñ
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+ΓòÉΓòÉΓòí EXCEPTION CAUGHT BY RENDERING LIBRARY Γò₧ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 9.3 pixels on the right.
+
+The relevant error-causing widget was:
+  Row
+  Row:file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/lib/features/bartender_school/presentation/screens/lesson_screen.dart:3852:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#7d55c relayoutBoundary=up17 OVERFLOWING:
+  creator: Row ΓåÉ Padding ΓåÉ DecoratedBox ΓåÉ Container ΓåÉ Column ΓåÉ Padding ΓåÉ DecoratedBox ΓåÉ Container ΓåÉ
+    Column ΓåÉ Padding ΓåÉ _SingleChildViewport ΓåÉ IgnorePointer-[GlobalKey#94f43] ΓåÉ Γï»
+  parentData: offset=Offset(12.0, 12.0) (can use size)
+  constraints: BoxConstraints(0.0<=w<=202.4, 0.0<=h<=Infinity)
+  size: Size(202.4, 23.0)
+  direction: horizontal
+  mainAxisAlignment: center
+  mainAxisSize: max
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+ΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñ
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+ΓòÉΓòÉΓòí EXCEPTION CAUGHT BY RENDERING LIBRARY Γò₧ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 41 pixels on the right.
+
+The relevant error-causing widget was:
+  Row
+  Row:file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/lib/features/bartender_school/presentation/screens/lesson_screen.dart:3878:15
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#411ad relayoutBoundary=up15 OVERFLOWING:
+  creator: Row ΓåÉ Column ΓåÉ Padding ΓåÉ DecoratedBox ΓåÉ Container ΓåÉ Column ΓåÉ Padding ΓåÉ _SingleChildViewport
+    ΓåÉ IgnorePointer-[GlobalKey#94f43] ΓåÉ Semantics ΓåÉ Listener ΓåÉ _GestureSemantics ΓåÉ Γï»
+  parentData: offset=Offset(0.0, 0.0); flex=null; fit=null (can use size)
+  constraints: BoxConstraints(0.0<=w<=228.4, 0.0<=h<=Infinity)
+  size: Size(228.4, 45.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: max
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+ΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñΓùóΓùñ
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+ΓòÉΓòÉΓòí EXCEPTION CAUGHT BY WIDGET INSPECTOR Γò₧ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+The following assertion was thrown:
+Looking up a deactivated widget's ancestor is unsafe.
+At this point the state of the widget's element tree is no longer stable.
+To safely refer to a widget's ancestor in its dispose() method, save a reference to the ancestor by
+calling dependOnInheritedWidgetOfExactType() in the widget's didChangeDependencies() method.
+
+When the exception was thrown, this was the stack:
+#0      Element._debugCheckStateIsActiveForAncestorLookup.<anonymous closure> (package:flutter/src/widgets/framework.dart:5049:9)
+#1      Element._debugCheckStateIsActiveForAncestorLookup (package:flutter/src/widgets/framework.dart:5063:6)
+#2      Element.visitAncestorElements (package:flutter/src/widgets/framework.dart:5174:12)
+#3      _describeRelevantUserCode (package:flutter/src/widgets/widget_inspector.dart:4236:13)
+#4      _parseDiagnosticsNode (package:flutter/src/widgets/widget_inspector.dart:4155:12)
+#5      debugTransformDebugCreator (package:flutter/src/widgets/widget_inspector.dart:4134:21)
+#6      _FlutterErrorDetailsNode.builder (package:flutter/src/foundation/assertions.dart:1310:31)
+#7      DiagnosticableNode.getProperties (package:flutter/src/foundation/diagnostics.dart:2943:68)
+#8      TextTreeRenderer._debugRender (package:flutter/src/foundation/diagnostics.dart:1270:63)
+#9      TextTreeRenderer.render (package:flutter/src/foundation/diagnostics.dart:1137:14)
+#10     FlutterError.dumpErrorToConsole (package:flutter/src/foundation/assertions.dart:1040:13)
+#11     TestWidgetsFlutterBinding._runTest.<anonymous closure> (package:flutter_test/src/binding.dart:1509:24)
+#12     _silenceFontNoise.<anonymous closure> (file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart:56:15)
+#13     FlutterError.reportError (package:flutter/src/foundation/assertions.dart:1203:14)
+#14     DebugOverflowIndicatorMixin._reportOverflow (package:flutter/src/rendering/debug_overflow_indicator.dart:259:18)
+#15     DebugOverflowIndicatorMixin.paintOverflowIndicator (package:flutter/src/rendering/debug_overflow_indicator.dart:329:7)
+#16     RenderFlex.paint.<anonymous closure> (package:flutter/src/rendering/flex.dart:1449:7)
+#17     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1457:6)
+#18     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#19     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#20     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#21     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#22     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#23     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#24     RenderDecoratedBox.paint (package:flutter/src/rendering/proxy_box.dart:2512:11)
+#25     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#26     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#27     RenderBoxContainerDefaultsMixin.defaultPaint (package:flutter/src/rendering/box.dart:3368:15)
+#28     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1402:7)
+#29     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#30     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#31     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#32     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#33     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#34     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#35     RenderDecoratedBox.paint (package:flutter/src/rendering/proxy_box.dart:2512:11)
+#36     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#37     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#38     RenderBoxContainerDefaultsMixin.defaultPaint (package:flutter/src/rendering/box.dart:3368:15)
+#39     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1402:7)
+#40     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#41     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#42     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#43     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#44     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#45     _RenderSingleChildViewport.paint.paintContents (package:flutter/src/widgets/single_child_scroll_view.dart:550:17)
+#46     PaintingContext.pushLayer (package:flutter/src/rendering/object.dart:522:12)
+#47     PaintingContext.pushClipRect (package:flutter/src/rendering/object.dart:589:7)
+#48     _RenderSingleChildViewport.paint (package:flutter/src/widgets/single_child_scroll_view.dart:554:40)
+#49     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#50     PaintingContext._repaintCompositedChild (package:flutter/src/rendering/object.dart:180:11)
+#51     PaintingContext.repaintCompositedChild (package:flutter/src/rendering/object.dart:125:5)
+#52     PaintingContext._compositeChild (package:flutter/src/rendering/object.dart:276:7)
+#53     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:257:7)
+#54     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#55     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#56     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#57     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#58     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#59     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#60     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#61     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#62     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#63     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#64     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#65     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#66     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#67     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#68     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#69     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#70     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#71     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#72     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#73     RenderTransform.paint (package:flutter/src/rendering/proxy_box.dart:2756:17)
+#74     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#75     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#76     RenderClipRect.paint (package:flutter/src/rendering/proxy_box.dart:1653:17)
+#77     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#78     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#79     RenderBoxContainerDefaultsMixin.defaultPaint (package:flutter/src/rendering/box.dart:3368:15)
+#80     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1402:7)
+#81     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#82     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#83     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#84     PaintingContext.pushLayer (package:flutter/src/rendering/object.dart:522:12)
+#85     PaintingContext.pushClipRRect (package:flutter/src/rendering/object.dart:636:7)
+#86     RenderClipRRect.paint (package:flutter/src/rendering/proxy_box.dart:1749:25)
+#87     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#88     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#89     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#90     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#91     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#92     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#93     RenderDecoratedBox.paint (package:flutter/src/rendering/proxy_box.dart:2512:11)
+#94     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#95     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#96     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#97     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#98     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#99     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#100    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#101    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#102    RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#103    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#104    PaintingContext._repaintCompositedChild (package:flutter/src/rendering/object.dart:180:11)
+#105    PaintingContext.repaintCompositedChild (package:flutter/src/rendering/object.dart:125:5)
+#106    PaintingContext._compositeChild (package:flutter/src/rendering/object.dart:276:7)
+#107    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:257:7)
+#108    RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#109    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#110    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#111    RenderSliverMultiBoxAdaptor.paint (package:flutter/src/rendering/sliver_multi_box_adaptor.dart:742:17)
+#112    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#113    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#114    RenderSliverEdgeInsetsPadding.paint (package:flutter/src/rendering/sliver_padding.dart:270:15)
+#115    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#116    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#117    RenderViewportBase._paintContents (package:flutter/src/rendering/viewport.dart:851:17)
+#118    PaintingContext.pushLayer (package:flutter/src/rendering/object.dart:522:12)
+#119    PaintingContext.pushClipRect (package:flutter/src/rendering/object.dart:589:7)
+#120    RenderViewportBase.paint (package:flutter/src/rendering/viewport.dart:826:38)
+#121    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#122    PaintingContext._repaintCompositedChild (package:flutter/src/rendering/object.dart:180:11)
+#123    PaintingContext.repaintCompositedChild (package:flutter/src/rendering/object.dart:125:5)
+#124    PipelineOwner.flushPaint (package:flutter/src/rendering/object.dart:1325:31)
+#125    PipelineOwner.flushPaint (package:flutter/src/rendering/object.dart:1335:15)
+#126    AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2137:31)
+#127    RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:495:5)
+#128    SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#129    SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#130    AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:1960:9)
+#133    TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#134    AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:1949:27)
+#135    WidgetTester.pumpAndSettle.<anonymous closure> (package:flutter_test/src/widget_tester.dart:719:23)
+<asynchronous suspension>
+#136    TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#137    _advance (file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart:122:3)
+<asynchronous suspension>
+#138    main.<anonymous closure> (file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart:197:9)
+<asynchronous suspension>
+#139    testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#140    TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1682:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 3 frames from dart:async and package:stack_trace)
+
+This exception was caught while trying to describe the user-relevant code of another error.
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+ΓòÉΓòÉΓòí EXCEPTION CAUGHT BY WIDGET INSPECTOR Γò₧ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+The following assertion was thrown:
+Looking up a deactivated widget's ancestor is unsafe.
+At this point the state of the widget's element tree is no longer stable.
+To safely refer to a widget's ancestor in its dispose() method, save a reference to the ancestor by
+calling dependOnInheritedWidgetOfExactType() in the widget's didChangeDependencies() method.
+
+When the exception was thrown, this was the stack:
+#0      Element._debugCheckStateIsActiveForAncestorLookup.<anonymous closure> (package:flutter/src/widgets/framework.dart:5049:9)
+#1      Element._debugCheckStateIsActiveForAncestorLookup (package:flutter/src/widgets/framework.dart:5063:6)
+#2      Element.visitAncestorElements (package:flutter/src/widgets/framework.dart:5174:12)
+#3      _describeRelevantUserCode (package:flutter/src/widgets/widget_inspector.dart:4236:13)
+#4      _parseDiagnosticsNode (package:flutter/src/widgets/widget_inspector.dart:4155:12)
+#5      debugTransformDebugCreator (package:flutter/src/widgets/widget_inspector.dart:4134:21)
+#6      _FlutterErrorDetailsNode.builder (package:flutter/src/foundation/assertions.dart:1310:31)
+#7      DiagnosticableNode.emptyBodyDescription (package:flutter/src/foundation/diagnostics.dart:2939:45)
+#8      TextTreeRenderer._debugRender (package:flutter/src/foundation/diagnostics.dart:1307:14)
+#9      TextTreeRenderer.render (package:flutter/src/foundation/diagnostics.dart:1137:14)
+#10     FlutterError.dumpErrorToConsole (package:flutter/src/foundation/assertions.dart:1040:13)
+#11     TestWidgetsFlutterBinding._runTest.<anonymous closure> (package:flutter_test/src/binding.dart:1509:24)
+#12     _silenceFontNoise.<anonymous closure> (file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart:56:15)
+#13     FlutterError.reportError (package:flutter/src/foundation/assertions.dart:1203:14)
+#14     DebugOverflowIndicatorMixin._reportOverflow (package:flutter/src/rendering/debug_overflow_indicator.dart:259:18)
+#15     DebugOverflowIndicatorMixin.paintOverflowIndicator (package:flutter/src/rendering/debug_overflow_indicator.dart:329:7)
+#16     RenderFlex.paint.<anonymous closure> (package:flutter/src/rendering/flex.dart:1449:7)
+#17     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1457:6)
+#18     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#19     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#20     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#21     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#22     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#23     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#24     RenderDecoratedBox.paint (package:flutter/src/rendering/proxy_box.dart:2512:11)
+#25     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#26     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#27     RenderBoxContainerDefaultsMixin.defaultPaint (package:flutter/src/rendering/box.dart:3368:15)
+#28     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1402:7)
+#29     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#30     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#31     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#32     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#33     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#34     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#35     RenderDecoratedBox.paint (package:flutter/src/rendering/proxy_box.dart:2512:11)
+#36     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#37     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#38     RenderBoxContainerDefaultsMixin.defaultPaint (package:flutter/src/rendering/box.dart:3368:15)
+#39     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1402:7)
+#40     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#41     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#42     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#43     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#44     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#45     _RenderSingleChildViewport.paint.paintContents (package:flutter/src/widgets/single_child_scroll_view.dart:550:17)
+#46     PaintingContext.pushLayer (package:flutter/src/rendering/object.dart:522:12)
+#47     PaintingContext.pushClipRect (package:flutter/src/rendering/object.dart:589:7)
+#48     _RenderSingleChildViewport.paint (package:flutter/src/widgets/single_child_scroll_view.dart:554:40)
+#49     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#50     PaintingContext._repaintCompositedChild (package:flutter/src/rendering/object.dart:180:11)
+#51     PaintingContext.repaintCompositedChild (package:flutter/src/rendering/object.dart:125:5)
+#52     PaintingContext._compositeChild (package:flutter/src/rendering/object.dart:276:7)
+#53     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:257:7)
+#54     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#55     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#56     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#57     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#58     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#59     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#60     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#61     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#62     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#63     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#64     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#65     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#66     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#67     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#68     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#69     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#70     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#71     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#72     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#73     RenderTransform.paint (package:flutter/src/rendering/proxy_box.dart:2756:17)
+#74     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#75     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#76     RenderClipRect.paint (package:flutter/src/rendering/proxy_box.dart:1653:17)
+#77     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#78     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#79     RenderBoxContainerDefaultsMixin.defaultPaint (package:flutter/src/rendering/box.dart:3368:15)
+#80     RenderFlex.paint (package:flutter/src/rendering/flex.dart:1402:7)
+#81     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#82     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#83     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#84     PaintingContext.pushLayer (package:flutter/src/rendering/object.dart:522:12)
+#85     PaintingContext.pushClipRRect (package:flutter/src/rendering/object.dart:636:7)
+#86     RenderClipRRect.paint (package:flutter/src/rendering/proxy_box.dart:1749:25)
+#87     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#88     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#89     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#90     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#91     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#92     RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#93     RenderDecoratedBox.paint (package:flutter/src/rendering/proxy_box.dart:2512:11)
+#94     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#95     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#96     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#97     RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#98     PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#99     RenderShiftedBox.paint (package:flutter/src/rendering/shifted_box.dart:98:15)
+#100    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#101    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#102    RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#103    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#104    PaintingContext._repaintCompositedChild (package:flutter/src/rendering/object.dart:180:11)
+#105    PaintingContext.repaintCompositedChild (package:flutter/src/rendering/object.dart:125:5)
+#106    PaintingContext._compositeChild (package:flutter/src/rendering/object.dart:276:7)
+#107    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:257:7)
+#108    RenderProxyBoxMixin.paint (package:flutter/src/rendering/proxy_box.dart:143:13)
+#109    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#110    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#111    RenderSliverMultiBoxAdaptor.paint (package:flutter/src/rendering/sliver_multi_box_adaptor.dart:742:17)
+#112    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#113    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#114    RenderSliverEdgeInsetsPadding.paint (package:flutter/src/rendering/sliver_padding.dart:270:15)
+#115    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#116    PaintingContext.paintChild (package:flutter/src/rendering/object.dart:265:13)
+#117    RenderViewportBase._paintContents (package:flutter/src/rendering/viewport.dart:851:17)
+#118    PaintingContext.pushLayer (package:flutter/src/rendering/object.dart:522:12)
+#119    PaintingContext.pushClipRect (package:flutter/src/rendering/object.dart:589:7)
+#120    RenderViewportBase.paint (package:flutter/src/rendering/viewport.dart:826:38)
+#121    RenderObject._paintWithContext (package:flutter/src/rendering/object.dart:3429:7)
+#122    PaintingContext._repaintCompositedChild (package:flutter/src/rendering/object.dart:180:11)
+#123    PaintingContext.repaintCompositedChild (package:flutter/src/rendering/object.dart:125:5)
+#124    PipelineOwner.flushPaint (package:flutter/src/rendering/object.dart:1325:31)
+#125    PipelineOwner.flushPaint (package:flutter/src/rendering/object.dart:1335:15)
+#126    AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2137:31)
+#127    RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:495:5)
+#128    SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#129    SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#130    AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:1960:9)
+#133    TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#134    AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:1949:27)
+#135    WidgetTester.pumpAndSettle.<anonymous closure> (package:flutter_test/src/widget_tester.dart:719:23)
+<asynchronous suspension>
+#136    TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#137    _advance (file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart:122:3)
+<asynchronous suspension>
+#138    main.<anonymous closure> (file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart:197:9)
+<asynchronous suspension>
+#139    testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#140    TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1682:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 3 frames from dart:async and package:stack_trace)
+
+This exception was caught while trying to describe the user-relevant code of another error.
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+QA> [lesson_A_04 ╤ü╨╗╨░╨╣╨┤ 3 (interactive)] 320├ù568: A RenderFlex overflowed by 9.3 pixels on the right. | A RenderFlex overflowed by 41 pixels on the right.
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+≡ƒôÜ Loading lessons part 1...
+Γ£à Part 1 loaded: 50738 bytes
+Γ£à Part 1 parsed: 9 lessons
+≡ƒôÜ Loading lessons part 2...
+Γ£à Part 2 loaded: 15828 bytes
+Γ£à Part 2 parsed: 4 lessons
+≡ƒÄë Level 1 lessons loaded: 13
+≡ƒÄë Total lessons combined: 13
+≡ƒôÜ Loading Level 2 lessons...
+Γ£à Level 2 loaded: 37957 bytes
+Γ£à Level 2 parsed: 12 lessons
+≡ƒÄë Level 2 lessons loaded: 12
+≡ƒÄë Total lessons combined: 25
+ΓòÉΓòÉΓòí EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK Γò₧ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+The following TestFailure was thrown running a test:
+Expected: empty
+  Actual: WhereIterable<String>:[
+            '[lesson_A_03 ╤ü╨╗╨░╨╣╨┤ 3 (interactive)] 320├ù568: A RenderFlex overflowed by 15 pixels on
+the right.',
+            '[lesson_A_04 ╤ü╨╗╨░╨╣╨┤ 3 (interactive)] 320├ù568: A RenderFlex overflowed by 9.3 pixels on
+the right. | A RenderFlex overflowed by 41 pixels on the right.'
+          ]
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart:200:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1682:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/WORK/FLUTTER/OWN_PROJECTS/coin/test/qa/lesson_slide_backdrop_test.dart line 200
+The test description was:
+  Level 1: ╨┐╨░╨╜╨╡╨╗╤î╨╜╤ï╨╡ ╤ü╨╗╨░╨╣╨┤╤ï ╨╜╨╡ ╨╗╨╛╨╝╨░╤Ä╤é╤ü╤Å ╨╜╨░ ╤â╨╖╨║╨╛╨╝ ╤ì╨║╤Ç╨░╨╜╨╡
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+ΓòÉΓòÉΓòí EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK Γò₧ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+The following message was thrown:
+Multiple exceptions (6) were detected during the running of the current test, and at least one was
+unexpected.
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+00:47 +1 -1: Level 1: ╨┐╨░╨╜╨╡╨╗╤î╨╜╤ï╨╡ ╤ü╨╗╨░╨╣╨┤╤ï ╨╜╨╡ ╨╗╨╛╨╝╨░╤Ä╤é╤ü╤Å ╨╜╨░ ╤â╨╖╨║╨╛╨╝ ╤ì╨║╤Ç╨░╨╜╨╡ [E]
+  Test failed. See exception logs above.
+  The test description was: Level 1: ╨┐╨░╨╜╨╡╨╗╤î╨╜╤ï╨╡ ╤ü╨╗╨░╨╣╨┤╤ï ╨╜╨╡ ╨╗╨╛╨╝╨░╤Ä╤é╤ü╤Å ╨╜╨░ ╤â╨╖╨║╨╛╨╝ ╤ì╨║╤Ç╨░╨╜╨╡
+  
+00:47 +1 -1: (tearDownAll)
+00:47 +1 -1: Some tests failed.

@@ -125,6 +125,89 @@ void main() {
       }
     });
 
+    test('assembly order is graded only where it is shown', () {
+      final diplomas = allPracticeChallenges
+          .where((c) => level1DiplomaChallengeIds.contains(c.id))
+          .toList();
+
+      expect(diplomas, hasLength(3), reason: 'диплом Level 1 — три коктейля');
+
+      for (final challenge in diplomas) {
+        expect(
+          challenge.checksAssembly,
+          isTrue,
+          reason: '${challenge.id}: у экзаменационного коктейля должен быть '
+              'проверяемый порядок сборки',
+        );
+        expect(challenge.assembly.length, greaterThanOrEqualTo(3));
+        expect(
+          challenge.assembly.toSet().length,
+          challenge.assembly.length,
+          reason: '${challenge.id}: шаги сборки не должны повторяться',
+        );
+        expect(
+          challenge.feedback.wrongAssembly,
+          isNotNull,
+          reason: '${challenge.id}: нужна подсказка на случай неверного '
+              'порядка',
+        );
+      }
+
+      // Порядок не проверяется там, где его нет в данных: иначе ученик
+      // провалит задание из-за того, чего ему не показывали.
+      for (final challenge in allPracticeChallenges) {
+        if (!challenge.checksAssembly) continue;
+        expect(challenge.assembly.length, greaterThan(1));
+      }
+    });
+
+    test('evaluator ignores assembly for challenges without the step', () {
+      final challenge = allPracticeChallenges.firstWhere(
+        (c) => !c.checksAssembly,
+      );
+      final perfect = evaluateAttempt(
+        challenge,
+        challenge.correctIngredients.toSet(),
+        challenge.correctMethod,
+        {
+          for (final entry in challenge.proportions.entries)
+            entry.key: entry.value.targetMl,
+        },
+      );
+
+      expect(perfect.assemblyCorrect, isTrue);
+      expect(perfect.stars, 3);
+    });
+
+    test('evaluator fails the attempt on wrong assembly order', () {
+      final challenge = allPracticeChallenges.firstWhere(
+        (c) => c.checksAssembly,
+      );
+      final proportions = {
+        for (final entry in challenge.proportions.entries)
+          entry.key: entry.value.targetMl,
+      };
+
+      final right = evaluateAttempt(
+        challenge,
+        challenge.correctIngredients.toSet(),
+        challenge.correctMethod,
+        proportions,
+        assembly: challenge.assembly,
+      );
+      final wrong = evaluateAttempt(
+        challenge,
+        challenge.correctIngredients.toSet(),
+        challenge.correctMethod,
+        proportions,
+        assembly: challenge.assembly.reversed.toList(),
+      );
+
+      expect(right.assemblyCorrect, isTrue);
+      expect(wrong.assemblyCorrect, isFalse);
+      expect(wrong.feedbackText, isNot(challenge.feedback.perfect));
+    });
+
     test('keeps every quiz usable and explainable', () {
       for (final quiz in quizzes) {
         final questions =

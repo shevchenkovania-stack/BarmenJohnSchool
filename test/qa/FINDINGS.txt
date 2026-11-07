@@ -1,23 +1,38 @@
-всего проблем: 22
+всего проблем: 37
+- [layout][post-shot:06_lesson_slide1] Golden "shots/06_lesson_slide1.png": Pixel test failed, 62.80%, 2069846px diff detected. 
+- [layout][post-shot:06_lesson_slide2] Golden "shots/06_lesson_slide2.png": Pixel test failed, 41.63%, 1372105px diff detected. 
+- [layout][post-shot:06_lesson_slide3] Golden "shots/06_lesson_slide3.png": Pixel test failed, 62.54%, 2061187px diff detected. 
+- [layout][post-shot:06_lesson_slide4] Golden "shots/06_lesson_slide4.png": Pixel test failed, 42.52%, 1401377px diff detected. 
+- [layout][post-shot:06_lesson_slide5] Golden "shots/06_lesson_slide5.png": Pixel test failed, 72.67%, 2395137px diff detected. 
+- [layout][post-shot:06_lesson_slide7] Golden "shots/06_lesson_slide7.png": Pixel test failed, 66.22%, 2182403px diff detected. 
+- [layout][post-shot:06_lesson_slide8] Golden "shots/06_lesson_slide8.png": Pixel test failed, 63.00%, 2076257px diff detected. 
+- [layout][post-shot:07_lesson_finish] Golden "shots/07_lesson_finish.png": Pixel test failed, 63.00%, 2076257px diff detected. 
 - [Lesson A_01] после последнего слайда: кнопка «К тесту»=true
-- [layout][post-shot:08_quiz_q1] Golden "shots/08_quiz_q1.png": Pixel test failed, 62.10%, 2046800px diff detected. 
-- [Quiz A_01] вопрос 1: слайдер (3 шт)
-- [layout][post-shot:08_quiz_q1_answered] Golden "shots/08_quiz_q1_answered.png": Pixel test failed, 77.32%, 2548195px diff detected. 
-- [layout][post-shot:08_quiz_q2_answered] Golden "shots/08_quiz_q2_answered.png": Pixel test failed, 79.01%, 2603895px diff detected. 
-- [layout][post-shot:08_quiz_q3_answered] Golden "shots/08_quiz_q3_answered.png": Pixel test failed, 25.07%, 826105px diff detected. 
-- [Quiz A_01] вопрос 5: matching (4 пар)
-- [layout][post-shot:08_quiz_q5_answered] Golden "shots/08_quiz_q5_answered.png": Pixel test failed, 52.32%, 1724352px diff detected. 
-- [layout][post-shot:08_quiz_q6_answered] Golden "shots/08_quiz_q6_answered.png": Pixel test failed, 77.32%, 2548195px diff detected. 
-- [layout][post-shot:08_quiz_q7_answered] Golden "shots/08_quiz_q7_answered.png": Pixel test failed, 76.13%, 2509235px diff detected. 
-- [layout][post-shot:08_quiz_q8_answered] Golden "shots/08_quiz_q8_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q9_answered] Golden "shots/08_quiz_q9_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q10_answered] Golden "shots/08_quiz_q10_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q11_answered] Golden "shots/08_quiz_q11_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q12_answered] Golden "shots/08_quiz_q12_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:09_quiz_result] Golden "shots/09_quiz_result.png": Pixel test failed, 25.73%, 847964px diff detected. 
+- [layout][post-shot:08_quiz_q1] Golden "shots/08_quiz_q1.png": Pixel test failed, 74.87%, 2467667px diff detected. 
+- [Quiz A_01] вопрос 1: sequence/ReorderableListView
+- [layout][post-shot:08_quiz_q1_answered] Golden "shots/08_quiz_q1_answered.png": Pixel test failed, 74.87%, 2467667px diff detected. 
+- [layout][post-shot:08_quiz_q3_answered] Golden "shots/08_quiz_q3_answered.png": Pixel test failed, 79.61%, 2623862px diff detected. 
+- [layout][post-shot:08_quiz_q4_answered] Golden "shots/08_quiz_q4_answered.png": Pixel test failed, 79.01%, 2603895px diff detected. 
+- [layout][post-shot:08_quiz_q5_answered] Golden "shots/08_quiz_q5_answered.png": Pixel test failed, 79.22%, 2611034px diff detected. 
+- [Quiz A_01] вопрос 7: matching (4 пар)
+- [layout][post-shot:08_quiz_q7_answered] Golden "shots/08_quiz_q7_answered.png": Pixel test failed, 52.32%, 1724352px diff detected. 
+- [Quiz A_01] вопрос 8: matching (4 пар)
+- [layout][post-shot:08_quiz_q8_answered] Golden "shots/08_quiz_q8_answered.png": Pixel test failed, 25.59%, 843546px diff detected. 
+- [Quiz A_01] вопрос 9: matching (4 пар)
+- [layout][post-shot:08_quiz_q9_answered] Golden "shots/08_quiz_q9_answered.png": Pixel test failed, 25.59%, 843546px diff detected. 
+- [Quiz A_01] вопрос 10: matching (4 пар)
+- [layout][post-shot:08_quiz_q10_answered] Golden "shots/08_quiz_q10_answered.png": Pixel test failed, 25.59%, 843546px diff detected. 
+- [Quiz A_01] вопрос 11: matching (4 пар)
+- [layout][post-shot:08_quiz_q11_answered] Golden "shots/08_quiz_q11_answered.png": Pixel test failed, 25.59%, 843546px diff detected. 
+- [Quiz A_01] вопрос 12: matching (4 пар)
+- [layout][post-shot:08_quiz_q12_answered] Golden "shots/08_quiz_q12_answered.png": Pixel test failed, 25.59%, 843546px diff detected. 
+- [layout][post-shot:09_quiz_result] Golden "shots/09_quiz_result.png": Pixel test failed, 25.59%, 843546px diff detected. 
 - [Quiz A_01] статус урока после квиза: LessonStatus.available
 - [layout][post-shot:10_quiz_fail] Golden "shots/10_quiz_fail.png": Pixel test failed, 76.70%, 2527972px diff detected. 
 - [Quiz fail] статус урока после провала: LessonStatus.available (должен быть НЕ completed)
 - [Workshop] блоков практики в списке: A, B, C, D, E, F (всего заданий: 32)
 - [Practice Mojito] вариантов ингредиентов на экране: 1
 - [Practice Mojito] контролы пропорций: Slider=5 InkWell=1 GestureDetector=1
+- [layout][post-shot:24_wisdom_vault] Golden "shots/24_wisdom_vault.png": Pixel test failed, 0.17%, 5498px diff detected. 
+- [layout][post-shot:31_narrow_lesson] Golden "shots/31_narrow_lesson.png": Pixel test failed, 56.79%, 1177595px diff detected. 
+- [layout][post-shot:32_narrow_lesson_slide2] Golden "shots/32_narrow_lesson_slide2.png": Pixel test failed, 63.07%, 1307749px diff detected. 

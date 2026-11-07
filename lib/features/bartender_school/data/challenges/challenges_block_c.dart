@@ -16,16 +16,24 @@ const List<PracticeChallenge> challengesBlockC = [
     proportions: {
       'Rum': ProportionTarget(targetMl: 60, toleranceMl: 10),
       'Lime': ProportionTarget(targetMl: 30, toleranceMl: 5),
-      'Mint': ProportionTarget(targetMl: 6, toleranceMl: 2),
-      'Sugar': ProportionTarget(targetMl: 15, toleranceMl: 3),
       'Soda water': ProportionTarget(targetMl: 60, toleranceMl: 10),
     },
+    // Сахар и мята идут первыми: сахар защищает листья при надавливании,
+    // лёд — последним перед содовой, иначе мята не отдаст аромат.
+    assembly: [
+      'Мята и сахар в бокал',
+      'Размять пестиком',
+      'Лайм и ром',
+      'Лёд',
+      'Содовая',
+    ],
     feedback: PracticeFeedback(
       perfect: 'Мохито — мятная свежесть Кубы. Muddle освоено — мята цела.',
       wrongIngredients: 'Мохито: ром, лайм, мята, сахар, содовая. Не водка!',
       wrongMethod: 'Muddle — помни мяту с лаймом и сахаром, затем build.',
-      wrongProportions:
-          '60мл ром, 30мл лайм, 6 листьев мяты, 15мл сахар, 60мл сода.',
+      wrongProportions: '60 мл рома, 30 мл лайма, 2 ложки сахара, содовая.',
+      wrongAssembly:
+          'Сначала мята с сахаром и пестик. Лайм и ром — после, лёд и содовая — в конце.',
     ),
   ),
   PracticeChallenge(
@@ -44,11 +52,21 @@ const List<PracticeChallenge> challengesBlockC = [
       'Lime': ProportionTarget(targetMl: 30, toleranceMl: 5),
       'Sugar': ProportionTarget(targetMl: 15, toleranceMl: 3),
     },
+    // Порядок не влияет на вкус, но влияет на скорость: жидкости первыми,
+    // лёд последним — так шейкер закрывается с первого раза.
+    assembly: [
+      'Ром, лайм и сироп в шейкер',
+      'Лёд до верха',
+      'Shake 10–12 секунд',
+      'Двойное процеживание в бокал',
+    ],
     feedback: PracticeFeedback(
       perfect: 'Даикири — чистый баланс. Хемингуэй одобрил бы.',
       wrongIngredients: 'Даикири: ром, лайм, сахар. Не водка!',
       wrongMethod: 'Shake со льдом 10-12 секунд.',
       wrongProportions: '2:1:0.5 ром, лайм, сахар.',
+      wrongAssembly:
+          'Жидкости — в шейкер, лёд — сверху, затем shake и двойное процеживание.',
     ),
   ),
   PracticeChallenge(
@@ -67,11 +85,20 @@ const List<PracticeChallenge> challengesBlockC = [
       'Campari': ProportionTarget(targetMl: 30, toleranceMl: 5),
       'Sweet vermouth': ProportionTarget(targetMl: 30, toleranceMl: 5),
     },
+    // Жидкости первыми, лёд после них.
+    assembly: [
+      'Джин, Кампари и вермут в стакан для смешивания',
+      'Лёд',
+      'Stir 25–30 секунд',
+      'Процедить в бокал с большим кубом',
+    ],
     feedback: PracticeFeedback(
       perfect: 'Негрони — итальянская гордость. Равные части, равный баланс.',
       wrongIngredients: 'Негрони: джин, кампари, сладкий вермут. Не апероль!',
       wrongMethod: 'Stir — перемешай барной ложкой 30 секунд.',
       wrongProportions: '1:1:1 джин, кампари, вермут.',
+      wrongAssembly:
+          'Сначала жидкости, затем лёд, stir и процеживание в бокал с кубом.',
     ),
   ),
   PracticeChallenge(

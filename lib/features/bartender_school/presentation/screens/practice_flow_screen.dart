@@ -25,6 +25,9 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
   String? _selectedMethod;
   final Map<String, int> _proportions = {};
 
+  /// Выбранный порядок шагов сборки (только для заданий, где он важен).
+  List<String> _assembly = [];
+
   // Результат
   PracticeResult? _result;
   int _xpEarned = 0;
@@ -36,14 +39,23 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
   Timer? _timer;
   bool _timeBonusEarned = false;
 
-  static const _totalSteps = 5;
-  static const _stepLabels = [
-    'Задание',
-    'Ингредиенты',
-    'Метод',
-    'Пропорции',
-    'Результат',
-  ];
+  /// Проверяет ли текущее задание порядок сборки.
+  bool get _checksAssembly => widget.challenge.checksAssembly;
+
+  /// Шаги экрана. Порядок сборки появляется только там, где он задан.
+  List<String> get _stepLabels => [
+        'Задание',
+        'Ингредиенты',
+        'Метод',
+        'Пропорции',
+        if (_checksAssembly) 'Сборка',
+        'Результат',
+      ];
+
+  int get _totalSteps => _stepLabels.length;
+
+  /// Индекс шага результата.
+  int get _resultStep => _totalSteps - 1;
 
   @override
   void initState() {
@@ -81,8 +93,8 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
       setState(() => _currentStep++);
       // Старт таймера на шаге 1 (ингредиенты)
       if (_currentStep == 1) _startTimer();
-      // Стоп таймера на шаге 4 (результат)
-      if (_currentStep == 4) _stopTimer();
+      // Стоп таймера на шаге результата
+      if (_currentStep == _resultStep) _stopTimer();
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -98,6 +110,7 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
       _selectedIngredients,
       _selectedMethod ?? '',
       _proportions,
+      assembly: widget.challenge.checksAssembly ? _assembly : null,
     );
     final award = context.read<ProgressService>().recordPracticeAttempt(
           challenge: widget.challenge,
@@ -193,8 +206,15 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
                     onChange: (ing, ml) {
                       setState(() => _proportions[ing] = ml);
                     },
-                    onEvaluate: _evaluate,
+                    onEvaluate: _checksAssembly ? _nextStep : _evaluate,
                   ),
+                  if (_checksAssembly)
+                    _AssemblyStep(
+                      challenge: widget.challenge,
+                      order: _assembly,
+                      onChanged: (order) => setState(() => _assembly = order),
+                      onEvaluate: _evaluate,
+                    ),
                   _ResultStep(
                     challenge: widget.challenge,
                     result: _result,
@@ -208,6 +228,7 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
                       setState(() {
                         _selectedIngredients.clear();
                         _selectedMethod = null;
+                        _assembly = [];
                         for (final ing in widget.challenge.correctIngredients) {
                           _proportions[ing] = 30;
                         }
@@ -771,6 +792,160 @@ class _ProportionsStep extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
+              ),
+              child: const Text('Проверить',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Step: Assembly (порядок сборки) ─────────────────────────────────────────
+
+/// Порядок сборки: шаги собираются нажатием, порядок проверяется.
+///
+/// Шаг появляется только у коктейлей, где порядок реально меняет результат.
+/// Ученик не перетаскивает — нажимает шаги по очереди, это надёжнее на
+/// маленьком экране и не требует долгого нажатия.
+class _AssemblyStep extends StatelessWidget {
+  final PracticeChallenge challenge;
+  final List<String> order;
+  final ValueChanged<List<String>> onChanged;
+  final VoidCallback onEvaluate;
+
+  const _AssemblyStep({
+    required this.challenge,
+    required this.order,
+    required this.onChanged,
+    required this.onEvaluate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final remaining = challenge.assembly
+        .where((step) => !order.contains(step))
+        .toList();
+
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Собери по порядку',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Нажимай шаги в том порядке, в котором собираешь коктейль',
+            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 16),
+
+          // Собранная последовательность
+          Expanded(
+            child: ListView(
+              children: [
+                for (var i = 0; i < order.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withAlpha(20),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColors.primary.withAlpha(120),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            '${i + 1}',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              order[i],
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            visualDensity: VisualDensity.compact,
+                            tooltip: 'Убрать шаг',
+                            icon: const Icon(Icons.close, size: 18),
+                            color: AppColors.textSecondary,
+                            onPressed: () => onChanged(
+                              order.where((s) => s != order[i]).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (remaining.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Осталось разложить:',
+                    style:
+                        TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(height: 8),
+                  for (final step in remaining)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: OutlinedButton(
+                        onPressed: () => onChanged([...order, step]),
+                        style: OutlinedButton.styleFrom(
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 14),
+                          side: BorderSide(color: AppColors.border),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          step,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ],
+            ),
+          ),
+
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: remaining.isEmpty ? onEvaluate : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.black,
+                disabledBackgroundColor: AppColors.primary.withAlpha(60),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14)),
               ),
