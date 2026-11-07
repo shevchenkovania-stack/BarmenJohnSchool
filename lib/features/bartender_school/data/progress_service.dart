@@ -151,9 +151,28 @@ class ProgressService extends ChangeNotifier {
   int get wisdomTotal => BartenderSchoolConfig.wisdomFragmentCount;
 
   /// How many Level 1 lessons are required to unlock this fragment.
+  ///
+  /// Используется только в подписи «Откроется после урока N»: уроков в
+  /// предыдущих блоках. Решение об открытии принимает
+  /// [isWisdomBlockCompleted].
   int wisdomRequiredLessons(int wisdomNumber) {
     return BartenderSchoolConfig.wisdomLessonRequirements[wisdomNumber] ?? 999;
   }
+
+  /// Whether the block that opens this fragment is finished.
+  ///
+  /// Мудрость идёт за школой: закончил блок A — открылись записи 1-2,
+  /// закончил B — 3-5, закончил C — 6-7. Проверяется по всем урокам блока,
+  /// а не по счётчику, поэтому «открыто N» на главной и в сундуке совпадают.
+  bool isWisdomBlockCompleted(int wisdomNumber) {
+    final blockId = BartenderSchoolConfig.wisdomBlocks[wisdomNumber];
+    if (blockId == null) return false;
+    return isBlockCompleted(blockId);
+  }
+
+  /// Имя блока, который открывает фрагмент ('A', 'B' или 'C').
+  String? wisdomBlockFor(int wisdomNumber) =>
+      BartenderSchoolConfig.wisdomBlocks[wisdomNumber];
 
   /// Whether the previous Wisdom fragment has been fully read.
   ///
@@ -167,12 +186,14 @@ class ProgressService extends ChangeNotifier {
   }
 
   /// Whether a wisdom fragment is available for purchase.
-  /// Requires: Level 1 milestone met, previous fragment read, not purchased.
+  /// Requires: block finished, previous fragment read, not purchased.
+  ///
+  /// Последовательность важна: без неё весь блок A вываливался бы разом.
   bool isWisdomAvailable(int wisdomNumber) {
     if (BartenderSchoolConfig.DEBUG_UNLOCK_ALL) return true;
     if (isWisdomPurchased(wisdomNumber)) return false;
-    if (!isWisdomSequenceUnlocked(wisdomNumber)) return false;
-    return completedRegularLessons >= wisdomRequiredLessons(wisdomNumber);
+    if (!isWisdomBlockCompleted(wisdomNumber)) return false;
+    return isWisdomSequenceUnlocked(wisdomNumber);
   }
 
   /// Whether a wisdom fragment has been purchased.

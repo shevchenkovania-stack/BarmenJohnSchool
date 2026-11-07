@@ -117,6 +117,10 @@ class _WisdomVaultScreenState extends State<WisdomVaultScreen>
                       price: progress.getWisdomPrice(lesson.lessonNumber),
                       requiredLessons:
                           progress.wisdomRequiredLessons(lesson.lessonNumber),
+                      blockId:
+                          progress.wisdomBlockFor(lesson.lessonNumber) ?? 'A',
+                      blockCompleted:
+                          progress.isWisdomBlockCompleted(lesson.lessonNumber),
                       sequenceLocked: !progress
                           .isWisdomSequenceUnlocked(lesson.lessonNumber),
                       onTap: () => _openLesson(context, lesson, progress),
@@ -387,15 +391,19 @@ class _ChapterHeading extends StatelessWidget {
       children: [
         WisdomOrnamentDivider(),
         SizedBox(height: 10),
-        Text(
-          'Следуй по карте. Каждая запись открывается после уроков Level 1.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: WisdomPalette.ink,
-            fontFamily: 'serif',
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            height: 1.35,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6),
+          child: Text(
+            'Записи открываются по блокам школы: блок A — первые две, '
+            'блок B — три следующих, блок C — финальные.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: WisdomPalette.ink,
+              fontFamily: 'serif',
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              height: 1.35,
+            ),
           ),
         ),
       ],
@@ -411,6 +419,10 @@ class _WisdomMapCard extends StatelessWidget {
   final bool canAfford;
   final int price;
   final int requiredLessons;
+
+  /// Блок школы, который открывает запись ('A', 'B', 'C').
+  final String blockId;
+  final bool blockCompleted;
   final bool sequenceLocked;
   final VoidCallback onTap;
 
@@ -422,6 +434,8 @@ class _WisdomMapCard extends StatelessWidget {
     required this.canAfford,
     required this.price,
     required this.requiredLessons,
+    required this.blockId,
+    required this.blockCompleted,
     required this.sequenceLocked,
     required this.onTap,
   });
@@ -585,10 +599,12 @@ class _WisdomMapCard extends StatelessWidget {
   String _statusText(bool locked) {
     if (isPurchased) return 'Печать снята • читать';
     if (locked) {
+      if (!blockCompleted) {
+        return 'Откроется, когда закончите блок $blockId';
+      }
       if (sequenceLocked) {
         return 'Сначала завершите запись ${lesson.lessonNumber - 1}';
       }
-      return 'Откроется после урока $requiredLessons';
     }
     if (!canAfford) return 'Нужно $price монет';
     return '$price монет • сломать печать';

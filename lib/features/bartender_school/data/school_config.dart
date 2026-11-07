@@ -52,15 +52,41 @@ class BartenderSchoolConfig {
     7: 300,
   };
 
-  /// Minimum completed lessons required to purchase wisdom fragment N.
-  /// Prevents buying ahead without learning.
-  static const Map<int, int> wisdomLessonRequirements = {
-    1: 1,
-    2: 2,
-    3: 4,
-    4: 5,
-    5: 7,
-    6: 9,
-    7: 12,
+  /// Blocks of Level 1 whose completion opens each wisdom fragment.
+  ///
+  /// Wisdom follows the school, not the calendar: finished block A — two
+  /// notes, finished B — three more, finished C — the last two with the
+  /// exam. Kept here (not in the screens) so the counter on the main screen
+  /// and the vault always agree.
+  static const Map<int, String> wisdomBlocks = {
+    1: 'A',
+    2: 'A',
+    3: 'B',
+    4: 'B',
+    5: 'B',
+    6: 'C',
+    7: 'C',
   };
+
+  /// Level-1 blocks in the order the student passes them.
+  static const List<String> level1BlockOrder = ['A', 'B', 'C'];
+
+  /// Minimum completed lessons required to purchase wisdom fragment N.
+  ///
+  /// Derived from [wisdomBlocks]: the number of lessons in the blocks that
+  /// come before the one that opens the fragment. Kept as numbers because
+  /// the UI shows "Откроется после урока N".
+  static Map<int, int> get wisdomLessonRequirements {
+    const lessonsPerBlock = {'A': 4, 'B': 5, 'C': 4};
+    final result = <int, int>{};
+    for (final entry in wisdomBlocks.entries) {
+      final orderIndex = level1BlockOrder.indexOf(entry.value);
+      var required = 0;
+      for (var i = 0; i < orderIndex; i++) {
+        required += lessonsPerBlock[level1BlockOrder[i]] ?? 0;
+      }
+      result[entry.key] = required;
+    }
+    return result;
+  }
 }

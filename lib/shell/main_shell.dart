@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/features/home/view/home_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/wisdom_vault_screen.dart';
+import 'package:coin/features/bartender_school/presentation/screens/workshop_locked_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/workshop_screen.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/domain/entities/progress.dart';
@@ -33,12 +34,18 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
-  // Экраны создаются один раз — IndexedStack их не пересоздаёт
-  static const _screens = [
-    HomeScreen(), // 🎓 Главный экран — школа бармена (с большой картинкой)
-    WisdomVaultScreen(), // 📜 Мудрость старого бармена
-    WorkshopScreen(), // 🍸 Мастерская — практика бармена
+  // Экраны создаются один раз — IndexedStack их не пересоздаёт.
+  // Мастерская на третьем месте подменяется заглушкой, пока первый урок
+  // не пройден: пустой экран с замком объясняет, что делать, а SnackBar
+  // «пройди первый урок» раньше просто отталкивал.
+  late final List<Widget> _screens = [
+    const HomeScreen(), // 🎓 Главный экран — школа бармена
+    const WisdomVaultScreen(), // 📜 Мудрость старого бармена
+    const WorkshopScreen(), // 🍸 Мастерская — практика бармена
   ];
+
+  /// Переключиться на вкладку «Школа» — вызывается из замка мастерской.
+  void _goToSchool() => setState(() => _currentIndex = 0);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +58,13 @@ class _MainShellState extends State<MainShell> {
         return Scaffold(
           body: IndexedStack(
             index: _currentIndex,
-            children: _screens,
+            children: [
+              _screens[0],
+              _screens[1],
+              isWorkshopUnlocked
+                  ? _screens[2]
+                  : WorkshopLockedScreen(onGoToLesson: _goToSchool),
+            ],
           ),
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
@@ -75,26 +88,7 @@ class _MainShellState extends State<MainShell> {
                 letterSpacing: .3,
               ),
               currentIndex: _currentIndex,
-              onTap: (i) {
-                // Блокируем вкладку Мастерской если первый урок не пройден
-                if (i == 2 && !isWorkshopUnlocked) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text(
-                        '🔒 Пройди первый урок, чтобы открыть Мастерскую',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      backgroundColor: const Color(0xFF252336),
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  );
-                  return;
-                }
-                setState(() => _currentIndex = i);
-              },
+              onTap: (i) => setState(() => _currentIndex = i),
               type: BottomNavigationBarType.fixed,
               items: [
                 BottomNavigationBarItem(

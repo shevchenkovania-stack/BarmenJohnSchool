@@ -70,7 +70,7 @@ void main() {
       final repository = await _newRepository();
       final progress = await _newProgress(repository: repository);
       progress.earnCoins(10000);
-      _completeRegular(progress, 12);
+      _completeRegular(progress, 13);
 
       expect(progress.isWisdomAvailable(1), isTrue);
       for (var number = 2; number <= 7; number++) {
@@ -91,22 +91,71 @@ void main() {
       expect(progress.isWisdomAvailable(3), isFalse);
     });
 
-    test('fragment still respects the Level 1 progress milestone', () async {
+    test('wisdom follows the school blocks', () async {
+      final repository = await _newRepository();
+      final progress = await _newProgress(repository: repository);
+      progress.earnCoins(100000);
+
+      // Блок A (4 урока) — открываются записи 1 и 2.
+      _completeRegular(progress, 4);
+      expect(progress.isWisdomAvailable(1), isTrue);
+      expect(progress.isWisdomAvailable(2), isFalse,
+          reason: 'вторая запись ждёт прочтения первой');
+      progress.purchaseWisdom(1);
+      progress.completeLesson('lesson_W_01', xpEarned: 0);
+      expect(progress.isWisdomAvailable(2), isTrue);
+      expect(progress.isWisdomAvailable(3), isFalse,
+          reason: 'до конца блока B третьей записи быть не должно');
+
+      // Блок B (уроки 5-9) — открываются записи 3, 4, 5.
+      _completeRegular(progress, 9);
+      progress.purchaseWisdom(2);
+      progress.completeLesson('lesson_W_02', xpEarned: 0);
+      expect(progress.isWisdomAvailable(3), isTrue);
+      expect(progress.isWisdomAvailable(6), isFalse,
+          reason: 'записи блока C ещё закрыты');
+
+      // Блок C (10-13) — открываются последние две.
+      _completeRegular(progress, 13);
+      for (var number = 3; number <= 6; number++) {
+        progress.purchaseWisdom(number);
+        progress.completeLesson(
+          'lesson_W_${number.toString().padLeft(2, '0')}',
+          xpEarned: 0,
+        );
+      }
+      expect(progress.isWisdomAvailable(7), isTrue);
+      expect(progress.purchaseWisdom(7), isTrue);
+    });
+
+    test('block B does not open the last fragments by itself', () async {
+      final repository = await _newRepository();
+      final progress = await _newProgress(repository: repository);
+      progress.earnCoins(100000);
+      _completeRegular(progress, 9);
+
+      expect(progress.isWisdomBlockCompleted(5), isTrue);
+      expect(progress.isWisdomBlockCompleted(6), isFalse);
+      expect(progress.wisdomBlockFor(6), 'C');
+      expect(progress.wisdomRequiredLessons(6), 9);
+    });
+
+    test('fragment waits for its block to be finished', () async {
       final repository = await _newRepository();
       final progress = await _newProgress(repository: repository);
       progress.earnCoins(10000);
-      _completeRegular(progress, 1);
-      progress.completeLesson('lesson_W_01', xpEarned: 0);
+      _completeRegular(progress, 3);
 
+      expect(progress.isWisdomAvailable(1), isFalse,
+          reason: 'в блоке A ещё есть непройденный урок');
+      _completeRegular(progress, 4);
       expect(progress.isWisdomAvailable(1), isTrue);
-      expect(progress.isWisdomAvailable(2), isFalse);
-      expect(progress.purchaseWisdom(2), isFalse);
     });
 
     test('purchase is coin-gated and idempotent', () async {
       final repository = await _newRepository();
       final progress = await _newProgress(repository: repository);
-      _completeRegular(progress, 1);
+      _completeRegular(progress, 4);
 
       expect(progress.isWisdomAvailable(1), isTrue);
       expect(progress.purchaseWisdom(1), isFalse);

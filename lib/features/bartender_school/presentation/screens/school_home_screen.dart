@@ -737,11 +737,12 @@ class _QuickAccessSection extends StatelessWidget {
           child: Consumer2<ProgressService, LessonRepository>(
             builder: (context, progressService, lessonRepo, _) {
               final wisdomLessons = lessonRepo.getWisdomLessons();
+              // Считаем по тому же правилу, что и сундук: фрагмент доступен,
+              // если закончен его блок и прочитана предыдущая запись. Иначе
+              // «Открыто N» на главной и в сундуке расходились.
               final unlockedWisdom = wisdomLessons.where((lesson) {
-                return progressService.isLessonUnlocked(
-                  lesson.id,
-                  lesson.unlockCondition,
-                );
+                return progressService.isWisdomAvailable(lesson.lessonNumber) ||
+                    progressService.isWisdomPurchased(lesson.lessonNumber);
               }).length;
 
               return GestureDetector(
