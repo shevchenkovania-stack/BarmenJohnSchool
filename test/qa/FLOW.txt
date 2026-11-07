@@ -1,53 +1,82 @@
 - ── проход по 13 урокам Level 1 ──
 - [lesson_A_01] тест терминов: 9 вопросов, 0 неверно → основной квиз: true
-- [Quiz lesson_A_01] sequence: переставил 4 элементов, порядок совпадает: true
-- [lesson_A_01] основной квиз: вопросов 7, засчитано 7 из 7, типов [matching, trueFalse, sequence, singleChoice, multipleChoice, slider, trueFalse], диалог итога [Щепотка соли в сладком коктейле сделает его ещё слаще, не добавляя сахара., Экзамен • 7/7, 🎉 Достижение разблокировано!, Перфекционист, УРОК ЗАСЧИТАН, Засчитано. Не потому что правильно, а потому что понял.] → статус урока: LessonStatus.completed, XP=50
+- [Quiz lesson_A_01] sequence: переставил 4 элементов, порядок совпадает: false
+- [lesson_A_01] основной квиз: вопросов 7, засчитано 7 из 7, типов [multipleChoice, trueFalse, multipleChoice, matching, sequence, slider, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=50
+- [LAYOUT][lesson_A_01 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_A_02] тест терминов: 4 вопросов, 0 неверно → основной квиз: true
-- [lesson_A_02] основной квиз: вопросов 5, засчитано 5 из 5, типов [singleChoice, singleChoice, singleChoice, singleChoice, trueFalse], диалог итога [25 мл лимонного сока — стандартное количество для коктейля., Экзамен • 5/5, УРОК ЗАСЧИТАН, Засчитано. Не потому что правильно, а потому что понял., 5 / 5, 100%] → статус урока: LessonStatus.completed, XP=100
+- [lesson_A_02] основной квиз: вопросов 5, засчитано 5 из 5, типов [trueFalse, singleChoice, singleChoice, singleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=100
+- [LAYOUT][lesson_A_02 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_A_03] тест терминов: 4 вопросов, 0 неверно → основной квиз: true
-- [lesson_A_03] основной квиз: вопросов 5, засчитано 5 из 5, типов [singleChoice, singleChoice, singleChoice, trueFalse, singleChoice], диалог итога [Какой сироп даёт больше 'тела' коктейлю?, Simple syrup 1:1, Rich syrup 2:1, Оба одинаково, Экзамен • 5/5, УРОК ЗАСЧИТАН] → статус урока: LessonStatus.completed, XP=150
+- [lesson_A_03] основной квиз: вопросов 5, засчитано 5 из 5, типов [singleChoice, singleChoice, singleChoice, singleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=150
+- [LAYOUT][lesson_A_03 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_A_04] тест терминов: 4 вопросов, 0 неверно → основной квиз: true
-- [lesson_A_04] основной квиз: вопросов 5, засчитано 5 из 5, типов [singleChoice, singleChoice, trueFalse, singleChoice, singleChoice], диалог итога [Какие три элемента 'золотого треугольника' коктейля?, Кислое, сладкое, горькое, Кислое, сладкое, крепкое, Сладкое, горькое, солёное, Кислое, горькое, крепкое, Экзамен • 5/5] → статус урока: LessonStatus.completed, XP=200
+- [lesson_A_04] основной квиз: вопросов 5, засчитано 5 из 5, типов [trueFalse, singleChoice, singleChoice, singleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=200
+- [LAYOUT][lesson_A_04 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_B_05] тест терминов: 3 вопросов, 0 неверно → основной квиз: true
-- [lesson_B_05] основной квиз: вопросов 5, засчитано 5 из 5, типов [trueFalse, singleChoice, multipleChoice, singleChoice, matching], диалог итога [Сопоставь элемент с правильной зоной станции:, Выбери пару для каждой карточки:, 🧊 Лёд кубики, Зона биттеров, 🍯 Simple syrup, 🍋 Лаймовый сок] → статус урока: LessonStatus.completed, XP=250
+- [lesson_B_05] основной квиз: вопросов 5, засчитано 5 из 5, типов [matching, singleChoice, singleChoice, trueFalse, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=250
+- [LAYOUT][lesson_B_05 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_B_06] тест терминов: 3 вопросов, 0 неверно → основной квиз: true
-- [lesson_B_06] основной квиз: вопросов 6, засчитано 6 из 6, типов [singleChoice, trueFalse, singleChoice, singleChoice, singleChoice, singleChoice], диалог итога [Сколько миллилитров в 1 oz при расчётах для бара?, Экзамен • 6/6, УРОК ЗАСЧИТАН, Засчитано. Не потому что правильно, а потому что понял., 6 / 6, 100%] → статус урока: LessonStatus.completed, XP=300
+- [lesson_B_06] основной квиз: вопросов 6, засчитано 6 из 6, типов [singleChoice, multipleChoice, singleChoice, singleChoice, trueFalse, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=300
+- [LAYOUT][lesson_B_06 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_B_07] тест терминов: 8 вопросов, 0 неверно → основной квиз: true
-- [lesson_B_07] основной квиз: вопросов 7, засчитано 7 из 7, типов [singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, trueFalse, multipleChoice], диалог итога [Какие ингредиенты требуют Dry Shake? Выбери все верные., Можно выбрать несколько ответов:, Фруктовое пюре, Экзамен • 7/7, УРОК ЗАСЧИТАН, Засчитано. Не потому что правильно, а потому что понял.] → статус урока: LessonStatus.completed, XP=350
+- [lesson_B_07] основной квиз: вопросов 7, засчитано 7 из 7, типов [trueFalse, singleChoice, singleChoice, multipleChoice, singleChoice, singleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=350
+- [LAYOUT][lesson_B_07 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_B_08] тест терминов: 5 вопросов, 0 неверно → основной квиз: true
-- [lesson_B_08] основной квиз: вопросов 7, засчитано 7 из 7, типов [trueFalse, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, multipleChoice], диалог итога [Какие типы льда используются в баре? Выбери все верные., Можно выбрать несколько ответов:, Кубики (cubed) — стандарт для shake/stir, Дроблёный (crushed) — для Mojito, tiki, Шар (sphere) — медленное таяние для whisky, Куски (chunk) — для N/O Old Fashioned] → статус урока: LessonStatus.completed, XP=400
+- [lesson_B_08] основной квиз: вопросов 7, засчитано 7 из 7, типов [singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, multipleChoice, slider], ОБОРВАЛСЯ: повтор вопроса (slider) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=400
+- [LAYOUT][lesson_B_08 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_B_09] тест терминов: 3 вопросов, 0 неверно → основной квиз: true
-- [Quiz lesson_B_09] sequence: переставил 5 элементов, порядок совпадает: false
-- [lesson_B_09] основной квиз: вопросов 5, засчитано 5 из 5, типов [multipleChoice, singleChoice, multipleChoice, trueFalse, sequence], диалог итога [В каком порядке открывают смену? Расставь шаги., Расставь шаги в правильном порядке:, Проверить и подготовить лёд, Нарезать свежий гарниш и подписать его, Проверить инструмент, Протереть станцию и подготовить тряпку] → статус урока: LessonStatus.completed, XP=450
+- [lesson_B_09] основной квиз: вопросов 5, засчитано 5 из 5, типов [multipleChoice, multipleChoice, singleChoice, matching, trueFalse], ОБОРВАЛСЯ: повтор вопроса (trueFalse) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=450
+- [LAYOUT][lesson_B_09 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_C_09] тест терминов: 3 вопросов, 0 неверно → основной квиз: true
-- [lesson_C_09] основной квиз: вопросов 6, засчитано 6 из 6, типов [singleChoice, singleChoice, multipleChoice, trueFalse, singleChoice, singleChoice], диалог итога [Почему нельзя сильно давить мяту?, Мята потеряет цвет, Разрушенные листья дают горечь и зелёную муть, Улетучится аромат, Это неправильная техника, Экзамен • 6/6] → статус урока: LessonStatus.completed, XP=500
+- [lesson_C_09] основной квиз: вопросов 6, засчитано 6 из 6, типов [singleChoice, multipleChoice, trueFalse, singleChoice, singleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=500
+- [LAYOUT][lesson_C_09 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_C_10] тест терминов: 3 вопросов, 0 неверно → основной квиз: true
-- [lesson_C_10] основной квиз: вопросов 6, засчитано 6 из 6, типов [singleChoice, trueFalse, multipleChoice, singleChoice, singleChoice, singleChoice], диалог итога [Что такое двойное процеживание?, Процедить два раза, Hawthorne + мелкое сито, Два разных ситечка, Процедить и перелить, Экзамен • 6/6] → статус урока: LessonStatus.completed, XP=550
+- [lesson_C_10] основной квиз: вопросов 6, засчитано 6 из 6, типов [trueFalse, singleChoice, singleChoice, multipleChoice, singleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=550
+- [LAYOUT][lesson_C_10 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_C_11] тест терминов: 3 вопросов, 0 неверно → основной квиз: true
-- [lesson_C_11] основной квиз: вопросов 6, засчитано 6 из 6, типов [singleChoice, singleChoice, singleChoice, multipleChoice, trueFalse, singleChoice], диалог итога [Что такое Кампари?, Горько-сладкий красный ликёр, Итальянский вермут, Апельсиновая настойка, Травяной ликёр, Экзамен • 6/6] → статус урока: LessonStatus.completed, XP=600
+- [lesson_C_11] основной квиз: вопросов 6, засчитано 6 из 6, типов [multipleChoice, singleChoice, trueFalse, singleChoice, singleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=600
+- [LAYOUT][lesson_C_11 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - [lesson_C_12] терминов не потребовалось → сразу основной квиз
-- [lesson_C_12] основной квиз: вопросов 15, засчитано 15 из 15, типов [singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, multipleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice], диалог итога [Что даёт Кампари в Негрони?, Горечь и цвет, Экзамен • 15/15, УРОК ЗАСЧИТАН, Засчитано. Не потому что правильно, а потому что понял., 15 / 15] → статус урока: LessonStatus.completed, XP=650
+- [lesson_C_12] основной квиз: вопросов 15, засчитано 15 из 15, типов [singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, singleChoice, multipleChoice, singleChoice], ОБОРВАЛСЯ: повтор вопроса (singleChoice) — UI не пропустил дальше → статус урока: LessonStatus.completed, XP=650
+- [LAYOUT][lesson_C_12 end] Error: Could not find the correct Provider<WeeklyContractService> above this QuizScreen Widget
 - ── практика Level 1: 20 заданий ──
-- [practice_margarita] идеальное выполнение → звёзд: 3, XP практики +40, экран результата: true
-- [practice_whiskey_sour] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_tom_collins] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_cosmopolitan] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_old_fashioned] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_last_word] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_penicillin] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_manhattan] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_moscow_mule] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_aperol_spritz] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_bloody_mary] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_espresso_martini] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_gin_fizz] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_sidecar] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
+- [LAYOUT][Practice practice_margarita result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_margarita] идеальное выполнение → звёзд: 3, XP практики +40, экран результата: false
+- [LAYOUT][Practice practice_whiskey_sour result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_whiskey_sour] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_tom_collins result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_tom_collins] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_cosmopolitan result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_cosmopolitan] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_old_fashioned result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_old_fashioned] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_last_word result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_last_word] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_penicillin result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_penicillin] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_manhattan result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_manhattan] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_moscow_mule result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_moscow_mule] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_aperol_spritz result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_aperol_spritz] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_bloody_mary result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_bloody_mary] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_espresso_martini result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_espresso_martini] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_gin_fizz result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_gin_fizz] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_sidecar result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_sidecar] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
 - [practice_mojito] идеальное выполнение → звёзд: 0, XP практики +0, экран результата: false
 - [practice_daiquiri] идеальное выполнение → звёзд: 0, XP практики +0, экран результата: false
 - [practice_negroni] идеальное выполнение → звёзд: 0, XP практики +0, экран результата: false
-- [practice_boulevardier] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_pisco_sour] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
-- [practice_mai_tai] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: true
+- [LAYOUT][Practice practice_boulevardier result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_boulevardier] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_pisco_sour result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_pisco_sour] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
+- [LAYOUT][Practice practice_mai_tai result] Error: Could not find the correct Provider<WeeklyContractService> above this PracticeFlowScreen Widget
+- [practice_mai_tai] идеальное выполнение → звёзд: 3, XP практики +30, экран результата: false
 - [идемпотентность] прогон 1: XP практики 0 → 0, монеты 0 → 0, звёзды 0
 - [идемпотентность] прогон 2: XP практики 0 → 0, монеты 0 → 0, звёзды 0
 - [диплом] все уроки + без практики: isSchoolCompleted=false
@@ -55,6 +84,8 @@
 - [диплом UI с практикой] LEVEL 1 § Диплом Бармена § Базовый курс § Пройти 13 уроков базового курса § Выучить основы баланса коктейлей § Дипломный зал
 - [диплом] все уроки + Mojito/Daiquiri/Negroni по 3★: isSchoolCompleted=true, Level 2 (lesson_D_13) разблокирован=true
 - [диплом] один урок не закрыт: isSchoolCompleted=false (ожидается false)
+- [LAYOUT][360×640 оболочка] Error: Could not find the correct Provider<WeeklyContractService> above this _WeeklyContractCard Widget
+- [LAYOUT][320×568 оболочка] Error: Could not find the correct Provider<WeeklyContractService> above this _WeeklyContractCard Widget
 - [diag lesson_A_01] кнопок=1 тексты: Слайд 1 из 8 § 12% § Твой вкусовой компас § Бармен Джон § Сегодня учимся не гадать, а чинить вкус. За стойкой это важнее, чем знать сто рецептов. § Забудь про «вкусно/невкусно». У коктейля 5 рычагов управления вкусом. Научись дёргать за нужный — и ты перестанешь гадать, начнёшь управлять.  Эти 5 рычагов работают как кнопки в микшере: одна усиливает, другая приглушает. Поняв их — ты поймёшь ЛЮБОЙ коктейль. § 🍬 СЛАДКОЕ — смягчает спирт, «обнимает» кислоту, даёт «тело» (плотность)    Простыми словами: делает крепкий напиток мягким и приятным § 🍋 КИСЛОЕ — будит нёбо, даёт яркость, «ставит на место» сладость    Простыми словами: делает коктейль свежим и интересным § 🌿 ГОРЬКОЕ — собирает вкус воедино, добавляет глубину и послевкусие    Простыми словами: делает вкус «объёмным», а не плоским § 🧂 СОЛЁНОЕ — усилитель: раскрывает сладость, убирает «плоскость»    Простыми словами: 1 капля — и всё «заиграет» § 🍄 УМАМИ — даёт «мясо», тело, долгое послевкусие    Простыми словами: коктейль не обрывается, а плавно заканчивается § Далее § 5 вкусов = твой пульт управления § 8
 - [diag lesson_A_02] кнопок=1 тексты: Слайд 1 из 5 § 20% § Архитектура баланса § Бармен Джон § Кислота должна быть как свет в комнате: достаточно ярко, но не слепит. § Кислота не просто «освежает». Она: • Снижает вязкость сладких компонентов • Поднимает летучие ароматы (цитрус, травы) • Создаёт контраст с алкоголем, делая вкус длиннее  Без кислоты — плоский, тяжёлый, «короткий» коктейль. С перебором — щиплет, маскирует спирт, вызывает гримасу.  Баланс = Кислота ↔ Сахар ↔ Спирт ↔ Разбавление льдом § Далее § Кислота в коктейлях § 4
 - [diag practice intro] Задание § Ингредиенты § Метод § Пропорции § Сборка § Результат § Mojito § Сегодня делаем Мохито. Ром, лайм, мята, сахар и содовая. Muddle — помни мяту, но не рви. Build — налей всё в бокал. § Начать § Mojito
@@ -68,5 +99,6 @@
 - [diag2 шаг 5] кнопок=1 [[Далее]]
 - [diag2 шаг 6] кнопок=1 [[Далее]]
 - [diag2 шаг 7] кнопок=1 [[К тесту]]
-- [diag2 финал] тап «К тесту»=true, тест терминов: true, основной квиз: false, тексты: 0/8 выучено § 1 / 6 § Что такое "Сладость"? § Интенсивное встряхивание в шейкере со льдом 10-15 секунд. § Один из 5 базовых вкусов. Сахар, сиропы, фрукты. § Энергичное встряхивание со льдом. Охлаждает, разбавляет, аэрирует.
+- [diag2 финал] тап «К тесту»=true, тест терминов: true, основной квиз: false, тексты: 0/8 выучено § 1 / 6 § Что такое "Сладость"? § Синоним встряхивания. Интенсивное смешивание со льдом. § Один из 5 базовых вкусов. Сахар, сиропы, фрукты. § Самый известный биттер. Травяной, пряный, с нотами горечавки.
+- [LAYOUT][quiz fail] Multiple exceptions (8) were detected during the running of the current test, and at least one was unexpected.
 - [провал квиза] lesson_A_02 статус: LessonStatus.available (должен быть НЕ completed)

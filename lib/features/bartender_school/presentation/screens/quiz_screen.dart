@@ -8,6 +8,7 @@ import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/block_rewards.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
 import 'package:coin/features/bartender_school/data/john_reactions.dart';
+import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/domain/entities/progress.dart';
 import 'package:coin/features/bartender_school/domain/entities/quiz.dart';
 import 'package:coin/features/bartender_school/domain/services/quiz_answer_evaluator.dart';
@@ -299,7 +300,8 @@ class _QuizScreenState extends State<QuizScreen> {
           : (failedBefore == 0
               ? JohnMoment.quizFailedFirstTime
               : JohnMoment.quizFailedAgain),
-      JohnContext(failedAttemptsBefore: failedBefore, streak: progressService.streak),
+      JohnContext(
+          failedAttemptsBefore: failedBefore, streak: progressService.streak),
     );
     final xpEarned = passed ? BartenderSchoolConfig.xpPerLesson : 0;
 
@@ -336,6 +338,12 @@ class _QuizScreenState extends State<QuizScreen> {
       _pendingBlockRewards = progressService.getNewlyCompletedBlockRewards();
     }
 
+    // Недельный контракт: урок считается только после сдачи, а квиз на 80%+
+    // закрывает отдельный пункт.
+    final contract = context.read<WeeklyContractService>();
+    if (passed) contract.registerLesson();
+    if (passed && percentage.toInt() >= 80) contract.registerExam();
+
     // Auto-unlock achievements
     List<String> unlockedAchievements = [];
 
@@ -352,9 +360,8 @@ class _QuizScreenState extends State<QuizScreen> {
     final trophies = (percentage / 100 * 3).round();
     // Повторный проход не должен превращать уже засчитанный урок в
     // «проваленный»: статус и XP не откатываются.
-    final alreadyCompleted =
-        progressService.getLessonStatus(widget.lessonId) ==
-            LessonStatus.completed;
+    final alreadyCompleted = progressService.getLessonStatus(widget.lessonId) ==
+        LessonStatus.completed;
     final lesson = Provider.of<LessonRepository>(
       context,
       listen: false,
@@ -944,12 +951,10 @@ class _QuizScreenState extends State<QuizScreen> {
               backgroundColor = Colors.transparent;
             }
           } else {
-            borderColor = isSelected
-                ? style.accent
-                : style.onDark.withAlpha(60);
-            backgroundColor = isSelected
-                ? style.accent.withAlpha(30)
-                : Colors.transparent;
+            borderColor =
+                isSelected ? style.accent : style.onDark.withAlpha(60);
+            backgroundColor =
+                isSelected ? style.accent.withAlpha(30) : Colors.transparent;
           }
 
           return Padding(
@@ -1013,8 +1018,7 @@ class _QuizScreenState extends State<QuizScreen> {
   /// панели, поэтому дефолтные фиолетовые подписи темы здесь выпадают из
   /// палитры.
   JohnRoomStyle get _currentStyle {
-    final lesson =
-        context.read<LessonRepository>().getLesson(widget.lessonId);
+    final lesson = context.read<LessonRepository>().getLesson(widget.lessonId);
     return JohnRoomStyle.forRoom(JohnRoomStyle.roomForBlock(lesson?.blockId));
   }
 

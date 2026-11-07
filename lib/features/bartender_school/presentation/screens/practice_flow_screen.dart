@@ -5,6 +5,7 @@ import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/practice_challenges.dart';
 import 'package:coin/features/bartender_school/data/john_reactions.dart';
+import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
 
@@ -126,6 +127,10 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
       qs.completeQuest(DailyQuestType.practiceCocktail).then((reward) {
         if (reward > 0) progress.earnCoins(reward);
       });
+      // Недельный контракт считает коктейли, собранные без ошибок.
+      if (result.stars >= 2) {
+        context.read<WeeklyContractService>().registerCocktail();
+      }
     }
     setState(() {
       _result = result;
@@ -828,9 +833,8 @@ class _AssemblyStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final remaining = challenge.assembly
-        .where((step) => !order.contains(step))
-        .toList();
+    final remaining =
+        challenge.assembly.where((step) => !order.contains(step)).toList();
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -986,7 +990,8 @@ class _JiggerSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rangeLow = (targetMl - tolerance).clamp(_minMl.toInt(), _maxMl.toInt());
+    final rangeLow =
+        (targetMl - tolerance).clamp(_minMl.toInt(), _maxMl.toInt());
     final rangeHigh =
         (targetMl + tolerance).clamp(_minMl.toInt(), _maxMl.toInt());
 

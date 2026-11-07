@@ -9,6 +9,7 @@ import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/home/home_viewmodel.dart';
 import 'package:coin/l10n/app_localizations.dart';
 import 'package:coin/features/bartender_school/data/john_reactions.dart';
+import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/presentation/screens/level1_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/glossary_screen.dart';
@@ -56,10 +57,12 @@ class HomeScreen extends StatelessWidget {
               const _JohnSays(),
               const SizedBox(height: 12),
               if (isCompactHeight)
-                SizedBox(height: 240, child: dailyChallenge)
+                SizedBox(height: 205, child: dailyChallenge)
               else
                 Expanded(child: dailyChallenge),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
+              const _WeeklyContractCard(),
+              const SizedBox(height: 12),
               const _LevelCardsRow(),
               const SizedBox(height: 12),
               const _QuickActionsRow(),
@@ -318,6 +321,157 @@ class _JohnSaysState extends State<_JohnSays> {
   }
 }
 
+// ── Недельный контракт Джона ──────────────────────────────────────────────────
+
+/// Карточка «Договор на неделю»: три пункта и история в награду.
+///
+/// Цифры здесь второстепенны: главное — что человек получает историю,
+/// а не ещё одну строку XP. Поэтому когда контракт закрыт, карточка
+/// превращается в кнопку «Слушать историю».
+class _WeeklyContractCard extends StatelessWidget {
+  const _WeeklyContractCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final contract = context.watch<WeeklyContractService>();
+    final style = JohnRoomStyle.forRoom(JohnSchoolRoom.foyer);
+    final claimed = contract.isClaimed;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+        decoration: BoxDecoration(
+          color: style.surface.withAlpha(205),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color:
+                contract.isComplete ? style.accent : style.accent.withAlpha(70),
+            width: contract.isComplete ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    claimed ? 'ДОГОВОР ЗАКРЫТ' : 'ДОГОВОР НА НЕДЕЛЮ',
+                    style: TextStyle(
+                      color: style.accent,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                ),
+                if (!claimed)
+                  Text(
+                    '${contract.items.where((i) => i.isComplete).length}/${contract.items.length}',
+                    style: TextStyle(
+                      color: style.onDark.withAlpha(170),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            if (claimed)
+              Text(
+                'История от Джона уже у тебя. В понедельник — новый договор.',
+                style:
+                    TextStyle(color: style.onDark, fontSize: 13, height: 1.35),
+              )
+            else ...[
+              for (final item in contract.items)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    children: [
+                      Text(item.emoji, style: const TextStyle(fontSize: 13)),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          item.title,
+                          style: TextStyle(
+                            color: item.isComplete
+                                ? style.accent
+                                : style.onDark.withAlpha(200),
+                            fontSize: 13,
+                            height: 1.3,
+                            decoration: item.isComplete
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '${item.done}/${item.target}',
+                        style: TextStyle(
+                          color: style.onDark.withAlpha(150),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              const SizedBox(height: 4),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: contract.isComplete
+                      ? () => _claimStory(context, contract)
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: style.accent,
+                    foregroundColor: style.ink,
+                    disabledBackgroundColor: style.accent.withAlpha(45),
+                    disabledForegroundColor: style.onDark.withAlpha(140),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    contract.isComplete
+                        ? 'Забрать историю'
+                        : 'Джон ждёт до понедельника',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _claimStory(
+    BuildContext context,
+    WeeklyContractService contract,
+  ) async {
+    final story = await contract.claim();
+    if (story == null || !context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text(story.title),
+        content: SingleChildScrollView(child: Text(story.text)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Спасибо, Джон'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ── Level Cards Row (горизонтальная линия) ────────────────────────────────────
 class _LevelCardsRow extends StatelessWidget {
   const _LevelCardsRow();
@@ -508,7 +662,10 @@ class _NoCacheChallengeHint extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      // Плашка стоит в слоте фиксированной высоты: на 360×640 с карточкой
+      // Джона и договором вертикальный запас стал меньше, поэтому отступы
+      // уменьшены вместе с иконкой.
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [AppColors.surfaceLight, AppColors.surface],
@@ -523,18 +680,18 @@ class _NoCacheChallengeHint extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [Color(0xFFE8A838), Color(0xFFB8821A)],
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: const Icon(Icons.download_rounded,
-                color: Colors.white, size: 28),
+                color: Colors.white, size: 24),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           const Text(
             'Загрузите рецепты',
             style: TextStyle(
