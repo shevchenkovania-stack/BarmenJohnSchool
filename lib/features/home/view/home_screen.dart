@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +9,8 @@ import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/home/home_viewmodel.dart';
 import 'package:coin/l10n/app_localizations.dart';
 import 'package:coin/features/bartender_school/data/john_reactions.dart';
+import 'package:coin/features/bartender_school/data/blind_tasting.dart';
+import 'package:coin/features/bartender_school/presentation/screens/blind_tasting_screen.dart';
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/presentation/screens/level1_screen.dart';
@@ -598,6 +600,21 @@ class _QuickActionsRow extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: _QuickAction(
+              label: 'Дегустация',
+              assetPath: 'images/ui_icon_tip_citrus.png',
+              // Маленькая точка, если раунд дня ещё не сыгран: приглашение
+              // без текста, которое не давит.
+              badge:
+                  context.watch<BlindTastingService>().playedToday ? null : '1',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BlindTastingScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _QuickAction(
               label: 'Диплом',
               assetPath: 'images/ui_icon_checklist.png',
               onTap: () => Navigator.push(
@@ -617,37 +634,70 @@ class _QuickAction extends StatelessWidget {
   final String assetPath;
   final VoidCallback onTap;
 
+  /// Метка справа сверху (например, «1» — доступен раунд дня).
+  final String? badge;
+
   const _QuickAction({
     required this.label,
     required this.assetPath,
     required this.onTap,
+    this.badge,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: JohnWoodPanel(
-        room: JohnSchoolRoom.foyer,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(assetPath, width: 21, height: 21),
-            const SizedBox(width: 6),
-            Flexible(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: const Color(0xFFE8D6B1),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          JohnWoodPanel(
+            room: JohnSchoolRoom.foyer,
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(assetPath, width: 21, height: 21),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: const Color(0xFFE8D6B1),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                overflow: TextOverflow.ellipsis,
+              ],
+            ),
+          ),
+          if (badge != null)
+            Positioned(
+              right: -2,
+              top: -4,
+              child: Container(
+                width: 18,
+                height: 18,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                  border:
+                      Border.all(color: const Color(0xFF1D120D), width: 1.5),
+                ),
+                child: Text(
+                  badge!,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

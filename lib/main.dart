@@ -29,6 +29,7 @@ import 'package:coin/features/bartender_school/data/quiz_repository.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
+import 'package:coin/features/bartender_school/data/blind_tasting.dart';
 
 /// Точка входа в приложение.
 ///
@@ -255,6 +256,10 @@ class _CocktailAppWithLoadingState extends State<CocktailAppWithLoading> {
         // Недельный контракт Джона: цель на дистанции + история в награду.
         ChangeNotifierProvider<WeeklyContractService>(
           create: (ctx) => WeeklyContractService(ctx.read<SharedPreferences>()),
+        ),
+        // Слепая дегустация: один раунд в день на изученных термах.
+        ChangeNotifierProvider<BlindTastingService>(
+          create: (ctx) => BlindTastingService(ctx.read<SharedPreferences>()),
         ),
 
         // Cocktail Builder ViewModel - конструктор коктейлей
