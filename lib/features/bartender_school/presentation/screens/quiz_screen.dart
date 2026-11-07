@@ -13,6 +13,7 @@ import 'package:coin/features/bartender_school/domain/entities/progress.dart';
 import 'package:coin/features/bartender_school/domain/entities/quiz.dart';
 import 'package:coin/features/bartender_school/domain/services/quiz_answer_evaluator.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/block_reward_dialog.dart';
+import 'package:coin/core/services/bar_sound_service.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
 
 /// Quiz screen - shows 5 random questions from lesson pool.
@@ -119,6 +120,7 @@ class _QuizScreenState extends State<QuizScreen> {
       );
       if (_isCurrentAnswerCorrect!) {
         _score++;
+        BarSoundService.instance.correct();
       }
     });
   }
@@ -150,6 +152,7 @@ class _QuizScreenState extends State<QuizScreen> {
       _isCurrentAnswerCorrect = isCorrect;
       if (isCorrect) {
         _score++;
+        BarSoundService.instance.correct();
       }
       _selectedIndices = null;
     });
@@ -169,6 +172,7 @@ class _QuizScreenState extends State<QuizScreen> {
       _isCurrentAnswerCorrect = isCorrect;
       if (isCorrect) {
         _score++;
+        BarSoundService.instance.correct();
       }
     });
   }
@@ -769,6 +773,13 @@ class _QuizScreenState extends State<QuizScreen> {
   void _closeCompletionDialog({required bool passed}) async {
     final navigator = Navigator.of(context);
     navigator.pop(); // Закрываем диалог завершения
+
+    // Звук итога квиза.
+    if (passed) {
+      BarSoundService.instance.success();
+    } else {
+      BarSoundService.instance.fail();
+    }
 
     // Если есть награды за блоки — показываем их по очереди
     if (passed && _pendingBlockRewards.isNotEmpty) {

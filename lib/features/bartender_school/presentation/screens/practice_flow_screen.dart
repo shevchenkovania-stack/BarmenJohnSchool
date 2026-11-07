@@ -8,6 +8,7 @@ import 'package:coin/features/bartender_school/data/john_reactions.dart';
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
+import 'package:coin/core/services/bar_sound_service.dart';
 
 /// 5-шаговый флоу практического задания.
 class PracticeFlowScreen extends StatefulWidget {
@@ -137,6 +138,13 @@ class _PracticeFlowScreenState extends State<PracticeFlowScreen> {
       _xpEarned = award.xpEarned;
       _timeBonusAwarded = award.timeBonusAwarded;
     });
+    // Звук результата: стук бокала + успех/провал.
+    BarSoundService.instance.glassTap();
+    if (result.stars >= 2) {
+      BarSoundService.instance.success();
+    } else {
+      BarSoundService.instance.fail();
+    }
     _nextStep();
   }
 

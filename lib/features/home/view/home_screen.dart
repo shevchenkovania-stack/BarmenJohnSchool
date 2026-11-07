@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +13,7 @@ import 'package:coin/features/bartender_school/data/blind_tasting.dart';
 import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/features/bartender_school/presentation/screens/blind_tasting_screen.dart';
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
+import 'package:coin/core/services/bar_sound_service.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/presentation/screens/level1_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/glossary_screen.dart';
@@ -20,6 +21,7 @@ import 'package:coin/features/bartender_school/presentation/screens/certificates
 import 'package:coin/features/bartender_school/presentation/widgets/student_name_dialog.dart';
 import 'package:coin/features/settings/view/settings_screen.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
+import 'package:coin/features/cocktail_list/view/cocktail_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -55,12 +57,18 @@ class HomeScreen extends StatelessWidget {
             // Порог поднят с 560: карточка Джона добавила строку, и на
             // экранах 640 px высотой фиксированная колонка упиралась в низ.
             final isCompactHeight = constraints.maxHeight < 640;
+            // Слот карточки дня масштабируется от высоты экрана: фиксированные
+            // 205 px обрезали плашку «Загрузите рецепты» вместе с кнопкой на
+            // телефонах 640-700 px, и её было видно только в альбомной
+            // ориентации.
+            final challengeSlot =
+                (constraints.maxHeight * 0.34).clamp(200.0, 320.0).toDouble();
             final children = <Widget>[
               _SchoolHeroHeader(topPad: topPad),
               const _JohnSays(),
               const SizedBox(height: 12),
               if (isCompactHeight)
-                SizedBox(height: 205, child: dailyChallenge)
+                SizedBox(height: challengeSlot, child: dailyChallenge)
               else
                 Expanded(child: dailyChallenge),
               const SizedBox(height: 12),
@@ -224,6 +232,14 @@ class _JohnSaysState extends State<_JohnSays> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _pickLine());
+    // Фоновый джаз бара — только на главной.
+    BarSoundService.instance.playBg();
+  }
+
+  @override
+  void dispose() {
+    BarSoundService.instance.stopBg();
+    super.dispose();
   }
 
   Future<void> _pickLine() async {
@@ -725,10 +741,6 @@ class _NoCacheChallengeHint extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      // Плашка стоит в слоте фиксированной высоты: на 360×640 с карточкой
-      // Джона и договором вертикальный запас стал меньше, поэтому отступы
-      // уменьшены вместе с иконкой.
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [AppColors.surfaceLight, AppColors.surface],
@@ -738,64 +750,141 @@ class _NoCacheChallengeHint extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.primary.withAlpha(40), width: 1),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFE8A838), Color(0xFFB8821A)],
-              ),
-              borderRadius: BorderRadius.circular(14),
+      // Карточка стоит в слоте ограниченной высоты, поэтому сама умеет
+      // прокручиваться: раньше при высоте 205 px кнопка «Загрузить»
+      // обрезалась, и на маленьком экране плашку было видно только в
+      // горизонтальной ориентации.
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFE8A838), Color(0xFFB8821A)],
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.download_rounded,
+                          color: Colors.white, size: 18),
+                    ),
+                    const SizedBox(width: 10),
+                    const Flexible(
+                      child: Text(
+                        'Загрузите рецепты',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Вызов дня берётся из базы рецептов — один раз скачать, '
+                  'дальше работает без интернета',
+                  style: TextStyle(
+                    color: Color(0xC0FFFFFF),
+                    fontSize: 11.5,
+                    height: 1.35,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Consumer<HomeViewModel>(
+                  builder: (context, vm, _) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: vm.isLoading
+                                  ? null
+                                  : () => _openRecipes(context, vm),
+                              icon: vm.isLoading
+                                  ? const SizedBox(
+                                      width: 15,
+                                      height: 15,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2, color: Colors.white))
+                                  : const Icon(Icons.library_books_rounded,
+                                      size: 16),
+                              label: Text(
+                                vm.isLoading ? 'Загрузка...' : 'Скачать базу',
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFE8A838),
+                                foregroundColor: Colors.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 11),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(11)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          // Второй путь: одним запросом взять случайный
+                          // рецепт, если человеку нужен только вызов дня.
+                          IconButton(
+                            tooltip: 'Один случайный рецепт',
+                            onPressed:
+                                vm.isLoading ? null : () => vm.loadRandom(),
+                            icon: const Icon(Icons.casino_rounded, size: 20),
+                            color: Colors.white,
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.white.withAlpha(30),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(11),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Ошибка сети больше не теряется: раньше кнопка просто
+                      // ничего не делала, и это выглядело как поломка.
+                      if (vm.hasError && vm.errorReason != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          vm.errorReason!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color(0xFFFFC9A3),
+                            fontSize: 11.5,
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
             ),
-            child: const Icon(Icons.download_rounded,
-                color: Colors.white, size: 24),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Загрузите рецепты',
-            style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 6),
-          // Плашка живёт в слоте фиксированной высоты: на 360×640 текст +
-          // кнопка вылезали за неё на 5.6 px, поэтому текст ограничен двумя
-          // строками.
-          const Text(
-            'Чтобы получить вызов дня, загрузите базу коктейлей',
-            style: TextStyle(color: Color(0x96FFFFFF), fontSize: 12),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 12),
-          Consumer<HomeViewModel>(
-            builder: (_, vm, __) => ElevatedButton.icon(
-              onPressed: vm.isLoading ? null : () => vm.loadRandom(),
-              icon: vm.isLoading
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
-                  : const Icon(Icons.download_rounded, size: 16),
-              label: Text(vm.isLoading ? 'Загрузка...' : 'Загрузить'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE8A838),
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
+  }
+
+  /// Открываем список рецептов — именно там скачивается вся база.
+  void _openRecipes(BuildContext context, HomeViewModel vm) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CocktailListScreen()),
+    ).then((_) => vm.reloadAfterBrowse());
   }
 }
 

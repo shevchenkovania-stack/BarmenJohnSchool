@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^6.2.1
   
   # Локализация (встроена в Flutter SDK)
   flutter_localizations:
@@ -57,6 +56,9 @@ dependencies:
 
   # Скелетон-анимация при загрузке
   shimmer: ^3.0.0
+
+  # Звуки бара (лёд, стук бокалов, фон)
+  audioplayers: ^5.2.1
 
   # Форматирование строк для локализации (числа, даты, плюрали)
   intl: any
@@ -132,6 +134,7 @@ flutter:
   assets:
     - images/
     - data/content/
+    - assets/sounds/
   
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -23,7 +23,20 @@ class HomeViewModel extends ChangeNotifier {
   Cocktail? cocktail; // текущий случайный коктейль
   bool isLoading = false; // НЕ показываем loading при старте
   bool hasError = false;
+
+  /// Почему последняя попытка не удалась.
+  ///
+  /// [hasError] нужен экрану, а [errorReason] — человеку: «нет интернета»,
+  /// «нет кэша» и «сервер молчит» требуют разных действий, а раньше все три
+  /// выглядели одинаково молчаливой кнопкой.
+  String? errorReason;
   bool hasCache = false; // есть ли offline кэш
+
+  /// Размер уже загруженной базы, если она есть.
+  int cachedCount = 0;
+
+  /// Кнопка нажималась хотя бы раз — до первого нажатия ошибку не показываем.
+  bool attempted = false;
 
   HomeViewModel(this._repo, this._cache) {
     print('🏠 [HomeViewModel] Constructor called');
@@ -51,6 +64,7 @@ class HomeViewModel extends ChangeNotifier {
       cocktail = null;
       isLoading = false;
       hasError = false;
+      errorReason = null;
       notifyListeners();
       print('📂 HomeVM: no cache, showing placeholder');
       return;
@@ -59,6 +73,7 @@ class HomeViewModel extends ChangeNotifier {
     // Есть кэш → берем случайный
     try {
       final cachedCocktails = _cache.loadAll();
+      cachedCount = cachedCocktails.length;
       if (cachedCocktails.isEmpty) {
         cocktail = null;
         hasCache = false;
@@ -78,6 +93,7 @@ class HomeViewModel extends ChangeNotifier {
 
     isLoading = false;
     hasError = false;
+    errorReason = null;
     notifyListeners();
   }
 
@@ -95,6 +111,8 @@ class HomeViewModel extends ChangeNotifier {
 
     isLoading = true;
     hasError = false;
+    errorReason = null;
+    attempted = true;
     notifyListeners();
 
     try {
@@ -104,6 +122,8 @@ class HomeViewModel extends ChangeNotifier {
       if (randomCocktail == null) {
         print('❌ LoadRandom: no cocktail returned');
         hasError = true;
+        errorReason =
+            'Сервер не ответил. Проверьте интернет и попробуйте ещё раз.';
         isLoading = false;
         notifyListeners();
         return false;
@@ -115,6 +135,7 @@ class HomeViewModel extends ChangeNotifier {
     } catch (e) {
       print('❌ LoadRandom: error ($e)');
       hasError = true;
+      errorReason = 'Не удалось загрузить рецепт. Проверьте интернет.';
       isLoading = false;
       notifyListeners();
       return false;
@@ -123,5 +144,16 @@ class HomeViewModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return true;
+  }
+
+  /// Сколько рецептов уже есть в базе.
+  int get cachedRecipeCount => cachedCount;
+
+  /// Открыть список рецептов и вернуться, если база появилась.
+  ///
+  /// На главной плашка «нет базы» должна вести туда, где база реально
+  /// скачивается: один случайный рецепт не делает вызов дня доступным.
+  Future<void> reloadAfterBrowse() async {
+    loadFromCache();
   }
 }

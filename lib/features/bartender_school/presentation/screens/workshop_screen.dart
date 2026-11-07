@@ -4,6 +4,7 @@ import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/practice_challenges.dart';
 import 'package:coin/features/bartender_school/presentation/screens/practice_flow_screen.dart';
+import 'package:coin/features/bartender_school/presentation/screens/shift_mode_screen.dart';
 import 'package:coin/features/bartender_school/domain/entities/progress.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
 
@@ -49,6 +50,10 @@ class WorkshopScreen extends StatelessWidget {
                 ),
                 // Мастерская остаётся только для практики.
                 // Мудрость открывается с главной, Полка бармена временно скрыта.
+                const SizedBox(height: 20),
+
+                // ── Кнопка «Смена» ────────────────────────────────────────
+                _ShiftButton(),
                 const SizedBox(height: 20),
 
                 // ── Блоки заданий ───────────────────────────────────────────
@@ -512,5 +517,66 @@ class _ChallengeCard extends StatelessWidget {
       default:
         return '';
     }
+  }
+}
+
+/// Кнопка запуска режима «Смена» — поток заказов под таймером.
+class _ShiftButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const ShiftModeScreen()),
+      ),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFB8821A), Color(0xFFE8A838)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withAlpha(60),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: const [
+            Icon(Icons.schedule_rounded, color: Colors.black, size: 28),
+            SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Начать смену',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '3 заказа · 3 минуты · оцени Джон',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios_rounded,
+                color: Colors.black87, size: 18),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 import 'package:coin/features/bartender_school/presentation/screens/lesson_screen.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/lesson_teaser.dart';
 
 class FlipCardScreen extends StatefulWidget {
   final Lesson lesson;
@@ -711,9 +712,26 @@ ${widget.lesson.keyPoints.map((p) => '• $p').join('\n')}
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => LessonScreen(lesson: widget.lesson),
+        builder: (_) => LessonTeaserGate(
+          title: widget.lesson.title.toUpperCase(),
+          // Сцена дышит перед уроком: Джон начинает разговор, а не
+          // вываливает слайды сразу.
+          line: widget.lesson.historicalStory?.trim().isNotEmpty == true
+              ? _firstSentence(widget.lesson.historicalStory!.trim())
+              : 'За стойкой нет мелочей. Начнём с того, без чего не '
+                  'работает ни один коктейль.',
+          child: LessonScreen(lesson: widget.lesson),
+        ),
       ),
     );
+  }
+
+  /// Первое предложение истории — его хватает на заставку.
+  static String _firstSentence(String text) {
+    final flat = text.replaceAll('\n', ' ').trim();
+    final dot = flat.indexOf('. ');
+    if (dot > 40 && dot < 160) return flat.substring(0, dot + 1);
+    return flat.length <= 160 ? flat : '${flat.substring(0, 157)}…';
   }
 
   Widget _buildJohnStoryFront() {

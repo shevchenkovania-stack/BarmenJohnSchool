@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 
@@ -45,7 +44,7 @@ class MissionBriefingScreen extends StatelessWidget {
                       child: Text(
                         'MISSION BRIEFING',
                         maxLines: 1,
-                        style: GoogleFonts.cinzel(
+                        style: TextStyle(fontFamily: 'serif', 
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFFD4AF37),
@@ -69,7 +68,7 @@ class MissionBriefingScreen extends StatelessWidget {
                     Text(
                       data.title,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.cinzel(
+                      style: TextStyle(fontFamily: 'serif', 
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -145,7 +144,7 @@ class MissionBriefingScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Text(
                                 'ЦЕЛЬ',
-                                style: GoogleFonts.cinzel(
+                                style: TextStyle(fontFamily: 'serif', 
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xFFD4AF37),
@@ -200,7 +199,7 @@ class MissionBriefingScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'НАЧАТЬ ГЛАВУ',
-                    style: GoogleFonts.cinzel(
+                    style: TextStyle(fontFamily: 'serif', 
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
@@ -288,7 +287,7 @@ class _Objectives extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'ЧТО ПРЕДСТОИТ',
-                style: GoogleFonts.cinzel(
+                style: TextStyle(fontFamily: 'serif', 
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFFD4AF37),

@@ -381,11 +381,12 @@ class _BottleRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        for (final challenge in bottles)
+        for (var i = 0; i < bottles.length; i++)
           _Bottle(
             room: room,
-            challenge: challenge,
-            stars: progress.getPracticeStars(challenge.id),
+            challenge: bottles[i],
+            stars: progress.getPracticeStars(bottles[i].id),
+            index: i,
           ),
         for (var i = bottles.length; i < 4; i++)
           const SizedBox(width: 60, height: 88),
@@ -394,19 +395,56 @@ class _BottleRow extends StatelessWidget {
   }
 }
 
-class _Bottle extends StatelessWidget {
+class _Bottle extends StatefulWidget {
   final JohnSchoolRoom room;
   final PracticeChallenge challenge;
   final int stars;
+  final int index;
 
   const _Bottle({
     required this.room,
     required this.challenge,
     required this.stars,
+    required this.index,
   });
 
+  @override
+  State<_Bottle> createState() => _BottleState();
+}
+
+class _BottleState extends State<_Bottle>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.4),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+    // Stagger: каждая бутылка появляется с задержкой.
+    final delay = widget.index * 90;
+    Future.delayed(Duration(milliseconds: delay), () {
+      if (mounted) _ctrl.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
   String get _artworkAsset {
-    return switch (challenge.lessonId) {
+    return switch (widget.challenge.lessonId) {
       'lesson_A_01' => 'images/lesson_a_01_balance.jpg',
       'lesson_A_02' => 'images/lesson_a_02_acid.jpg',
       'lesson_A_03' => 'images/lesson_a_03_sweetness.jpg',
@@ -425,21 +463,21 @@ class _Bottle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMastered = stars > 0;
-    final style = JohnRoomStyle.forRoom(room);
+    final isMastered = widget.stars > 0;
+    final style = JohnRoomStyle.forRoom(widget.room);
 
     final Color bottleColor;
-    if (stars >= 3) {
+    if (widget.stars >= 3) {
       bottleColor = style.accent;
-    } else if (stars == 2) {
+    } else if (widget.stars == 2) {
       bottleColor = const Color(0xFF6F9A71);
-    } else if (stars == 1) {
+    } else if (widget.stars == 1) {
       bottleColor = const Color(0xFFAA7542);
     } else {
       bottleColor = style.onDark.withAlpha(70);
     }
 
-    return SizedBox(
+    final bottle = SizedBox(
       width: 60,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -501,12 +539,12 @@ class _Bottle extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(
                       3,
-                      (index) => Icon(
-                        index < stars
+                      (i) => Icon(
+                        i < widget.stars
                             ? Icons.star_rounded
                             : Icons.star_border_rounded,
                         size: 8,
-                        color: index < stars
+                        color: i < widget.stars
                             ? style.accent
                             : style.onDark.withAlpha(55),
                       ),
@@ -518,7 +556,7 @@ class _Bottle extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            isMastered ? challenge.cocktailName : '???',
+            isMastered ? widget.challenge.cocktailName : '???',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: isMastered ? style.onDark : style.onDark.withAlpha(80),
@@ -530,6 +568,14 @@ class _Bottle extends StatelessWidget {
           ),
         ],
       ),
+    );
+
+    // Освоенные бутылки появляются анимацией (ставятся на полку).
+    // Заблокированные — просто видны без анимации.
+    if (!isMastered) return bottle;
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(position: _slide, child: bottle),
     );
   }
 }

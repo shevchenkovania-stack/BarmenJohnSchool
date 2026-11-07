@@ -2,6 +2,7 @@
 //   карточка → урок (все слайды) → «К тесту» → квиз терминов → квиз → практика → диплом
 // Пишет отчёт в test/qa/FLOW.txt. Запуск:
 //   flutter test test/qa/level1_flow_test.dart
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -9,7 +10,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +35,7 @@ import 'package:coin/features/bartender_school/presentation/screens/workshop_scr
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/data/blind_tasting.dart';
 import 'package:coin/features/bartender_school/data/guest_echo.dart';
+import 'package:coin/features/home/view/home_screen.dart';
 import 'package:coin/l10n/app_localizations.dart';
 import 'package:coin/shell/main_shell.dart';
 
@@ -138,12 +139,16 @@ Future<Harness> _boot(WidgetTester tester, Widget screen,
         create: (_) => BlindTastingService(sp)),
     Provider<GuestEchoService>(create: (_) => GuestEchoService(sp)),
     // HomeScreen внутри MainShell требует свой ViewModel — без него оболочку
-    // на узком экране не проверить.
-    if (homeDeps)
+    // на узком экране не проверить. Репозиторий отдаётся провайдером: кнопка
+    // «Скачать базу» ведёт в CocktailListScreen, а он читает его из контекста.
+    if (homeDeps) ...[
+      Provider<CocktailRepository>(create: (_) => CocktailRepository()),
+      Provider<CocktailCacheService>(create: (_) => CocktailCacheService()),
       ChangeNotifierProvider<HomeViewModel>(
         create: (_) =>
             HomeViewModel(CocktailRepository(), CocktailCacheService()),
       ),
+    ],
   ];
   await tester.pumpWidget(
     MultiProvider(
@@ -543,7 +548,6 @@ double _sequenceItemHeight(WidgetTester tester, int count) {
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    GoogleFonts.config.allowRuntimeFetching = false;
     await _registerFonts();
   });
 
@@ -822,6 +826,93 @@ void main() {
             settle: false);
         _drain(tester, '${size.width.round()}×${size.height.round()} ${e.key}');
       }
+    }
+  });
+
+  testWidgets('Плашка «Загрузите рецепты» целая на всех экранах',
+      (tester) async {
+    _silenceFontNoise();
+    final h = await _boot(tester, const SizedBox.shrink(), wisdom: true);
+
+    // Пустой кэш — именно то состояние, в котором человек видит плашку.
+    // Экран рецептов здесь не открываем: он ходит в сеть, а проверяем мы
+    // доступность кнопки, а не загрузку базы.
+    for (final size in const [
+      Size(411, 891),
+      Size(360, 740),
+      Size(360, 640),
+      Size(320, 568),
+      Size(640, 360),
+    ]) {
+      final label = '${size.width.round()}×${size.height.round()}';
+      await _boot(
+        tester,
+        const HomeScreen(),
+        reuse: h,
+        surface: size,
+        homeDeps: true,
+        settle: false,
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      _drain(tester, 'Home $label');
+
+      if (_n(find.text('Загрузите рецепты')) == 0) {
+        say('[Home] $label: плашки нет');
+        continue;
+      }
+
+      // Кнопка должна быть в видимой области: раньше её обрезал слот
+      // фиксированной высоты, и плашку было видно только в альбомной
+      // ориентации.
+      final button = find.text('Скачать базу');
+      if (_n(button) == 0) {
+        say('[Home] $label: кнопка не построена');
+        continue;
+      }
+      final viewport = tester.getRect(find.byType(HomeScreen));
+      final rect = tester.getRect(button);
+      if (!viewport.contains(rect.center)) {
+        say('[Home] $label: кнопка вне экрана — ${rect.top.round()}..'
+            '${rect.bottom.round()} при высоте ${viewport.height.round()}');
+      }
+
+      // Второй путь («один случайный рецепт») тоже должен быть доступен.
+      if (_n(find.byTooltip('Один случайный рецепт')) == 0) {
+        say('[Home] $label: нет кнопки случайного рецепта');
+      }
+    }
+  });
+
+  testWidgets('Ошибка загрузки объясняется, а не молчит', (tester) async {
+    _silenceFontNoise();
+    final h = await _boot(tester, const SizedBox.shrink(), wisdom: true);
+    await _boot(
+      tester,
+      const HomeScreen(),
+      reuse: h,
+      surface: const Size(360, 740),
+      homeDeps: true,
+      settle: false,
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+
+    // Без сети getRandomCocktail не должен подвешивать стенд: запускаем
+    // загрузку, не дожидаясь реального HTTP-ответа (у Dio он может висеть
+    // минутами), и проверяем, что экран не молчит и попытка отмечена.
+    final vm = Provider.of<HomeViewModel>(
+      tester.element(find.byType(HomeScreen)),
+      listen: false,
+    );
+    unawaited(vm.loadRandom());
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    _drain(tester, 'Home ошибка загрузки');
+
+    if (vm.errorReason == null || vm.errorReason!.trim().isEmpty) {
+      say('[Home] ошибка загрузки не объяснена');
+    }
+    if (!vm.attempted) {
+      say('[Home] попытка загрузки не отмечена');
     }
   });
 

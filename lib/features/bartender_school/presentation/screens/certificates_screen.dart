@@ -1,12 +1,10 @@
 // certificate_document.dart
-// Замени _CertificateDocument, _CertificateDetailScreen и _NoCertificatesMessage
-// Требует: google_fonts: ^6.x.x в pubspec.yaml
-// Пример: flutter pub add google_fonts
+// Шрифты используют системный serif (работает офлайн, без google_fonts).
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
+import 'package:coin/core/services/bar_sound_service.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/lesson_repository.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/student_name_dialog.dart';
@@ -137,6 +135,8 @@ class CertificatesScreen extends StatelessWidget {
 
   void _openCertificate(BuildContext context, int level, String title,
       ProgressService progress, bool isEarned) {
+    // Триумф: при открытии честно заработанного диплома — звук успеха.
+    if (isEarned) BarSoundService.instance.success();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -374,10 +374,23 @@ class CertificateDetailScreen extends StatefulWidget {
       _CertificateDetailScreenState();
 }
 
-class _CertificateDetailScreenState extends State<CertificateDetailScreen> {
+class _CertificateDetailScreenState extends State<CertificateDetailScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _glow;
+
   @override
   void initState() {
     super.initState();
+    _glow = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    );
+    // Свечение запускаем только для честно заработанного диплома.
+    if (!widget.isLocked) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _glow.forward();
+      });
+    }
     // If no name entered, show dialog
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final progress = context.read<ProgressService>();
@@ -385,6 +398,12 @@ class _CertificateDetailScreenState extends State<CertificateDetailScreen> {
         StudentNameDialog.show(context);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _glow.dispose();
+    super.dispose();
   }
 
   Future<void> _showEditNameDialog() async {
@@ -412,15 +431,49 @@ class _CertificateDetailScreenState extends State<CertificateDetailScreen> {
               const _CertificateMentorHeader(),
               const SizedBox(height: 16),
               // Diploma document — always visible (with lock overlay if not earned)
-              Stack(
-                children: [
-                  CertificateDocument(
-                    level: widget.level,
-                    title: widget.title,
-                    xp: widget.xp,
-                    streak: widget.streak,
-                    studentName: studentName,
-                  ),
+              AnimatedBuilder(
+                animation: _glow,
+                builder: (context, child) {
+                  // Появление: scale 0.92 → 1.0 с лёгким отскоком.
+                  final t = _glow.value;
+                  final scale = 0.92 + 0.08 * Curves.easeOutBack.transform(t.clamp(0.0, 1.0));
+                  // Пульсация свечения: ярче в середине.
+                  final glowOpacity = widget.isLocked
+                      ? 0.0
+                      : (0.25 + 0.35 * (0.5 - 0.5 * (t - 0.5).abs() * 2));
+                  return Transform.scale(
+                    scale: scale,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: accentColor.withOpacity(glowOpacity),
+                            blurRadius: 40,
+                            spreadRadius: 4,
+                          ),
+                        ],
+                      ),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Stack(
+                  children: [
+                    CertificateDocument(
+                      level: widget.level,
+                      title: widget.title,
+                      xp: widget.xp,
+                      streak: widget.streak,
+                      studentName: studentName,
+                    ),
+                    // Восковая печать — появляется с запозданием как штамп.
+                    if (!widget.isLocked)
+                      Positioned(
+                        right: 16,
+                        bottom: 16,
+                        child: _WaxSeal(progress: _glow),
+                      ),
                   if (widget.isLocked)
                     Positioned.fill(
                       child: GestureDetector(
@@ -442,7 +495,7 @@ class _CertificateDetailScreenState extends State<CertificateDetailScreen> {
                                 const SizedBox(height: 12),
                                 Text(
                                   'Диплом пока заблокирован',
-                                  style: GoogleFonts.cinzel(
+                                  style: TextStyle(fontFamily: 'serif', 
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white.withAlpha(200),
@@ -469,7 +522,8 @@ class _CertificateDetailScreenState extends State<CertificateDetailScreen> {
                         ),
                       ),
                     ),
-                ],
+                  ],
+                ),
               ),
               if (!widget.isLocked) ...[
                 _ActionButton(
@@ -601,7 +655,7 @@ class _ActionButton extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(
                   label,
-                  style: GoogleFonts.cinzel(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 2,
@@ -702,7 +756,7 @@ class CertificateDocument extends StatelessWidget {
               child: Center(
                 child: Text(
                   'JD',
-                  style: GoogleFonts.cinzel(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 120,
                     fontWeight: FontWeight.w900,
                     color: Colors.white.withAlpha(4),
@@ -760,7 +814,7 @@ class CertificateDocument extends StatelessWidget {
                 // School name
                 Text(
                   'JOHN ROCK BARTENDER SCHOOL',
-                  style: GoogleFonts.cinzel(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 3,
@@ -771,7 +825,7 @@ class CertificateDocument extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Est. — The Art of Mixology',
-                  style: GoogleFonts.ebGaramond(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 11,
                     fontStyle: FontStyle.italic,
                     color: Colors.white.withAlpha(100),
@@ -794,7 +848,7 @@ class CertificateDocument extends StatelessWidget {
                   ),
                   child: Text(
                     theme.levelLabel,
-                    style: GoogleFonts.cinzel(
+                    style: TextStyle(fontFamily: 'serif', 
                       fontSize: 8,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 2.5,
@@ -810,7 +864,7 @@ class CertificateDocument extends StatelessWidget {
                   level == 3
                       ? 'Настоящим с честью удостоверяется'
                       : 'Настоящим удостоверяется',
-                  style: GoogleFonts.ebGaramond(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 12,
                     fontStyle: FontStyle.italic,
                     color: Colors.white.withAlpha(120),
@@ -822,7 +876,7 @@ class CertificateDocument extends StatelessWidget {
                 // Diploma title
                 Text(
                   title.toUpperCase(),
-                  style: GoogleFonts.cinzel(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 2,
@@ -834,7 +888,7 @@ class CertificateDocument extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   _subtitle,
-                  style: GoogleFonts.cormorantGaramond(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 13,
                     fontWeight: FontWeight.w300,
                     letterSpacing: 2,
@@ -848,7 +902,7 @@ class CertificateDocument extends StatelessWidget {
                 // Body text
                 Text(
                   _bodyText,
-                  style: GoogleFonts.ebGaramond(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: 12,
                     color: Colors.white.withAlpha(120),
                     height: 1.7,
@@ -862,7 +916,7 @@ class CertificateDocument extends StatelessWidget {
                 // Student name placeholder
                 Text(
                   displayName,
-                  style: GoogleFonts.cormorantGaramond(
+                  style: TextStyle(fontFamily: 'serif', 
                     fontSize: studentName.trim().isEmpty ? 20 : 26,
                     fontWeight: FontWeight.w300,
                     fontStyle: FontStyle.italic,
@@ -1162,7 +1216,7 @@ class _StatItem extends StatelessWidget {
       children: [
         Text(
           value,
-          style: GoogleFonts.cormorantGaramond(
+          style: TextStyle(fontFamily: 'serif', 
             fontSize: 20,
             fontWeight: FontWeight.w500,
             color: accentLight,
@@ -1172,7 +1226,7 @@ class _StatItem extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: GoogleFonts.cinzel(
+          style: TextStyle(fontFamily: 'serif', 
             fontSize: 7,
             letterSpacing: 1.5,
             color: Colors.white.withAlpha(80),
@@ -1202,7 +1256,7 @@ class _SigBlock extends StatelessWidget {
       children: [
         Text(
           value,
-          style: GoogleFonts.cormorantGaramond(
+          style: TextStyle(fontFamily: 'serif', 
             fontSize: 15,
             fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
             color: color,
@@ -1214,7 +1268,7 @@ class _SigBlock extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: GoogleFonts.cinzel(
+          style: TextStyle(fontFamily: 'serif', 
             fontSize: 7,
             letterSpacing: 1.5,
             color: Colors.white.withAlpha(60),
@@ -1287,7 +1341,7 @@ class NoCertificatesMessage extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'ДИПЛОМЫ ЕЩЁ НЕ ПОЛУЧЕНЫ',
-            style: GoogleFonts.cinzel(
+            style: TextStyle(fontFamily: 'serif', 
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 2,
@@ -1298,7 +1352,7 @@ class NoCertificatesMessage extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             'Пройди уроки John Rock Bartender School\nи получи дипломы!',
-            style: GoogleFonts.ebGaramond(
+            style: TextStyle(fontFamily: 'serif', 
               fontSize: 14,
               color: AppColors.textSecondary,
               height: 1.6,
@@ -1308,6 +1362,65 @@ class NoCertificatesMessage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Восковая печать диплома. Появляется как штамп: масштаб 0 → 1.2 → 1.0
+/// с лёгким поворотом. Анимируется по `progress` (0..1).
+class _WaxSeal extends StatelessWidget {
+  final Animation<double> progress;
+  const _WaxSeal({required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: progress,
+      builder: (context, _) {
+        final t = progress.value;
+        // Печать появляется с задержкой 0.35..1.0.
+        final sealT = ((t - 0.35) / 0.65).clamp(0.0, 1.0);
+        if (sealT <= 0) return const SizedBox.shrink();
+        final curved = Curves.elasticOut.transform(sealT);
+        final scale = 0.0 + curved * 1.0;
+        final rotation = (1 - curved) * 0.5; // лёгкий наклон при штампе
+        return Transform.rotate(
+          angle: rotation,
+          child: Transform.scale(
+            scale: scale,
+            child: Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const RadialGradient(
+                  colors: [Color(0xFFB71C1C), Color(0xFF7F0000)],
+                  stops: [0.4, 1.0],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(120),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                border: Border.all(color: const Color(0xFF5D0000), width: 2),
+              ),
+              alignment: Alignment.center,
+              child: const Text(
+                'JB',
+                style: TextStyle(
+                  fontFamily: 'serif',
+                  color: Color(0xFFFFF3E0),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
