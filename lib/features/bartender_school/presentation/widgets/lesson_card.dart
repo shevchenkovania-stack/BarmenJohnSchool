@@ -521,7 +521,9 @@ class _BottomIndicators extends StatelessWidget {
             child: Text(
               termsLearned < totalTerms ? '$termsLearned/$totalTerms' : '✓',
               style: const TextStyle(
-                fontSize: 8,
+                // Счётчик «3/5» — это информация, а не декор: мельче 10
+                // pt её уже не читают на телефоне.
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textSecondary,
               ),
@@ -781,7 +783,7 @@ class _JohnLessonHint extends StatelessWidget {
                         color: isLocked
                             ? AppColors.textSecondary.withAlpha(100)
                             : AppColors.primary,
-                        fontSize: 9,
+                        fontSize: 11,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -792,8 +794,8 @@ class _JohnLessonHint extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: textColor,
-                        fontSize: 10,
-                        height: 1.15,
+                        fontSize: 12,
+                        height: 1.2,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

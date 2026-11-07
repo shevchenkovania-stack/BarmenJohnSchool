@@ -24,13 +24,21 @@ class MyApp extends StatelessWidget {
           theme: appTheme,
           debugShowCheckedModeBanner: false,
 
-          // ── Text Scaling Control ─────────────────────────────────────────
-          // Масштаб шрифта из настроек пользователя.
-          // Пользователь может выбрать размер в Settings → раздел "Шрифт".
+          // ── Масштаб шрифта ─────────────────────────────────────────────────
+          // Системный масштаб из настроек телефона сохраняется: если человек
+          // увеличил текст ради читаемости, приложение не должно его
+          // «отменять». Внутренняя настройка (settings.fontScale) работает
+          // как множитель поверх системного.
           builder: (context, child) {
+            final media = MediaQuery.of(context);
             return MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(settings.fontScale),
+              data: media.copyWith(
+                textScaler: TextScaler.linear(
+                  media.textScaler
+                          .clamp(minScaleFactor: 0.8, maxScaleFactor: 2.0)
+                          .scale(1) *
+                      settings.fontScale,
+                ),
               ),
               child: child!,
             );
