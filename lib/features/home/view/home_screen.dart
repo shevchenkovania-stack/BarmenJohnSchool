@@ -45,6 +45,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: JohnRoomBackground(
         room: JohnSchoolRoom.foyer,
+        evening: isEveningNow(),
         child: LayoutBuilder(
           builder: (context, constraints) {
             // Порог поднят с 560: карточка Джона добавила строку, и на

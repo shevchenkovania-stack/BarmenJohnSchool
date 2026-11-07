@@ -22,6 +22,7 @@ class WorkshopScreen extends StatelessWidget {
       ),
       body: JohnRoomBackground(
         room: JohnSchoolRoom.workshop,
+        evening: isEveningNow(),
         child: Consumer<ProgressService>(
           builder: (context, progress, _) {
             // Группируем задания по блокам (Level 1: A=3, B=3, C=4)

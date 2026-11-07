@@ -112,16 +112,34 @@ class JohnRoomStyle {
   }
 }
 
+/// Вечер ли сейчас с точки зрения бара.
+///
+/// Бар живёт вечером: после 18:00 и до 5 утра включён тёплый свет.
+/// Функция вынесена отдельно, чтобы правило можно было проверить тестом
+/// и одинаково использовать на всех экранах.
+bool isEveningNow([DateTime? now]) {
+  final hour = (now ?? DateTime.now()).hour;
+  return hour >= 18 || hour < 5;
+}
+
 class JohnRoomBackground extends StatelessWidget {
   final JohnSchoolRoom room;
   final Widget child;
   final double imageOpacity;
+
+  /// Вечерний режим: тёплая подсветка поверх комнаты.
+  ///
+  /// Включается после 18:00 (или явно через настройку). Это не анимация
+  /// и не таймер: просто другой цвет оверлея, поэтому на батарею и на
+  /// читаемость текста не влияет.
+  final bool evening;
 
   const JohnRoomBackground({
     super.key,
     required this.room,
     required this.child,
     this.imageOpacity = 1,
+    this.evening = false,
   });
 
   @override
@@ -154,6 +172,19 @@ class JohnRoomBackground extends StatelessWidget {
             ),
           ),
         ),
+        // Тёплая лампа над стойкой: тот же кадр, но «вечером».
+        if (evening)
+          const IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(0, -0.55),
+                  radius: 1.1,
+                  colors: [Color(0x33FFB347), Color(0x00000000)],
+                ),
+              ),
+            ),
+          ),
         child,
       ],
     );

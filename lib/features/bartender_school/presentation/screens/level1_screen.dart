@@ -163,6 +163,7 @@ class _Level1ScreenState extends State<Level1Screen> {
       ),
       body: JohnRoomBackground(
         room: JohnSchoolRoom.foyer,
+        evening: isEveningNow(),
         child: Consumer<LessonRepository>(
           builder: (context, lessonRepo, _) {
             print('🔵 Level1Screen: Consumer rebuild');
