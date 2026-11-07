@@ -4,7 +4,8 @@
 
 1. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — единая каноническая память проекта.
 2. [MASTER_PLAN.md](MASTER_PLAN.md) — порядок работ, Definition of Done и текущий статус.
-3. [08_LEVEL2_IMPLEMENTATION.md](08_LEVEL2_IMPLEMENTATION.md) — реализованный Level 2, источники, практика, изображения и проверка.
+3. [RELEASE_QA_CHECKLIST.md](RELEASE_QA_CHECKLIST.md) — приёмка перед первым релизом: блокеры сборки, чек-лист по каждому экрану, кнопкам и текстам.
+4. [08_LEVEL2_IMPLEMENTATION.md](08_LEVEL2_IMPLEMENTATION.md) — реализованный Level 2, источники, практика, изображения и проверка.
 
 ## Тематические документы
 
@@ -15,6 +16,7 @@
 - [05_WORKSHOP_AND_PRACTICE.md](05_WORKSHOP_AND_PRACTICE.md) — практический цикл.
 - [06_DATA_PROGRESS_TESTS.md](06_DATA_PROGRESS_TESTS.md) — данные, SharedPreferences и тесты.
 - [07_ROADMAP_AND_RELEASE.md](07_ROADMAP_AND_RELEASE.md) — релизные требования.
+- [TODO_RELEASE_PLAN.md](TODO_RELEASE_PLAN.md) — реестр дефектов и недоделок релиза.
 
 ## Архив
 
