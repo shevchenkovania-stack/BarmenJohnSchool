@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
+import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 import 'package:coin/features/bartender_school/presentation/screens/quiz_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/term_quiz_screen.dart';
@@ -1073,7 +1074,10 @@ class _SlideWidget extends StatelessWidget {
                   ),
                 ],
                 if (slide.type == SlideType.choice && slide.choices.isNotEmpty)
-                  _WisdomChoiceList(choices: slide.choices),
+                  _WisdomChoiceList(
+                    choices: slide.choices,
+                    sceneTitle: slide.title,
+                  ),
                 if (slide.type == SlideType.silence)
                   const Padding(
                     padding: EdgeInsets.only(top: 22),
@@ -1104,9 +1108,8 @@ class _SlideWidget extends StatelessWidget {
   Widget _buildBarTipSlide() {
     // Слайд лежит поверх панели комнаты: общая тема (янтарь #E8A838 на
     // тёмном) спорит с золотом комнаты, поэтому берём её палитру.
-    final style = schoolRoom == null
-        ? null
-        : JohnRoomStyle.forRoom(schoolRoom!);
+    final style =
+        schoolRoom == null ? null : JohnRoomStyle.forRoom(schoolRoom!);
     final accent = style?.accent ?? AppColors.primary;
     final ink = style?.ink ?? AppColors.textPrimary;
     final body = style?.onDark ?? AppColors.textPrimary;
@@ -1419,7 +1422,13 @@ class _WisdomPaperCard extends StatelessWidget {
 class _WisdomChoiceList extends StatefulWidget {
   final List<SlideChoice> choices;
 
-  const _WisdomChoiceList({required this.choices});
+  /// Заголовок сцены — по нему эхо на главной узнаваемо.
+  final String sceneTitle;
+
+  const _WisdomChoiceList({
+    required this.choices,
+    required this.sceneTitle,
+  });
 
   @override
   State<_WisdomChoiceList> createState() => _WisdomChoiceListState();
@@ -1474,7 +1483,16 @@ class _WisdomChoiceListState extends State<_WisdomChoiceList> {
               borderRadius: BorderRadius.circular(12),
               onTap: revealed
                   ? null
-                  : () => setState(() => _pickedId = choice.id),
+                  : () {
+                      setState(() => _pickedId = choice.id);
+                      // Запоминаем ход: через несколько дней Джон вернётся
+                      // к нему на главной («гость вернулся...»).
+                      context.read<GuestEchoService>().remember(
+                            sceneTitle: widget.sceneTitle,
+                            choiceText: choice.text,
+                            wasRight: choice.isCorrect,
+                          );
+                    },
               child: Container(
                 padding: const EdgeInsets.all(13),
                 decoration: BoxDecoration(

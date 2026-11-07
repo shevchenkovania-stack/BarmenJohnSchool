@@ -30,6 +30,7 @@ import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/data/blind_tasting.dart';
+import 'package:coin/features/bartender_school/data/guest_echo.dart';
 
 /// Точка входа в приложение.
 ///
@@ -260,6 +261,10 @@ class _CocktailAppWithLoadingState extends State<CocktailAppWithLoading> {
         // Слепая дегустация: один раунд в день на изученных термах.
         ChangeNotifierProvider<BlindTastingService>(
           create: (ctx) => BlindTastingService(ctx.read<SharedPreferences>()),
+        ),
+        // Эхо гостя: выбор в сцене возвращается через несколько дней.
+        Provider<GuestEchoService>(
+          create: (ctx) => GuestEchoService(ctx.read<SharedPreferences>()),
         ),
 
         // Cocktail Builder ViewModel - конструктор коктейлей

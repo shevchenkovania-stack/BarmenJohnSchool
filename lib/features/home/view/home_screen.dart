@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +10,7 @@ import 'package:coin/features/home/home_viewmodel.dart';
 import 'package:coin/l10n/app_localizations.dart';
 import 'package:coin/features/bartender_school/data/john_reactions.dart';
 import 'package:coin/features/bartender_school/data/blind_tasting.dart';
+import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/features/bartender_school/presentation/screens/blind_tasting_screen.dart';
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
@@ -254,6 +255,18 @@ class _JohnSaysState extends State<_JohnSays> {
       _lastVisitKey,
       DateTime(now.year, now.month, now.day).toIso8601String(),
     );
+
+    // Эхо гостя: если прошлый выбор в сцене был давно, Джон сначала
+    // говорит о нём, а не о погоде. Приоритет у памяти, не у расписания.
+    final echo = context.read<GuestEchoService>().takeEcho();
+    if (!mounted) return;
+    if (echo != null) {
+      setState(() {
+        _text = echo;
+        _ready = true;
+      });
+      return;
+    }
 
     if (!mounted) return;
     setState(() {

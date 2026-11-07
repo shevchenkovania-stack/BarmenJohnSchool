@@ -32,6 +32,9 @@ import 'package:coin/features/bartender_school/presentation/screens/level1_scree
 import 'package:coin/features/bartender_school/presentation/screens/quiz_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/term_quiz_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/workshop_screen.dart';
+import 'package:coin/features/bartender_school/data/weekly_contract.dart';
+import 'package:coin/features/bartender_school/data/blind_tasting.dart';
+import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/l10n/app_localizations.dart';
 import 'package:coin/shell/main_shell.dart';
 
@@ -127,6 +130,13 @@ Future<Harness> _boot(WidgetTester tester, Widget screen,
     ChangeNotifierProvider<ProgressService>.value(value: progress),
     ChangeNotifierProvider<DailyQuestService>(
         create: (_) => DailyQuestService(sp)),
+    // Механики-надстройки: квиз и мастерская пишут в них прогресс, поэтому
+    // без них оболочка падает на первом же экране.
+    ChangeNotifierProvider<WeeklyContractService>(
+        create: (_) => WeeklyContractService(sp)),
+    ChangeNotifierProvider<BlindTastingService>(
+        create: (_) => BlindTastingService(sp)),
+    Provider<GuestEchoService>(create: (_) => GuestEchoService(sp)),
     // HomeScreen внутри MainShell требует свой ViewModel — без него оболочку
     // на узком экране не проверить.
     if (homeDeps)
