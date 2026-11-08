@@ -1,4 +1,6 @@
 /// Represents a single lesson in the bartender school.
+import 'package:coin/features/bartender_school/data/quest_scene.dart';
+
 class Lesson {
   final String id;
   final String blockId; // "A", "B", "C"
@@ -110,6 +112,13 @@ class LessonSlide {
   /// каждого. Раньше поле не парсилось, и варианты молча терялись.
   final List<SlideChoice>? choices;
 
+  /// Сцена-квест на слайде.
+  ///
+  /// Если задана — слайд рисуется как сцена (`QuestSceneView`), а не как
+  /// обычная теория. Поле необязательное: уроки без сцены работают как
+  /// раньше.
+  final QuestScene? questScene;
+
   LessonSlide({
     required this.type,
     required this.title,
@@ -119,6 +128,7 @@ class LessonSlide {
     this.mentorNote,
     this.author,
     this.choices,
+    this.questScene,
   });
 
   factory LessonSlide.fromJson(Map<String, dynamic> json) {
@@ -137,6 +147,10 @@ class LessonSlide {
           ?.whereType<Map>()
           .map((c) => SlideChoice.fromJson(c.cast<String, dynamic>()))
           .toList(),
+      questScene: json['questScene'] is Map
+          ? QuestScene.fromJson(
+              (json['questScene'] as Map).cast<String, dynamic>())
+          : null,
     );
   }
 }

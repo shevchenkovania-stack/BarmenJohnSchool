@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
+import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 import 'package:coin/features/bartender_school/presentation/screens/quiz_screen.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/quest_scene_view.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/wisdom_visuals.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
 
@@ -502,6 +504,10 @@ class _LessonScreenState extends State<LessonScreen> {
                         isFirstSlide: index == 0,
                         isWisdomLesson: isWisdomLesson,
                         schoolRoom: schoolRoom,
+                        // Сцена-квест листает сама, после своего финала.
+                        onGoNext: index < widget.lesson.slides.length - 1
+                            ? _nextPage
+                            : null,
                       );
                     },
                   ),
@@ -645,12 +651,17 @@ class _SlideWidget extends StatelessWidget {
   final bool isWisdomLesson;
   final JohnSchoolRoom? schoolRoom;
 
+  /// Перелистнуть на следующий слайд. `null` на последнем слайде: листать
+  /// некуда, и сцена не показывает лишнюю кнопку.
+  final VoidCallback? onGoNext;
+
   const _SlideWidget({
     required this.slide,
     this.lessonMentor,
     this.isFirstSlide = false,
     this.isWisdomLesson = false,
     this.schoolRoom,
+    this.onGoNext,
   });
 
   String? get _mentorText {
@@ -710,6 +721,25 @@ class _SlideWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isWisdomLesson) {
       return _buildWisdomSlide(context);
+    }
+
+    // Сцена-квест рисуется своим виджетом: у неё своё состояние
+    // (вопросы, выбор, реакция гостя), которого нет у обычной теории.
+    // Уроки без сцены идут тем же путём, что и раньше.
+    if (slide.questScene != null && slide.questScene!.isValid) {
+      return QuestSceneView(
+        scene: slide.questScene!,
+        room: schoolRoom ?? JohnSchoolRoom.flavorLab,
+        onFinished: (option) {
+          final echo = context.read<GuestEchoService>();
+          echo.remember(
+            sceneTitle: slide.questScene!.title,
+            choiceText: option.text,
+            wasRight: option.isRight,
+          );
+        },
+        onContinue: onGoNext,
+      );
     }
 
     if (slide.type == SlideType.barTip) {
