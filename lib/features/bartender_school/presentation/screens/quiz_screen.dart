@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
@@ -7,13 +9,27 @@ import 'package:coin/features/bartender_school/data/quiz_repository.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/block_rewards.dart';
 import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
+import 'package:coin/features/bartender_school/data/term_service.dart';
+import 'package:coin/features/bartender_school/data/john_reactions.dart';
+import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/domain/entities/quiz.dart';
 import 'package:coin/features/bartender_school/domain/services/quiz_answer_evaluator.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/block_reward_dialog.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
 
-/// Quiz screen - shows 5 random questions from lesson pool.
+/// Квиз: сначала вопросы по терминам урока, потом вопросы урока.
+///
+/// Раньше это были два отдельных экрана подряд: сначала `TermQuizScreen`
+/// («Термины: …»), сразу за ним обычный квиз. Студент видел «второй квиз
+/// с начала». Теперь один экран, один прогресс, один результат: термины идут
+/// первым блоком той же сессии.
 class QuizScreen extends StatefulWidget {
+  /// Имя маршрута квиза. Нужно, чтобы при выходе снять ровно этот экран
+  /// с навигатора (`popUntil`), а не гадать «сколько раз pop». Прежний
+  /// цикл из трёх `pop()` подряд уводил ученика далеко назад — сразу к списку
+  /// уроков, минуя саму теорию, и казалось, что из квиза нет выхода.
+  static const String routeName = '/quiz';
+
   final String lessonId;
 
   const QuizScreen({super.key, required this.lessonId});
@@ -36,8 +52,34 @@ class _QuizScreenState extends State<QuizScreen> {
   bool _answered = false;
   bool _isLoadingQuestions = false;
 
+  // ── Блок терминов ────────────────────────────────────────────────────────
+  // Вопросы по терминам идут первыми и не входят в процент квиза:
+  // процент считается только по вопросам урока, иначе провал терминов
+  // топил бы результат по самому уроку.
+  List<TermQuizQuestion> _termQuestions = [];
+  int _termIndex = 0;
+  final Set<String> _termsLearnedNow = {};
+  String? _termSelectedAnswer;
+  bool _termAnswered = false;
+
+  /// Сколько вопросов всего в сессии: термины + урок.
+  int get _totalSteps => _termQuestions.length + _questions.length;
+
+  /// На каком шаге мы сейчас (для одного общего прогресса).
+  ///
+  /// Пока идёт блок терминов, шаг — это его собственный индекс, а не
+  /// «все термины + текущий вопрос урока»: иначе заголовок показывал 5/11
+  /// на первом термине.
+  int get _currentStep {
+    if (_termIndex < _termQuestions.length) return _termIndex;
+    return _termQuestions.length + _currentQuestionIndex;
+  }
+
   /// Награды за блоки, которые нужно показать после завершения квиза.
   List<BlockReward> _pendingBlockRewards = [];
+
+  /// Сколько раз этот квиз был провален до текущей попытки.
+  int _failedAttemptsBefore = 0;
 
   @override
   void initState() {
@@ -65,6 +107,9 @@ class _QuizScreenState extends State<QuizScreen> {
       }
 
       _questions = quizRepo.getQuestionsForLesson(widget.lessonId);
+      _failedAttemptsBefore =
+          context.read<ProgressService>().getQuizFailures(widget.lessonId);
+      _loadTermQuestions();
       _prepareCurrentInteractiveQuestion();
 
       if (_questions.isEmpty) {
@@ -90,6 +135,108 @@ class _QuizScreenState extends State<QuizScreen> {
       }
     } finally {
       _isLoadingQuestions = false;
+    }
+  }
+
+  /// Собирает вопросы блока терминов: только ещё не выученные.
+  ///
+  /// Один проход покрывает до 6 вопросов, а у урока бывает 8 терминов,
+  /// поэтому остаток естественно переезжает в следующий подход к квизу
+  /// (выученные пропускаются).
+  void _loadTermQuestions() {
+    final lesson =
+        Provider.of<LessonRepository>(context, listen: false).getLesson(
+      widget.lessonId,
+    );
+    if (lesson == null || lesson.terms.isEmpty) return;
+
+    final termService = TermService();
+    final progress = Provider.of<ProgressService>(context, listen: false);
+    final learned = <String>{};
+    var unlearned = 0;
+    for (final name in lesson.terms) {
+      final term = termService.getTerm(name);
+      if (term == null) continue;
+      if (progress.isTermLearned(term.russianName)) {
+        learned.add(term.russianName);
+      } else {
+        unlearned++;
+      }
+    }
+    _termQuestions = termService.generateQuiz(
+      lesson.terms,
+      maxQuestions: unlearned == 0 ? 3 : unlearned.clamp(3, 6),
+      skipLearned: learned,
+      // Seed из id урока: набор вопросов и порядок вариантов стабильны
+      // между перерисовками и повторами — иначе выученный термин снова
+      // не узнавался на следующей попытке.
+      seed: widget.lessonId.hashCode,
+    );
+  }
+
+  void _selectTermAnswer(String answer) {
+    if (_termAnswered) return;
+    final question = _termQuestions[_termIndex];
+    final isCorrect = answer == question.correctAnswer;
+    setState(() {
+      _termSelectedAnswer = answer;
+      _termAnswered = true;
+      if (isCorrect) {
+        _termsLearnedNow.add(question.termName);
+      }
+    });
+  }
+
+  void _nextTermQuestion() {
+    // Термины закончились — записываем выученное и переходим к вопросам урока.
+    // Индекс обязательно переводим за границу списка: именно по нему
+    // `inTermBlock` понимает, что блок терминов закрыт. Без этого экран
+    // застревал на последнем термине — дальше пройти было нельзя.
+    if (_termIndex >= _termQuestions.length - 1) {
+      _commitLearnedTerms();
+      setState(() {
+        _termIndex = _termQuestions.length;
+        _termSelectedAnswer = null;
+        _termAnswered = false;
+        _prepareCurrentInteractiveQuestion();
+      });
+      return;
+    }
+    setState(() {
+      _termIndex++;
+      _termSelectedAnswer = null;
+      _termAnswered = false;
+    });
+  }
+
+  /// Досрочный выход из блока терминов («Пропустить»): выученное всё равно
+  /// засчитывается, но квиз по уроку не блокируется терминами.
+  void _skipTerms() {
+    _commitLearnedTerms();
+    setState(() {
+      // Переводим индекс за границу, а не обнуляем список: иначе общий
+      // прогресс и нумерация шагов считались бы по другому знаменателю.
+      _termIndex = _termQuestions.length;
+      _termSelectedAnswer = null;
+      _termAnswered = false;
+      _prepareCurrentInteractiveQuestion();
+    });
+  }
+
+  void _commitLearnedTerms() {
+    if (_termsLearnedNow.isEmpty) return;
+    final progress = Provider.of<ProgressService>(context, listen: false);
+    for (final termName in _termsLearnedNow) {
+      progress.markTermLearned(termName);
+    }
+    _termsLearnedNow.clear();
+
+    // Достижение «весь словарь выучен» живёт здесь же: раньше оно
+    // разблокировалось в удалённом экране терминов.
+    final allTermNames =
+        TermService.allTerms.map((t) => t.russianName).toList();
+    if (allTermNames.isNotEmpty && allTermNames.every(progress.isTermLearned)) {
+      progress.unlockAchievement('all_terms');
     }
   }
 
@@ -262,6 +409,11 @@ class _QuizScreenState extends State<QuizScreen> {
   void _showCompletionDialog() {
     final progressService =
         Provider.of<ProgressService>(context, listen: false);
+    // Сервисы берём по ссылке сейчас: после закрытия квиза этот State
+    // будет удалён, и `context.read` в асинхронных коллбеках упал бы
+    // (`InheritedWidget was defunct`) — задание не засчиталось бы.
+    final questService = context.read<DailyQuestService>();
+    final contract = context.read<WeeklyContractService>();
     final percentage =
         _questions.isEmpty ? 100 : (_score / _questions.length * 100);
     final passed = percentage >= BartenderSchoolConfig.quizPassingScore;
@@ -276,6 +428,7 @@ class _QuizScreenState extends State<QuizScreen> {
     // Only a passed quiz completes the lesson. Failed attempts should not
     // unlock the next step or make the certificate meaningless.
     if (passed) {
+      progressService.resetQuizFailures(widget.lessonId);
       progressService.completeLesson(
         widget.lessonId,
         score: percentage.toInt(),
@@ -286,18 +439,24 @@ class _QuizScreenState extends State<QuizScreen> {
       progressService.earnCoins(coinsEarned);
 
       // Ежедневные задания: урок пройден + квиз на 80%+
-      final questService = context.read<DailyQuestService>();
-      questService.completeQuest(DailyQuestType.completeLesson).then((reward) {
+      unawaited(questService.completeQuest(DailyQuestType.completeLesson).then((reward) {
         if (reward > 0) progressService.earnCoins(reward);
-      });
+      }));
       if (percentage.toInt() >= 80) {
-        questService.completeQuest(DailyQuestType.passQuiz).then((reward) {
+        unawaited(questService.completeQuest(DailyQuestType.passQuiz).then((reward) {
           if (reward > 0) progressService.earnCoins(reward);
-        });
+        }));
       }
 
       // Проверяем, завершён ли какой-то блок (награды за блоки)
       _pendingBlockRewards = progressService.getNewlyCompletedBlockRewards();
+
+      // Недельный договор: урок и сданный экзамен.
+      contract.registerLesson();
+      if (percentage.toInt() >= 80) contract.registerExam();
+    } else {
+      // Провал запоминаем: на второй и третий раз Джон скажет по-другому.
+      progressService.registerQuizFailure(widget.lessonId);
     }
 
     // Auto-unlock achievements
@@ -399,9 +558,13 @@ class _QuizScreenState extends State<QuizScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // XP + Coins earned
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                // XP + Coins earned. В диалоге всего ~340 px по ширине:
+                // два бейджа рядом не влезали (50 px overflow), поэтому
+                // Wrap переносит их на новую строку вместо обрезки.
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 12,
+                  runSpacing: 8,
                   children: [
                     // XP badge
                     Container(
@@ -428,9 +591,8 @@ class _QuizScreenState extends State<QuizScreen> {
                         ],
                       ),
                     ),
-                    // Coins badge (only if passed)
-                    if (passed && coinsEarned > 0) ...[
-                      const SizedBox(width: 12),
+                    // Coins badge (only if passed). Отступ даёт `spacing` Wrap.
+                    if (passed && coinsEarned > 0)
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
@@ -455,8 +617,12 @@ class _QuizScreenState extends State<QuizScreen> {
                           ],
                         ),
                       ),
-                    ],
                   ],
+                ),
+                const SizedBox(height: 16),
+                _JohnVerdict(
+                  passed: passed,
+                  failedBefore: _failedAttemptsBefore,
                 ),
                 const SizedBox(height: 20),
                 // 🎉 Congratulations Section
@@ -665,14 +831,15 @@ class _QuizScreenState extends State<QuizScreen> {
       _pendingBlockRewards = [];
     }
 
-    // Навигация назад
-    if (passed) {
-      for (var i = 0; i < 3 && navigator.canPop(); i++) {
-        navigator.pop();
-      }
-    } else if (navigator.canPop()) {
-      navigator.pop();
-    }
+    // Снимаем только сам квиз: теория и список уроков остаются в стеке.
+    // Раньше здесь было до трёх `pop()` подряд — они сносили и экран урока,
+    // и ученик видел список уроков, так что «выхода из квиза» не было.
+    // Маршрут опознаём по имени, но на случай запуска без имени (тесты, deep
+    // link) не даём `popUntil` уйти глубже предыдущего экрана.
+    final route = ModalRoute.of(context);
+    navigator.popUntil((target) =>
+        target != route &&
+        target.settings.name != QuizScreen.routeName);
   }
 
   Widget _buildMatchingQuestion(QuizQuestion question) {
@@ -1215,15 +1382,20 @@ class _QuizScreenState extends State<QuizScreen> {
         }
 
         // Build the actual quiz UI
+        final inTermBlock = _termIndex < _termQuestions.length;
         final question = _questions[_currentQuestionIndex];
-        final progress = (_currentQuestionIndex + 1) / _questions.length;
+        final totalSteps = _totalSteps;
+        final progress =
+            totalSteps == 0 ? 0.0 : (_currentStep + 1) / totalSteps;
+        final stepLabel = _termQuestions.isEmpty
+            ? ''
+            : (inTermBlock ? 'Термины · ' : 'Вопросы · ');
 
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: JohnThemedAppBar(
             room: schoolRoom,
-            title:
-                'Экзамен • ${_currentQuestionIndex + 1}/${_questions.length}',
+            title: 'Квиз • $stepLabel${_currentStep + 1}/$totalSteps',
           ),
           body: JohnRoomBackground(
             room: schoolRoom,
@@ -1235,171 +1407,211 @@ class _QuizScreenState extends State<QuizScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(schoolStyle.accent),
                   minHeight: 6,
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24),
-                    child: JohnWoodPanel(
-                      room: schoolRoom,
-                      highlighted: true,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            question.question,
-                            style: TextStyle(
-                              color: schoolStyle.onDark,
-                              fontFamily: 'serif',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              height: 1.3,
-                            ),
+                if (inTermBlock)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: _TermQuestionView(
+                            question: _termQuestions[_termIndex],
+                            index: _termIndex,
+                            total: _termQuestions.length,
+                            selected: _termSelectedAnswer,
+                            answered: _termAnswered,
+                            room: schoolRoom,
+                            style: schoolStyle,
+                            onSelect: _selectTermAnswer,
+                            onNext: _nextTermQuestion,
+                            onSkip: _skipTerms,
                           ),
-                          const SizedBox(height: 32),
-                          if (question.type == QuestionType.matching)
-                            _buildMatchingQuestion(question)
-                          else if (question.type == QuestionType.sequence)
-                            _buildSequenceQuestion(question)
-                          else if (question.type == QuestionType.slider)
-                            _buildSliderQuestion(question)
-                          else if (question.type == QuestionType.multipleChoice)
-                            _buildMultipleChoiceQuestion(question)
-                          else if (question.options != null &&
-                              question.options!.isNotEmpty)
-                            ...List.generate(question.options!.length, (index) {
-                              final option = question.options![index];
-                              final isSelected = _selectedIndex == index;
-                              final isCorrect =
-                                  index == question.correctAnswerIndex;
-                              final showResult = _answered;
+                        ),
+                        // Постоянная нижняя панель: даже если пользователь не
+                        // видит кнопку перехода (длинный вопрос, крупный
+                        // системный шрифт), «Пропустить» всегда под рукой.
+                        // Раньше на последнем термине без выбора варианта
+                        // не оставалось ни одной работающей кнопки — отсюда
+                        // и ощущение, что из квиза нельзя выйти.
+                        _TermBlockFooter(
+                          style: schoolStyle,
+                          isLast: _termIndex == _termQuestions.length - 1,
+                          onNext: _termAnswered ? _nextTermQuestion : null,
+                          onSkip: _skipTerms,
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24),
+                      child: JohnWoodPanel(
+                        room: schoolRoom,
+                        highlighted: true,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              question.question,
+                              style: TextStyle(
+                                color: schoolStyle.onDark,
+                                fontFamily: 'serif',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                height: 1.3,
+                              ),
+                            ),
+                            const SizedBox(height: 32),
+                            if (question.type == QuestionType.matching)
+                              _buildMatchingQuestion(question)
+                            else if (question.type == QuestionType.sequence)
+                              _buildSequenceQuestion(question)
+                            else if (question.type == QuestionType.slider)
+                              _buildSliderQuestion(question)
+                            else if (question.type ==
+                                QuestionType.multipleChoice)
+                              _buildMultipleChoiceQuestion(question)
+                            else if (question.options != null &&
+                                question.options!.isNotEmpty)
+                              ...List.generate(question.options!.length,
+                                  (index) {
+                                final option = question.options![index];
+                                final isSelected = _selectedIndex == index;
+                                final isCorrect =
+                                    index == question.correctAnswerIndex;
+                                final showResult = _answered;
 
-                              Color borderColor;
-                              Color backgroundColor;
+                                Color borderColor;
+                                Color backgroundColor;
 
-                              if (showResult) {
-                                if (isCorrect) {
-                                  borderColor = Colors.green;
-                                  backgroundColor = Colors.green.withAlpha(30);
-                                } else if (isSelected && !isCorrect) {
-                                  borderColor = Colors.red;
-                                  backgroundColor = Colors.red.withAlpha(30);
+                                if (showResult) {
+                                  if (isCorrect) {
+                                    borderColor = Colors.green;
+                                    backgroundColor =
+                                        Colors.green.withAlpha(30);
+                                  } else if (isSelected && !isCorrect) {
+                                    borderColor = Colors.red;
+                                    backgroundColor = Colors.red.withAlpha(30);
+                                  } else {
+                                    borderColor = AppColors.divider;
+                                    backgroundColor = Colors.transparent;
+                                  }
                                 } else {
-                                  borderColor = AppColors.divider;
-                                  backgroundColor = Colors.transparent;
+                                  borderColor = isSelected
+                                      ? schoolStyle.accent
+                                      : AppColors.divider;
+                                  backgroundColor = isSelected
+                                      ? schoolStyle.accent.withAlpha(30)
+                                      : Colors.transparent;
                                 }
-                              } else {
-                                borderColor = isSelected
-                                    ? schoolStyle.accent
-                                    : AppColors.divider;
-                                backgroundColor = isSelected
-                                    ? schoolStyle.accent.withAlpha(30)
-                                    : Colors.transparent;
-                              }
 
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: Material(
-                                  color: backgroundColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: InkWell(
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: Material(
+                                    color: backgroundColor,
                                     borderRadius: BorderRadius.circular(12),
-                                    onTap: () => _selectAnswer(index),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: borderColor,
-                                          width: 2,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(12),
+                                      onTap: () => _selectAnswer(index),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: borderColor,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 32,
-                                            height: 32,
-                                            decoration: BoxDecoration(
-                                              color: borderColor,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                String.fromCharCode(65 + index),
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 32,
+                                              height: 32,
+                                              decoration: BoxDecoration(
+                                                color: borderColor,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  String.fromCharCode(
+                                                      65 + index),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: Text(
-                                              option,
-                                              style: TextStyle(
-                                                color: schoolStyle.onDark,
-                                                fontSize: 15,
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: Text(
+                                                option,
+                                                style: TextStyle(
+                                                  color: schoolStyle.onDark,
+                                                  fontSize: 15,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          if (showResult && isCorrect)
-                                            const Icon(
-                                              Icons.check_circle,
-                                              color: Colors.green,
-                                            ),
-                                          if (showResult &&
-                                              isSelected &&
-                                              !isCorrect)
-                                            const Icon(
-                                              Icons.cancel,
-                                              color: Colors.red,
-                                            ),
-                                        ],
+                                            if (showResult && isCorrect)
+                                              const Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                              ),
+                                            if (showResult &&
+                                                isSelected &&
+                                                !isCorrect)
+                                              const Icon(
+                                                Icons.cancel,
+                                                color: Colors.red,
+                                              ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }),
-                          if (_answered && _isCurrentAnswerCorrect == false)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16),
-                              child: Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: schoolStyle.accent.withAlpha(20),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: schoolStyle.accent.withAlpha(80),
+                                );
+                              }),
+                            if (_answered && _isCurrentAnswerCorrect == false)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: schoolStyle.accent.withAlpha(20),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: schoolStyle.accent.withAlpha(80),
+                                    ),
                                   ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Пояснение Джона',
-                                      style: TextStyle(
-                                        color: schoolStyle.accent,
-                                        fontWeight: FontWeight.bold,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Пояснение Джона',
+                                        style: TextStyle(
+                                          color: schoolStyle.accent,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      question.explanation,
-                                      style: TextStyle(
-                                        color:
-                                            schoolStyle.onDark.withAlpha(190),
-                                        fontSize: 14,
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        question.explanation,
+                                        style: TextStyle(
+                                          color:
+                                              schoolStyle.onDark.withAlpha(190),
+                                          fontSize: 14,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
                 // Interactive questions own their submit action. The persistent
                 // footer appears only after evaluation and is then used for Next.
                 if (_answered)
@@ -1488,6 +1700,391 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 }
 
+/// Нижняя панель блока терминов.
+///
+/// Живёт вне прокрутки и показывается всегда, поэтому из термина можно
+/// уйти в любой момент: «Пропустить» активна всегда, «Дальше» — после
+/// выбранного ответа. До этого единственной кнопкой перехода была та, что
+/// рисовалась внутри прокручиваемого списка: на последнем термине без
+/// ответа квиз выглядел тупиком.
+class _TermBlockFooter extends StatelessWidget {
+  static const Key skipKey = Key('quiz_term_footer_skip');
+  static const Key nextKey = Key('quiz_term_footer_next');
+
+  final JohnRoomStyle style;
+  final bool isLast;
+  final VoidCallback? onNext;
+  final VoidCallback onSkip;
+
+  const _TermBlockFooter({
+    required this.style,
+    required this.isLast,
+    required this.onNext,
+    required this.onSkip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final canGoNext = onNext != null;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+      decoration: BoxDecoration(
+        color: style.surface,
+        border: Border(
+          top: BorderSide(color: style.accent.withAlpha(100)),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                key: skipKey,
+                onPressed: onSkip,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: style.onDark.withAlpha(210),
+                  side: BorderSide(color: style.accent.withAlpha(130)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('Пропустить'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: ElevatedButton(
+                key: nextKey,
+                onPressed: onNext,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      canGoNext ? style.accent : style.accent.withAlpha(70),
+                  foregroundColor: style.ink,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  isLast ? 'К вопросам урока →' : 'Дальше →',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Один вопрос блока терминов внутри общего квиза.
+///
+/// Повторяет вид бывшего `TermQuizScreen` (пергаментная карточка,
+/// зелёный/красный разбор), но живёт в общем потоке: один прогресс,
+/// один результат. Кнопка «К вопросам урока» есть всегда — термины не должны
+/// блокировать квиз по уроку.
+class _TermQuestionView extends StatelessWidget {
+  /// Ключ кнопки перехода: по нему идут тесты, чтобы не путать кнопку
+  /// с вариантами ответа.
+  static const Key nextKey = Key('quiz_term_next');
+
+  final TermQuizQuestion question;
+  final int index;
+  final int total;
+  final String? selected;
+  final bool answered;
+  final JohnSchoolRoom room;
+  final JohnRoomStyle style;
+  final ValueChanged<String> onSelect;
+  final VoidCallback onNext;
+  final VoidCallback onSkip;
+
+  const _TermQuestionView({
+    required this.question,
+    required this.index,
+    required this.total,
+    required this.selected,
+    required this.answered,
+    required this.room,
+    required this.style,
+    required this.onSelect,
+    required this.onNext,
+    required this.onSkip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isCorrect = selected == question.correctAnswer;
+    final isLast = index == total - 1;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Заголовок блока: сразу видно, что это часть того же квиза.
+          Row(
+            children: [
+              Image.asset(
+                'images/ui_icon_book_theory.png',
+                width: 18,
+                height: 18,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Термины урока · ${index + 1}/$total',
+                  style: TextStyle(
+                    color: style.onDark,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
+              // На системном масштабе 2.0 кнопка не помещается рядом с
+              // заголовком — ограничиваем её масштаб и даём сжиматься.
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 140),
+                child: MediaQuery.withClampedTextScaling(
+                  maxScaleFactor: 1.3,
+                  child: TextButton(
+                    onPressed: onSkip,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(
+                      'К вопросам урока',
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: style.accent, fontSize: 13),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // Карточка вопроса
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFFCEAB9), Color(0xFFE7C681)],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: answered
+                    ? (isCorrect ? Colors.green.shade700 : Colors.red.shade700)
+                    : style.accent.withAlpha(190),
+                width: 1.3,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(95),
+                  blurRadius: 14,
+                  offset: const Offset(0, 7),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Image.asset(
+                  'images/ui_icon_book_theory.png',
+                  width: 32,
+                  height: 32,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  question.question,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'serif',
+                    color: style.ink,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 22),
+
+          // Варианты
+          ...question.options.map((option) {
+            final isSelected = option == selected;
+            final isCorrectAnswer = option == question.correctAnswer;
+
+            Color bgColor;
+            Color borderColor;
+            Color textColor;
+            if (!answered) {
+              bgColor = const Color(0xFFF4DFAC);
+              borderColor = style.accent.withAlpha(190);
+              textColor = style.ink;
+            } else if (isCorrectAnswer) {
+              bgColor = const Color(0xFFDCE8C3);
+              borderColor = Colors.green.shade700;
+              textColor = const Color(0xFF245229);
+            } else if (isSelected) {
+              bgColor = const Color(0xFFF1C9B8);
+              borderColor = Colors.red.shade700;
+              textColor = const Color(0xFF7A241E);
+            } else {
+              bgColor = const Color(0xFFE9D5A3);
+              borderColor = style.accent.withAlpha(100);
+              textColor = style.ink.withAlpha(155);
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => onSelect(option),
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: borderColor),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withAlpha(55),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            option,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: textColor,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                        if (answered && isCorrectAnswer)
+                          const Icon(Icons.check_circle,
+                              color: Colors.green, size: 22),
+                        if (answered && isSelected && !isCorrectAnswer)
+                          const Icon(Icons.cancel, color: Colors.red, size: 22),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+
+          const SizedBox(height: 14),
+
+          if (answered) ...[
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isCorrect
+                    ? const Color(0xE7224A2C)
+                    : const Color(0xE76A351E),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isCorrect ? Colors.green.shade400 : style.accent,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    isCorrect
+                        ? 'images/ui_icon_checklist.png'
+                        : 'images/ui_icon_book_theory.png',
+                    width: 22,
+                    height: 22,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      isCorrect
+                          ? 'Правильно! Термин запомнен ✓'
+                          : 'Не совсем. Попробуй запомнить — ещё раз увидишь в повторении.',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: style.onDark,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              key: nextKey,
+              onPressed: onNext,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: style.accent,
+                foregroundColor: style.ink,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                isLast ? 'К вопросам урока →' : 'Дальше →',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Кнопка «дальше» для вопроса урока.
+///
+/// Отдельный виджет с `Key`: у `ElevatedButton.icon` внутри есть
+/// Material/InkWell, и тесты по типу путали кнопку с вариантами ответа.
+class _LessonQuestionNextButton extends StatelessWidget {
+  static const Key buttonKey = Key('quiz_lesson_next');
+
+  final bool isLast;
+  final VoidCallback onNext;
+
+  const _LessonQuestionNextButton({
+    required this.isLast,
+    required this.onNext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      key: buttonKey,
+      onPressed: onNext,
+      icon: Icon(isLast ? Icons.check : Icons.arrow_forward),
+      label: Text(isLast ? 'Завершить' : 'Далее'),
+    );
+  }
+}
+
 class _NextLessonHookCard extends StatelessWidget {
   final String text;
 
@@ -1571,6 +2168,13 @@ class _QuizBottomButton extends StatelessWidget {
     final canPress = answered || isSliderQuestion;
     final isNext = answered;
 
+    if (isNext) {
+      return _LessonQuestionNextButton(
+        isLast: isLastQuestion,
+        onNext: onNext,
+      );
+    }
+
     return ElevatedButton.icon(
       onPressed: canPress
           ? (isNext ? onNext : (isSliderQuestion ? onSubmit : null))
@@ -1590,6 +2194,73 @@ class _QuizBottomButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+      ),
+    );
+  }
+}
+
+/// Реплика Джона на экране результата квиза.
+///
+/// Джон наблюдает, а не оценивает: на провале он не стыдит, а меняет подход.
+/// Текст берётся из `johnReactions`, чтобы тон проверялся тестом.
+class _JohnVerdict extends StatelessWidget {
+  final bool passed;
+  final int failedBefore;
+
+  const _JohnVerdict({required this.passed, required this.failedBefore});
+
+  String get _line {
+    final johnContext = JohnContext(failedAttemptsBefore: failedBefore);
+    if (passed) {
+      return johnReaction(JohnMoment.quizPassed, johnContext);
+    }
+    return failedBefore == 0
+        ? johnReaction(JohnMoment.quizFailedFirstTime, johnContext)
+        : johnReaction(JohnMoment.quizFailedAgain, johnContext);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final line = _line;
+    if (line.isEmpty) return const SizedBox.shrink();
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2114),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFD0A24C).withAlpha(140)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 30,
+            height: 30,
+            child: CircleAvatar(
+              backgroundColor: Color(0xFF4A3720),
+              child: Text(
+                'Д',
+                style: TextStyle(
+                  color: Color(0xFFD0A24C),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              line,
+              style: const TextStyle(
+                color: Color(0xFFF3E7D0),
+                fontSize: 12.5,
+                height: 1.35,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

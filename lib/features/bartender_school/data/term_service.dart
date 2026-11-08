@@ -6,6 +6,8 @@
 /// - English name (for display)
 /// - Definition, example, category
 /// - Quiz questions for testing knowledge
+import 'dart:math';
+
 class TermService {
   static final TermService _instance = TermService._internal();
   factory TermService() => _instance;
@@ -54,10 +56,18 @@ class TermService {
   /// терминами гейт приходилось проходить 3–4 раза по случайности
   /// (TERM-FARM). Теперь берётся по одному вопросу на каждый невыученный
   /// термин, а обратные вопросы добавляются только если остались слоты.
+  ///
+  /// Перемешивание детерминированное ([seed]): иначе каждая перерисовка
+  /// экрана и каждый повтор квиза давали новый набор вариантов, и выученный
+  /// термин не узнавался. С тем же seed набор всегда один и тот же.
   List<TermQuizQuestion> generateQuiz(List<String> lessonTermNames,
-      {int maxQuestions = 5, Set<String> skipLearned = const {}}) {
+      {int maxQuestions = 5,
+      Set<String> skipLearned = const {},
+      int? seed}) {
     final lessonTerms = termsForLesson(lessonTermNames);
     if (lessonTerms.isEmpty) return [];
+
+    final rnd = Random(seed);
 
     final pending =
         lessonTerms.where((t) => !skipLearned.contains(t.russianName)).toList();
@@ -74,12 +84,12 @@ class TermService {
               t.englishName != term.englishName &&
               t.definition != term.definition)
           .toList()
-        ..shuffle();
+        ..shuffle(rnd);
 
       final options = [
         term.definition,
         ...wrongAnswers.take(2).map((t) => t.definition)
-      ]..shuffle();
+      ]..shuffle(rnd);
 
       forward.add(TermQuizQuestion(
         question: 'Что такое "${term.russianName}"?',
@@ -96,12 +106,12 @@ class TermService {
               t.russianName != term.russianName &&
               t.definition != term.definition)
           .toList()
-        ..shuffle();
+        ..shuffle(rnd);
 
       final options = [
         term.russianName,
         ...wrongNames.take(2).map((t) => t.russianName),
-      ]..shuffle();
+      ]..shuffle(rnd);
 
       reverse.add(TermQuizQuestion(
         question: 'Как называется: "${term.definition}"?',
@@ -162,8 +172,10 @@ class TermService {
       russianName: 'Солевой раствор',
       englishName: 'Saline Solution',
       category: 'Ингредиент',
-      definition: 'Концентрированный раствор соли в воде. Используется для усиления вкуса.',
-      example: '20% раствор: 20г соли на 100мл воды. 1 капля — и вкус заиграет.',
+      definition:
+          'Концентрированный раствор соли в воде. Используется для усиления вкуса.',
+      example:
+          '20% раствор: 20г соли на 100мл воды. 1 капля — и вкус заиграет.',
       lessonId: 'lesson_A_01',
     ),
     TermData(
@@ -195,9 +207,10 @@ class TermService {
     TermData(
       russianName: 'Мексиканский локоть',
       englishName: 'Mexican Elbow',
-      category: 'Вкус',
-      definition: 'Шутливый термин: привычка пить текилу с лаймом.',
-      example: 'Текила + лайм + соль — классическая комбинация.',
+      category: 'Инструмент',
+      definition:
+          'Ручной пресс для цитрусовых: рычаг нажимают ладонью сверху, а плод держит чаша. Даёт стабильный выход сока без эфирных масел из кожуры.',
+      example: 'Из одного лимона ≈ 30 мл сока, из лайма ≈ 15 мл.',
       lessonId: 'lesson_A_02',
     ),
     TermData(
@@ -237,7 +250,8 @@ class TermService {
       russianName: 'Мёд',
       englishName: 'Honey',
       category: 'Ингредиент',
-      definition: 'Натуральный подсластитель. Требует разведения водой или сиропом.',
+      definition:
+          'Натуральный подсластитель. Требует разведения водой или сиропом.',
       example: 'Honey syrup: мёд + горячая вода 1:1, иначе не смешается.',
       lessonId: 'lesson_A_03',
     ),
