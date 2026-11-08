@@ -3,7 +3,7 @@
 > Единая постоянная память проекта для разработчиков и AI-ассистентов.  
 > Репозиторий: `C:\WORK\FLUTTER\OWN_PROJECTS\coin`  
 > GitHub: `https://github.com/johnrocksh/johnrockcoctail_pub`  
-> Последняя сверка с кодом и документацией: 2026-08-17.
+> Последняя сверка с кодом и документацией: 2026-11-08.
 
 ## Как использовать этот файл
 
@@ -16,6 +16,33 @@
    - старые планы в корне и `lib/*.txt` как история, а не обязательство.
 4. После существенного изменения продукта, архитектуры, учебного потока или известных рисков обновить этот файл в том же коммите.
 5. Не писать сюда секреты, API-ключи, токены и персональные данные пользователя.
+
+## 0a. Свежая память работы от 2026-11-08: единая тёплая палитра
+
+Требование пользователя: «прозрачного не должно быть, синий не должен быть, не должно быть тупиков».
+
+Что сделано:
+
+- Все 8 тренажёров урока (`_SweetnessCalibrationSlide`, `_BitterCalibrationSlide`,
+  `_StationBuilderSlide`, `_JiggerMeasurementSlide`, `_ShakeTimingSlide`,
+  `_DilutionCalculatorSlide`, `_CocktailBuilderSlide`, `_AcidCalibrationSlide`)
+  принимают `schoolRoom` и рисуют контент внутри `JohnWoodPanel`. Раньше часть
+  слайдов шла без панели, и сквозь текст просвечивала фотография комнаты.
+- Внутри тренажёров `AppColors.*` заменён на палитру комнаты (`JohnRoomStyle`):
+  `_roomStyle`, `_ink`, `_inkMuted`, `_accent`. `_MethodButton` получает `style`.
+- `AppColors` (`lib/core/theme/app_theme.dart`) перекрашен из фиолетово-синего в
+  тёплый эспрессо + латунь. Это убирает «старый проект» со всех экранов школы
+  (квиз, мастерская, сертификаты, карточки уроков) одной правкой палитры.
+- Цвета зон станции и «Dilution/Прогресс» в коктейль-билдере больше не голубые.
+- Шторка «Словарик урока» — в палитре комнаты (было `AppColors.background`).
+- Убраны тупики: квиз без вопросов получил кнопку «К урокам» (раньше был
+  только текст об ошибке); остальные экраны имеют `JohnThemedAppBar` с back.
+- Устранены три overflow-штриховки в тренажёрах (сладость, горечь, квиз-карточка
+  коктейлей): длинные строки теперь в `Expanded` с переносом.
+- `workshop_screen.dart` больше не передаёт несуществующий параметр `stage`
+  в `JohnRoomBackground` — из-за него не компилировались 3 QA-теста.
+- Проверка: 62 снимка всех уроков Level 1 — 0 % прозрачности, синих пикселей
+  ≤ 0.01 %; overflow-штриховки нет; `flutter test` — 150 тестов зелёные.
 
 ## 0. Свежая память работы от 2026-08-15
 
@@ -215,6 +242,20 @@
 Проходной балл квиза: `BartenderSchoolConfig.quizPassingScore == 70`.
 
 Проваленный квиз не должен завершать урок, выдавать прогресс или открывать следующий урок.
+
+### Один квиз: блок терминов внутри квиза урока
+
+Квиз один (`QuizScreen`), а не два подряд. Вопросы по терминам идут первым
+блоком того же экрана: `_termQuestions` → `_questions`. Это значит, что
+`_termIndex` обязан переехать за границу списка (`_termQuestions.length`),
+когда последний термин отвечен или нажато «К вопросам урока»: условие
+`inTermBlock = _termIndex < _termQuestions.length` держит экран на терминах,
+пока индекс не перешёл границу. Регрессия ловится тестом
+`test/bartender_school/level1/quiz_term_block_test.dart`.
+
+Шаг в заголовке AppBar считается отдельно для двух фаз: внутри блока терминов
+это `_termIndex`, после — `_termQuestions.length + _currentQuestionIndex`.
+Иначе на первом термине показывалось «5/11».
 
 ## 6. Мастерская
 
@@ -426,6 +467,10 @@ Legacy-кандидаты на удаление после проверки за
 - `test/bartender_school/level1/level1_content_test.dart`
 - `test/bartender_school/level1/progress_service_test.dart`
 - `test/bartender_school/level1/quiz_answer_evaluator_test.dart`
+- `test/bartender_school/level1/quiz_term_block_test.dart` — регрессия стопора на последнем термине
+- `test/qa/all_levels_layout_test.dart` → `test/qa/LAYOUT_ALL.txt`
+- `test/qa/font_scale_layout_test.dart` → `test/qa/FONT_SCALE.txt`
+- `test/qa/level1_flow_test.dart` → `test/qa/LAYOUT.txt` и `test/qa/FLOW.txt`
 
 Сейчас они проверяют:
 
@@ -454,9 +499,13 @@ Legacy-кандидаты на удаление после проверки за
 ```powershell
 dart format lib test
 flutter analyze
-flutter test test/bartender_school/level1
+flutter test test/bartender_school test/qa
 flutter build apk --debug
 ```
+
+Статус на 2026-11-08: `flutter test test/bartender_school test/qa` — 146/146 зелёных,
+`LAYOUT_ALL.txt` и `FONT_SCALE.txt` пусты по переполнениям, `flutter analyze` даёт
+0 errors / 0 warnings (только накопленные info-hints). Проверено на Mi A2 Lite.
 
 2026-08-15 debug APK пересобран и установлен на Mi A2 Lite и Pixel 8 Pro. На Pixel вручную проверены главный экран, Level 1/2, кроп карточек Level 2 и реальные matching/sequence. Полный fresh-install проход до двух дипломов и проверка самого маленького поддерживаемого экрана всё ещё нужны до заявления `release-ready`.
 
@@ -474,6 +523,8 @@ flutter build apk --debug
 - Не возвращать legacy-фичи в основной flow без отдельного решения.
 - Не ломать канонический голос Джона и стандарт карточек.
 - Не отключать accessibility ради маскировки layout-проблем.
+- В `Row` с заголовком и бейджем значения заголовок всегда в `Flexible` с `maxLines`/`ellipsis`: пара «длинный заголовок + бейдж» вылезала за край на 50–145 px в трёх тренажёрах и в диалоге результата квиза.
+- Горизонтальный `Row` со свободным текстом внутри `SingleChildScrollView` (без ограничения по ширине родителя) почти всегда переполняется — проверять прогоном `test/qa/all_levels_layout_test.dart` и `test/qa/level1_flow_test.dart`, где отчёт пишется в `test/qa/LAYOUT_ALL.txt` и `test/qa/LAYOUT.txt`.
 - При изменении прогресса продумывать миграцию SharedPreferences.
 - Предпочитать небольшие сервисы и виджеты вместо дальнейшего роста гигантских экранов.
 

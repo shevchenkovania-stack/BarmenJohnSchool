@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/practice_challenges.dart';
+import 'package:coin/features/bartender_school/data/room_mood.dart';
 import 'package:coin/features/bartender_school/presentation/screens/practice_flow_screen.dart';
 import 'package:coin/features/bartender_school/domain/entities/progress.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
@@ -20,54 +21,73 @@ class WorkshopScreen extends StatelessWidget {
         title: 'Мастерская Джона',
         automaticallyImplyLeading: false,
       ),
-      body: JohnRoomBackground(
-        room: JohnSchoolRoom.workshop,
-        child: Consumer<ProgressService>(
-          builder: (context, progress, _) {
-            // Группируем задания по блокам (Level 1: A=3, B=3, C=4)
-            const blockLimits = {'A': 3, 'B': 3, 'C': 4};
-            final blocks = <String, List<PracticeChallenge>>{};
-            for (final c in allPracticeChallenges) {
-              final limit = blockLimits[c.blockId];
-              if (limit == null) continue; // Skip blocks not in Level 1
-              final list = blocks.putIfAbsent(c.blockId, () => []);
-              if (list.length < limit) list.add(c);
-            }
+      body: Consumer<ProgressService>(
+        builder: (context, progress, _) {
+          // Группируем задания по блокам (Level 1: A=3, B=3, C=4)
+          const blockLimits = {'A': 3, 'B': 3, 'C': 4};
+          final blocks = <String, List<PracticeChallenge>>{};
+          for (final c in allPracticeChallenges) {
+            final limit = blockLimits[c.blockId];
+            if (limit == null) continue; // Skip blocks not in Level 1
+            final list = blocks.putIfAbsent(c.blockId, () => []);
+            if (list.length < limit) list.add(c);
+          }
 
-            return ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                // ── Заголовок с Джоном + XP ────────────────────────────────
-                _JohnHeader(
-                  xp: progress.workshopPracticeXp,
-                  level: progress.workshopPracticeLevel,
-                  nextXp: progress.workshopNextLevelXp,
-                  streak: progress.streak,
-                  badges: progress.getUnlockedBadgeIds().length,
-                  coins: progress.coins,
-                ),
-                // Мастерская остаётся только для практики.
-                // Мудрость открывается с главной, Полка бармена временно скрыта.
-                const SizedBox(height: 20),
-
-                // ── Блоки заданий ───────────────────────────────────────────
-                for (final blockId in ['A', 'B', 'C'])
-                  if (blocks.containsKey(blockId)) ...[
-                    _BlockSection(
-                      blockId: blockId,
-                      challenges: blocks[blockId]!,
-                      progress: progress,
-                      allBlocks: blocks,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-
-                const SizedBox(height: 32),
-              ],
-            );
-          },
-        ),
+          // Комната отвечает на прогресс: бокал на стойке, когда хотя бы один
+          // коктейль собран, и верхний свет с медалью, когда собраны все.
+          // Сам оверлей стадии ещё не подключён к `JohnRoomBackground`,
+          // поэтому фон рисуем без него — иначе экран не компилируется.
+          return JohnRoomBackground(
+            room: JohnSchoolRoom.workshop,
+            child: _WorkshopBody(
+              blocks: blocks,
+              progress: progress,
+            ),
+          );
+        },
       ),
+    );
+  }
+}
+
+class _WorkshopBody extends StatelessWidget {
+  final Map<String, List<PracticeChallenge>> blocks;
+  final ProgressService progress;
+
+  const _WorkshopBody({required this.blocks, required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        // ── Заголовок с Джоном + XP ────────────────────────────────
+        _JohnHeader(
+          xp: progress.workshopPracticeXp,
+          level: progress.workshopPracticeLevel,
+          nextXp: progress.workshopNextLevelXp,
+          streak: progress.streak,
+          badges: progress.getUnlockedBadgeIds().length,
+          coins: progress.coins,
+        ),
+        // Мастерская остаётся только для практики.
+        // Мудрость открывается с главной, Полка бармена временно скрыта.
+        const SizedBox(height: 20),
+
+        // ── Блоки заданий ───────────────────────────────────────────
+        for (final blockId in ['A', 'B', 'C'])
+          if (blocks.containsKey(blockId)) ...[
+            _BlockSection(
+              blockId: blockId,
+              challenges: blocks[blockId]!,
+              progress: progress,
+              allBlocks: blocks,
+            ),
+            const SizedBox(height: 16),
+          ],
+
+        const SizedBox(height: 32),
+      ],
     );
   }
 }
@@ -472,6 +492,30 @@ class _ChallengeCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    // [LEVEL-DUPE] Восемь коктейлей встречаются и в Level 1,
+                    // и в Level 2. Это осознанное повторение навыка, но
+                    // прятать его нельзя — иначе новизна выглядит обманом.
+                    if (_isRepetition) ...[
+                      const SizedBox(height: 5),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: style.accent.withAlpha(30),
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: style.accent.withAlpha(90)),
+                        ),
+                        child: Text(
+                          'повторение',
+                          style: TextStyle(
+                            color: style.accent,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -497,6 +541,20 @@ class _ChallengeCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// Коктейль есть и в Level 1, и в Level 2.
+  bool get _isRepetition {
+    if (challenge.blockId != 'D' &&
+        challenge.blockId != 'E' &&
+        challenge.blockId != 'F') {
+      return false;
+    }
+    return allPracticeChallenges.any(
+      (c) =>
+          (c.blockId == 'A' || c.blockId == 'B' || c.blockId == 'C') &&
+          c.cocktailName == challenge.cocktailName,
     );
   }
 

@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:coin/core/theme/app_theme.dart';
+import 'package:coin/features/bartender_school/data/john_reactions.dart';
 import 'package:coin/features/bartender_school/data/lesson_repository.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/domain/entities/progress.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/john_home_card.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/weekly_contract_card.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/rank_progress_card.dart';
+import 'package:coin/features/bartender_school/presentation/screens/daily_quests_screen.dart';
+import 'package:coin/features/bartender_school/data/daily_quest_service.dart';
+import 'package:coin/features/bartender_school/data/workshop_badges.dart';
+import 'package:coin/features/bartender_school/presentation/screens/blind_tasting_screen.dart';
+import 'package:coin/features/bartender_school/data/blind_tasting.dart';
+import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/features/bartender_school/presentation/screens/level1_screen.dart';
+import 'package:coin/features/bartender_school/presentation/screens/level2_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/glossary_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/achievements_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/certificates_screen.dart';
@@ -37,7 +48,13 @@ class SchoolHomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _SchoolHeader(topPad: topPad),
+            const _JohnPresence(),
+            const _GuestEchoLine(),
+            const RankProgressCard(),
+            const _DailyQuestsEntry(),
             _UserStats(),
+            const WeeklyContractCard(),
+            const _BlindTastingEntry(),
             _LevelCardsSection(),
             _QuickAccessSection(),
             const SizedBox(height: 32),
@@ -149,6 +166,256 @@ class _SchoolHeader extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Реплика Джона на главной.
+///
+/// Событие выбирается по состоянию прогресса: пауза, серия или первый вход.
+/// Тексты живут в `john_reactions.dart` и проверяются тестом на тон.
+class _JohnPresence extends StatelessWidget {
+  const _JohnPresence();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<ProgressService, LessonRepository>(
+      builder: (context, progressService, lessonRepo, _) {
+        final now = DateTime.now();
+        final coreLessons = lessonRepo.lessons
+            .where((lesson) => const ['A', 'B', 'C'].contains(lesson.blockId));
+        final hasAnyProgress = progressService.totalXP > 0 ||
+            coreLessons.any((lesson) =>
+                progressService.getLessonStatus(lesson.id) ==
+                LessonStatus.completed);
+
+        final moment = johnHomeMoment(
+          streak: progressService.streak,
+          daysSinceLastVisit: daysSince(progressService.lastStudyDate, now),
+          hasAnyProgress: hasAnyProgress,
+        );
+        final line = johnReaction(
+          moment,
+          JohnContext(
+            streak: progressService.streak,
+            daysSinceLastVisit: daysSince(progressService.lastStudyDate, now),
+          ),
+          variant: johnVariantForDay(now),
+        );
+        if (line.isEmpty) return const SizedBox.shrink();
+
+        return JohnHomeCard(
+          line: line,
+          ctaLabel: 'Открыть курс ›',
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const Level1Screen()),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Эхо выбора гостя: решение из сцены возвращается через несколько дней.
+///
+/// Показывается не чаще раза в день — [GuestEchoService.takeEcho] сам решает,
+/// пора ли напоминать. После показа запись сгорает.
+class _GuestEchoLine extends StatefulWidget {
+  const _GuestEchoLine();
+
+  @override
+  State<_GuestEchoLine> createState() => _GuestEchoLineState();
+}
+
+class _GuestEchoLineState extends State<_GuestEchoLine> {
+  String? _line;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final line = context.read<GuestEchoService>().takeEcho();
+      if (line == null) return;
+      setState(() => _line = line);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final line = _line;
+    if (line == null) return const SizedBox.shrink();
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF241C12),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFF8E7A55).withAlpha(120)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.record_voice_over_outlined,
+              size: 16, color: Color(0xFFC8A45C)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              line,
+              style: const TextStyle(
+                color: Color(0xFFF3E7D0),
+                fontSize: 12.5,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Вход в слепую дегустацию с меткой о сегодняшнем раунде.
+class _BlindTastingEntry extends StatelessWidget {
+  const _BlindTastingEntry();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<BlindTastingService>(
+      builder: (context, tasting, _) {
+        final done = tasting.playedToday;
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const BlindTastingScreen()),
+          ),
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF1F2A24), Color(0xFF293A30)],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFF52D6C6).withAlpha(130)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF52D6C6).withAlpha(30),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.local_bar_rounded,
+                      color: Color(0xFF52D6C6), size: 22),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Слепая дегустация',
+                        style: TextStyle(
+                          color: Color(0xFFE8FBF7),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        done
+                            ? 'Сегодняшний раунд пройден · возвращайся завтра'
+                            : 'Один раунд в день · ${tasting.correctCount} угадано',
+                        style: TextStyle(
+                          color: const Color(0xFFE8FBF7).withAlpha(170),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (done)
+                  const Icon(Icons.check_rounded,
+                      color: Color(0xFF52D6C6), size: 20)
+                else
+                  const Icon(Icons.chevron_right_rounded,
+                      color: Color(0xFF52D6C6), size: 22),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Быстрый вход в ежедневные задания.
+///
+/// Раньше экран был спрятан в глубине: теперь он в один тап с главной и
+/// сам показывает, сколько заданий осталось.
+class _DailyQuestsEntry extends StatelessWidget {
+  const _DailyQuestsEntry();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<DailyQuestService>(
+      builder: (context, quests, _) {
+        final done = quests.completedCount;
+        final total = quests.quests.length;
+        final allDone = quests.allCompleted;
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const DailyQuestsScreen()),
+          ),
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1C2320),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: const Color(0xFF7FC97F).withAlpha(110),
+              ),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.checklist_rounded,
+                    size: 20, color: Color(0xFF7FC97F)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    allDone
+                        ? 'Задания на сегодня выполнены'
+                        : 'Ежедневные задания · $done из $total',
+                    style: TextStyle(
+                      color: allDone
+                          ? const Color(0xFF7FC97F)
+                          : const Color(0xFFEAF7EA),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Text(
+                  '$done/$total',
+                  style: TextStyle(
+                    color: const Color(0xFFEAF7EA).withAlpha(150),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -355,10 +622,26 @@ class _LevelCardsSection extends StatelessWidget {
           lessonsCount: 12,
           blockIds: const ['A', 'B', 'C'],
           icon: '🌱',
-          gradientColors: [Colors.green.shade600, Colors.green.shade800],
+          gradientColors: [AppColors.primary, AppColors.primaryDark],
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const Level1Screen()),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Level 2 готов (12 уроков, 12 квизов, диплом), поэтому не спрятан.
+        // Плашка без обещаний: ничего лишнего, чего нет в контенте.
+        _LevelCard(
+          level: 2,
+          title: 'Профессиональная смена',
+          subtitle: 'Классика, вкусы, сервис',
+          lessonsCount: 12,
+          blockIds: const ['D', 'E', 'F'],
+          icon: '🍸',
+          gradientColors: [AppColors.primaryDark, AppColors.background],
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const Level2Screen()),
           ),
         ),
         const SizedBox(height: 16),
@@ -850,7 +1133,7 @@ class _AwardsSection extends StatelessWidget {
                 width: 3,
                 height: 14,
                 decoration: BoxDecoration(
-                  color: Colors.purple,
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -872,16 +1155,21 @@ class _AwardsSection extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: _AwardCard(
-                  customIconPath: 'images/ui_icon_term_medal.png',
-                  title: 'Награды',
-                  subtitle: '12 достижений',
-                  color: Colors.amber,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const AchievementsScreen()),
-                  ),
+                child: Consumer<ProgressService>(
+                  builder: (context, progress, _) {
+                    final earned = progress.progress.achievements.length;
+                    return _AwardCard(
+                      customIconPath: 'images/ui_icon_term_medal.png',
+                      title: 'Награды',
+                      subtitle: '$earned из ${workshopBadges.length} бейджей',
+                      color: Colors.amber,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const AchievementsScreen()),
+                      ),
+                    );
+                  },
                 ),
               ),
               const SizedBox(width: 12),

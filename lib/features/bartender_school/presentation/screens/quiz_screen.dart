@@ -439,11 +439,14 @@ class _QuizScreenState extends State<QuizScreen> {
       progressService.earnCoins(coinsEarned);
 
       // Ежедневные задания: урок пройден + квиз на 80%+
-      unawaited(questService.completeQuest(DailyQuestType.completeLesson).then((reward) {
+      unawaited(questService
+          .completeQuest(DailyQuestType.completeLesson)
+          .then((reward) {
         if (reward > 0) progressService.earnCoins(reward);
       }));
       if (percentage.toInt() >= 80) {
-        unawaited(questService.completeQuest(DailyQuestType.passQuiz).then((reward) {
+        unawaited(
+            questService.completeQuest(DailyQuestType.passQuiz).then((reward) {
           if (reward > 0) progressService.earnCoins(reward);
         }));
       }
@@ -838,8 +841,7 @@ class _QuizScreenState extends State<QuizScreen> {
     // link) не даём `popUntil` уйти глубже предыдущего экрана.
     final route = ModalRoute.of(context);
     navigator.popUntil((target) =>
-        target != route &&
-        target.settings.name != QuizScreen.routeName);
+        target != route && target.settings.name != QuizScreen.routeName);
   }
 
   Widget _buildMatchingQuestion(QuizQuestion question) {
@@ -1344,19 +1346,19 @@ class _QuizScreenState extends State<QuizScreen> {
         // Show loading while quizzes are loading
         if (quizRepo.isLoading) {
           return Scaffold(
-            backgroundColor: AppColors.background,
-            appBar: AppBar(
-              title: const Text('Загрузка квиза...'),
-              backgroundColor: AppColors.background,
+            backgroundColor: schoolStyle.surface,
+            appBar: JohnThemedAppBar(
+              room: schoolRoom,
+              title: 'Загрузка квиза...',
             ),
-            body: const Center(
+            body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: AppColors.primary),
-                  SizedBox(height: 16),
+                  CircularProgressIndicator(color: schoolStyle.accent),
+                  const SizedBox(height: 16),
                   Text('Загружаю вопросы...',
-                      style: TextStyle(color: AppColors.textPrimary)),
+                      style: TextStyle(color: schoolStyle.onDark)),
                 ],
               ),
             ),
@@ -1368,14 +1370,31 @@ class _QuizScreenState extends State<QuizScreen> {
           _loadQuestions();
           if (_questions.isEmpty) {
             return Scaffold(
-              backgroundColor: AppColors.background,
-              appBar: AppBar(
-                title: const Text('Квиз'),
-                backgroundColor: AppColors.background,
+              backgroundColor: schoolStyle.surface,
+              appBar: JohnThemedAppBar(
+                room: schoolRoom,
+                title: 'Квиз',
               ),
-              body: const Center(
-                child: Text('Вопросы для этого урока пока недоступны',
-                    style: TextStyle(color: AppColors.textPrimary)),
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Вопросы для этого урока пока недоступны',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: schoolStyle.onDark)),
+                      const SizedBox(height: 20),
+                      // Тупика быть не должно: отсюда всегда можно уйти
+                      // обратно к списку уроков.
+                      ElevatedButton.icon(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back),
+                        label: const Text('К урокам'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             );
           }

@@ -735,29 +735,43 @@ class _SlideWidget extends StatelessWidget {
         );
       } else if (slide.title.contains('сладость') ||
           slide.title.contains('Сладость')) {
-        return _withMentor(_SweetnessCalibrationSlide(slide: slide));
+        return _withMentor(
+          _SweetnessCalibrationSlide(slide: slide, schoolRoom: schoolRoom),
+        );
       } else if (slide.title.contains('горечь') ||
           slide.title.contains('Горечь') ||
           slide.title.contains('биттер')) {
-        return _withMentor(_BitterCalibrationSlide(slide: slide));
+        return _withMentor(
+          _BitterCalibrationSlide(slide: slide, schoolRoom: schoolRoom),
+        );
       } else if (slide.title.contains('станцию') ||
           slide.title.contains('Собери')) {
-        return _withMentor(_StationBuilderSlide(slide: slide));
+        return _withMentor(
+          _StationBuilderSlide(slide: slide, schoolRoom: schoolRoom),
+        );
       } else if (slide.title.contains('джиггер') ||
           slide.title.contains('налей') ||
           (slide.title.contains('Практика') &&
               slide.content.contains('джиггер'))) {
-        return _withMentor(_JiggerMeasurementSlide(slide: slide));
+        return _withMentor(
+          _JiggerMeasurementSlide(slide: slide, schoolRoom: schoolRoom),
+        );
       } else if (slide.title.contains('шейк') ||
           slide.title.contains('тайминг') ||
           slide.title.contains('встрях')) {
-        return _withMentor(_ShakeTimingSlide(slide: slide));
+        return _withMentor(
+          _ShakeTimingSlide(slide: slide, schoolRoom: schoolRoom),
+        );
       } else if (slide.title.contains('dilution') ||
           slide.title.contains('Дильюш')) {
-        return _withMentor(_DilutionCalculatorSlide(slide: slide));
+        return _withMentor(
+          _DilutionCalculatorSlide(slide: slide, schoolRoom: schoolRoom),
+        );
       } else if (slide.title.contains('Практика') &&
           slide.content.contains('Шаг')) {
-        return _withMentor(_CocktailBuilderSlide(slide: slide));
+        return _withMentor(
+          _CocktailBuilderSlide(slide: slide, schoolRoom: schoolRoom),
+        );
       }
       // Фоллбэк тоже получает room: без него тренажёр рисовался прямо
       // на фоне комнаты и слайд читался как «прозрачный».
@@ -1940,8 +1954,7 @@ class _ToolVisualSlide extends StatelessWidget {
                             TextSpan(
                               text: '${entry.key}: ',
                               style: TextStyle(
-                                color: style?.onDark ??
-                                    const Color(0xFFFCEAB9),
+                                color: style?.onDark ?? const Color(0xFFFCEAB9),
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1949,9 +1962,9 @@ class _ToolVisualSlide extends StatelessWidget {
                             TextSpan(
                               text: entry.value,
                               style: TextStyle(
-                                color: (style?.onDark ??
-                                        const Color(0xFFFCEAB9))
-                                    .withAlpha(200),
+                                color:
+                                    (style?.onDark ?? const Color(0xFFFCEAB9))
+                                        .withAlpha(200),
                                 fontSize: 14,
                                 height: 1.35,
                               ),
@@ -1974,8 +1987,8 @@ class _ToolVisualSlide extends StatelessWidget {
           slide.content,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: (schoolStyle?.onDark ?? AppColors.textPrimary)
-                .withAlpha(180),
+            color:
+                (schoolStyle?.onDark ?? AppColors.textPrimary).withAlpha(180),
             fontFamily: 'serif',
             fontSize: 13.5,
             fontStyle: FontStyle.italic,
@@ -2068,6 +2081,13 @@ class CocktailTemplate {
 }
 
 class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
+  Color get _accent => _roomStyle.accent;
   static const List<CocktailTemplate> _cocktails = [
     CocktailTemplate(
       name: 'Daiquiri',
@@ -2222,8 +2242,8 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
         const SizedBox(height: 16),
         Text(
           widget.slide.title,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
+          style: TextStyle(
+            color: _ink,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -2231,8 +2251,8 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
         const SizedBox(height: 8),
         Text(
           widget.slide.content,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
+          style: TextStyle(
+            color: _inkMuted,
             fontSize: 14,
             height: 1.5,
           ),
@@ -2292,14 +2312,14 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withAlpha(40),
-            AppColors.primary.withAlpha(20),
+            _accent.withAlpha(40),
+            _accent.withAlpha(20),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primary.withAlpha(80)),
+        border: Border.all(color: _accent.withAlpha(80)),
       ),
       child: Column(
         children: [
@@ -2308,11 +2328,10 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: _accent,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child:
-                    Text(cocktail.emoji, style: const TextStyle(fontSize: 28)),
+                child: Text(cocktail.emoji, style: TextStyle(fontSize: 28)),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -2321,10 +2340,10 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                   children: [
                     Text(
                       cocktail.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
+                        color: _ink,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -2332,14 +2351,14 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(30),
+                        color: _accent.withAlpha(30),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         cocktail.style,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.primary,
+                          color: _accent,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -2356,7 +2375,7 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                     CircularProgressIndicator(
                       value: score / 100,
                       strokeWidth: 6,
-                      backgroundColor: AppColors.divider,
+                      backgroundColor: _roomStyle.accent.withAlpha(90),
                       valueColor: AlwaysStoppedAnimation(_getScoreColor()),
                     ),
                     Column(
@@ -2381,7 +2400,7 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: _roomStyle.surface,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -2397,9 +2416,9 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                 Expanded(
                   child: Text(
                     _getTasteDescription(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.textPrimary,
+                      color: _ink,
                       height: 1.3,
                     ),
                   ),
@@ -2418,11 +2437,11 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: _resetSliders,
-            icon: const Icon(Icons.refresh, size: 18),
+            icon: Icon(Icons.refresh, size: 18),
             label: const Text('Начать заново'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.textSecondary,
-              side: const BorderSide(color: AppColors.divider),
+              foregroundColor: _inkMuted,
+              side: BorderSide(color: _roomStyle.accent.withAlpha(90)),
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -2438,8 +2457,8 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                 size: 18),
             label: Text(_showRecipe ? 'Скрыть рецепт' : 'Показать рецепт'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              side: BorderSide(color: AppColors.primary.withAlpha(100)),
+              foregroundColor: _accent,
+              side: BorderSide(color: _accent.withAlpha(100)),
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -2474,10 +2493,10 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: _ink,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -2504,13 +2523,13 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                 decoration: BoxDecoration(
                   color: isCorrect
                       ? Colors.green.withAlpha(30)
-                      : AppColors.primary.withAlpha(30),
+                      : _accent.withAlpha(30),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '${value.toInt()}',
                   style: TextStyle(
-                    color: isCorrect ? Colors.green : AppColors.primary,
+                    color: isCorrect ? Colors.green : _accent,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -2521,11 +2540,10 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
           const SizedBox(height: 6),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: isCorrect ? Colors.green : AppColors.primary,
-              inactiveTrackColor: AppColors.divider,
-              thumbColor: isCorrect ? Colors.green : AppColors.primary,
-              overlayColor:
-                  (isCorrect ? Colors.green : AppColors.primary).withAlpha(30),
+              activeTrackColor: isCorrect ? Colors.green : _accent,
+              inactiveTrackColor: _roomStyle.accent.withAlpha(90),
+              thumbColor: isCorrect ? Colors.green : _accent,
+              overlayColor: (isCorrect ? Colors.green : _accent).withAlpha(30),
               trackHeight: 6,
             ),
             child: Slider(
@@ -2539,30 +2557,27 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(minLabel,
-                  style: const TextStyle(
-                      fontSize: 11, color: AppColors.textSecondary)),
+              Text(minLabel, style: TextStyle(fontSize: 11, color: _inkMuted)),
               if (_showRecipe)
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withAlpha(20),
+                    color: _accent.withAlpha(20),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     'цель: ${target.toInt()}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: AppColors.primary,
+                      color: _accent,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 )
               else
                 Text(maxLabel,
-                    style: const TextStyle(
-                        fontSize: 11, color: AppColors.textSecondary)),
+                    style: TextStyle(fontSize: 11, color: _inkMuted)),
             ],
           ),
         ],
@@ -2574,21 +2589,21 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: _roomStyle.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider),
+        border: Border.all(color: _roomStyle.accent.withAlpha(90)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: _selectedCocktailIndex,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.primary),
+          icon: Icon(Icons.keyboard_arrow_down, color: _accent),
           items: _cocktails.asMap().entries.map((entry) {
             return DropdownMenuItem(
               value: entry.key,
               child: Row(
                 children: [
-                  Text(entry.value.emoji, style: const TextStyle(fontSize: 20)),
+                  Text(entry.value.emoji, style: TextStyle(fontSize: 20)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -2597,17 +2612,17 @@ class _BalanceTrainerSlideState extends State<_BalanceTrainerSlide> {
                       children: [
                         Text(
                           entry.value.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: _ink,
                           ),
                         ),
                         Text(
                           entry.value.style,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
-                            color: AppColors.textSecondary,
+                            color: _inkMuted,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -3010,9 +3025,8 @@ class _AcidCalibrationSlideState extends State<_AcidCalibrationSlide> {
       decoration: BoxDecoration(
         color: _style?.surfaceLight ?? AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: _style == null
-            ? null
-            : Border.all(color: _accent.withAlpha(90)),
+        border:
+            _style == null ? null : Border.all(color: _accent.withAlpha(90)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -3107,8 +3121,7 @@ class _AcidCalibrationSlideState extends State<_AcidCalibrationSlide> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('10',
-                  style: TextStyle(fontSize: 12, color: _inkMuted)),
+              Text('10', style: TextStyle(fontSize: 12, color: _inkMuted)),
               Text('${cocktail.minGood.toInt()}',
                   style: TextStyle(
                       fontSize: 12,
@@ -3119,8 +3132,7 @@ class _AcidCalibrationSlideState extends State<_AcidCalibrationSlide> {
                       fontSize: 12,
                       color: Colors.green,
                       fontWeight: FontWeight.bold)),
-              Text('40',
-                  style: TextStyle(fontSize: 12, color: _inkMuted)),
+              Text('40', style: TextStyle(fontSize: 12, color: _inkMuted)),
             ],
           ),
           const SizedBox(height: 16),
@@ -3144,10 +3156,8 @@ class _AcidCalibrationSlideState extends State<_AcidCalibrationSlide> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Мягко',
-                  style: TextStyle(fontSize: 11, color: _inkMuted)),
-              Text('Ярко',
-                  style: TextStyle(fontSize: 11, color: _inkMuted)),
+              Text('Мягко', style: TextStyle(fontSize: 11, color: _inkMuted)),
+              Text('Ярко', style: TextStyle(fontSize: 11, color: _inkMuted)),
             ],
           ),
         ],
@@ -3166,9 +3176,8 @@ class _AcidCalibrationSlideState extends State<_AcidCalibrationSlide> {
             style: OutlinedButton.styleFrom(
               foregroundColor: _inkMuted,
               side: BorderSide(
-                color: _style == null
-                    ? AppColors.divider
-                    : _accent.withAlpha(110),
+                color:
+                    _style == null ? AppColors.divider : _accent.withAlpha(110),
               ),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
@@ -3271,8 +3280,9 @@ class _AcidCalibrationSlideState extends State<_AcidCalibrationSlide> {
 
 class _SweetnessCalibrationSlide extends StatefulWidget {
   final LessonSlide slide;
+  final JohnSchoolRoom? schoolRoom;
 
-  const _SweetnessCalibrationSlide({required this.slide});
+  const _SweetnessCalibrationSlide({required this.slide, this.schoolRoom});
 
   @override
   State<_SweetnessCalibrationSlide> createState() =>
@@ -3299,6 +3309,13 @@ class SweetnessCocktailTemplate {
 
 class _SweetnessCalibrationSlideState
     extends State<_SweetnessCalibrationSlide> {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
+  Color get _accent => _roomStyle.accent;
   static const List<SweetnessCocktailTemplate> _cocktails = [
     SweetnessCocktailTemplate(
       name: 'Daiquiri',
@@ -3389,75 +3406,78 @@ class _SweetnessCalibrationSlideState
     final cocktail = _cocktails[_selectedCocktailIndex];
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideTypeIcon(type: widget.slide.type),
-          const SizedBox(height: 16),
-          Text(
-            widget.slide.title,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+        padding: const EdgeInsets.all(24),
+        child: JohnWoodPanel(
+          room: widget.schoolRoom ?? JohnSchoolRoom.flavorLab,
+          highlighted: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SlideTypeIcon(type: widget.slide.type),
+              const SizedBox(height: 16),
+              Text(
+                widget.slide.title,
+                style: TextStyle(
+                  color: _ink,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.slide.content,
+                style: TextStyle(
+                  color: _inkMuted,
+                  fontSize: 14,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildCocktailSelector(),
+              const SizedBox(height: 20),
+              _buildCocktailCard(cocktail),
+              const SizedBox(height: 20),
+              _buildSyrupSelector(cocktail),
+              const SizedBox(height: 16),
+              _buildSlider(cocktail),
+              const SizedBox(height: 20),
+              _buildControlButtons(),
+              if (_showResult) ...[
+                const SizedBox(height: 20),
+                _buildResultsSummary(),
+              ],
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            widget.slide.content,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 14,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 24),
-          _buildCocktailSelector(),
-          const SizedBox(height: 20),
-          _buildCocktailCard(cocktail),
-          const SizedBox(height: 20),
-          _buildSyrupSelector(cocktail),
-          const SizedBox(height: 16),
-          _buildSlider(cocktail),
-          const SizedBox(height: 20),
-          _buildControlButtons(),
-          if (_showResult) ...[
-            const SizedBox(height: 20),
-            _buildResultsSummary(),
-          ],
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildCocktailSelector() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: _roomStyle.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider),
+        border: Border.all(color: _roomStyle.accent.withAlpha(90)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: _selectedCocktailIndex,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.primary),
+          icon: Icon(Icons.keyboard_arrow_down, color: _accent),
           items: _cocktails.asMap().entries.map((entry) {
             return DropdownMenuItem(
               value: entry.key,
               child: Row(
                 children: [
-                  Text(entry.value.emoji, style: const TextStyle(fontSize: 20)),
+                  Text(entry.value.emoji, style: TextStyle(fontSize: 20)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       entry.value.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: _ink,
                       ),
                     ),
                   ),
@@ -3484,14 +3504,14 @@ class _SweetnessCalibrationSlideState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withAlpha(40),
-            AppColors.primary.withAlpha(20),
+            _accent.withAlpha(40),
+            _accent.withAlpha(20),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primary.withAlpha(80)),
+        border: Border.all(color: _accent.withAlpha(80)),
       ),
       child: Column(
         children: [
@@ -3500,11 +3520,10 @@ class _SweetnessCalibrationSlideState
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: _accent,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child:
-                    Text(cocktail.emoji, style: const TextStyle(fontSize: 28)),
+                child: Text(cocktail.emoji, style: TextStyle(fontSize: 28)),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -3513,10 +3532,10 @@ class _SweetnessCalibrationSlideState
                   children: [
                     Text(
                       cocktail.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
+                        color: _ink,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -3524,7 +3543,7 @@ class _SweetnessCalibrationSlideState
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(30),
+                        color: _accent.withAlpha(30),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       // Подпись «Сироп: …, NN-NN мл» длинная: на узком
@@ -3533,9 +3552,9 @@ class _SweetnessCalibrationSlideState
                         'Сироп: ${cocktail.syrupType}, ${cocktail.minGood.toInt()}-${cocktail.maxGood.toInt()} мл',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.primary,
+                          color: _accent,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -3549,12 +3568,13 @@ class _SweetnessCalibrationSlideState
                 decoration: BoxDecoration(
                   color: _getLiquidColor(),
                   borderRadius: BorderRadius.circular(40),
-                  border: Border.all(color: AppColors.divider, width: 3),
+                  border: Border.all(
+                      color: _roomStyle.accent.withAlpha(90), width: 3),
                 ),
                 child: Center(
                   child: Text(
                     _getFace(),
-                    style: const TextStyle(fontSize: 40),
+                    style: TextStyle(fontSize: 40),
                   ),
                 ),
               ),
@@ -3573,12 +3593,19 @@ class _SweetnessCalibrationSlideState
                 Icon(_isInGoodZone() ? Icons.check_circle : Icons.warning,
                     color: _getColor(), size: 20),
                 const SizedBox(width: 8),
-                Text(
-                  _getDescription(),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: _getColor(),
-                    fontWeight: FontWeight.bold,
+                // Описание зоны не влезало в строку и рисовало
+                // жёлто-чёрную штриховку overflow — даём перенос.
+                Expanded(
+                  child: Text(
+                    _getDescription(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: _getColor(),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -3593,18 +3620,18 @@ class _SweetnessCalibrationSlideState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: _roomStyle.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '🍯 Тип сиропа',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: _ink,
             ),
           ),
           const SizedBox(height: 12),
@@ -3621,14 +3648,14 @@ class _SweetnessCalibrationSlideState
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? (isCorrect ? Colors.green : AppColors.primary)
+                            ? (isCorrect ? Colors.green : _accent)
                             : (isCorrect
                                 ? Colors.green.withAlpha(30)
-                                : AppColors.divider),
+                                : _roomStyle.accent.withAlpha(90)),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: isSelected
-                              ? (isCorrect ? Colors.green : AppColors.primary)
+                              ? (isCorrect ? Colors.green : _accent)
                               : Colors.transparent,
                           width: 2,
                         ),
@@ -3639,8 +3666,7 @@ class _SweetnessCalibrationSlideState
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color:
-                              isSelected ? Colors.white : AppColors.textPrimary,
+                          color: isSelected ? Colors.white : _ink,
                         ),
                       ),
                     ),
@@ -3658,7 +3684,7 @@ class _SweetnessCalibrationSlideState
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: _roomStyle.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -3669,7 +3695,7 @@ class _SweetnessCalibrationSlideState
             children: [
               // Заголовок сжимается, бейдж держит размер: иначе пара
               // «📏 Дозировка (мл)» + «N мл» вылезала на 102 px.
-              const Flexible(
+              Flexible(
                 child: Text(
                   '📏 Дозировка (мл)',
                   maxLines: 2,
@@ -3677,7 +3703,7 @@ class _SweetnessCalibrationSlideState
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: _ink,
                   ),
                 ),
               ),
@@ -3707,7 +3733,7 @@ class _SweetnessCalibrationSlideState
               Container(
                 height: 12,
                 decoration: BoxDecoration(
-                  color: AppColors.divider,
+                  color: _roomStyle.accent.withAlpha(90),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Row(
@@ -3751,9 +3777,7 @@ class _SweetnessCalibrationSlideState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('10',
-                  style:
-                      TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+              Text('10', style: TextStyle(fontSize: 12, color: _inkMuted)),
               Text('${cocktail.minGood.toInt()}',
                   style: TextStyle(
                       fontSize: 12,
@@ -3764,16 +3788,14 @@ class _SweetnessCalibrationSlideState
                       fontSize: 12,
                       color: Colors.green,
                       fontWeight: FontWeight.bold)),
-              const Text('30',
-                  style:
-                      TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+              Text('30', style: TextStyle(fontSize: 12, color: _inkMuted)),
             ],
           ),
           const SizedBox(height: 16),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: _getColor(),
-              inactiveTrackColor: AppColors.divider,
+              inactiveTrackColor: _roomStyle.accent.withAlpha(90),
               thumbColor: _getColor(),
               overlayColor: _getColor().withAlpha(30),
               trackHeight: 8,
@@ -3787,15 +3809,11 @@ class _SweetnessCalibrationSlideState
             ),
           ),
           const SizedBox(height: 8),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Мягко',
-                  style:
-                      TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-              Text('Плотно',
-                  style:
-                      TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+              Text('Мягко', style: TextStyle(fontSize: 11, color: _inkMuted)),
+              Text('Плотно', style: TextStyle(fontSize: 11, color: _inkMuted)),
             ],
           ),
         ],
@@ -3809,11 +3827,11 @@ class _SweetnessCalibrationSlideState
         Expanded(
           child: OutlinedButton.icon(
             onPressed: _reset,
-            icon: const Icon(Icons.refresh, size: 18),
+            icon: Icon(Icons.refresh, size: 18),
             label: const Text('Сброс'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.textSecondary,
-              side: const BorderSide(color: AppColors.divider),
+              foregroundColor: _inkMuted,
+              side: BorderSide(color: _roomStyle.accent.withAlpha(90)),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -3825,7 +3843,7 @@ class _SweetnessCalibrationSlideState
         Expanded(
           child: ElevatedButton.icon(
             onPressed: _checkAll,
-            icon: const Icon(Icons.check_circle, size: 18),
+            icon: Icon(Icons.check_circle, size: 18),
             label: const Text('Проверить'),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -3893,9 +3911,9 @@ class _SweetnessCalibrationSlideState
                   _dosageMl <= c.maxGood;
               return Column(
                 children: [
-                  Text(isOk ? '✅' : '❌', style: const TextStyle(fontSize: 24)),
+                  Text(isOk ? '✅' : '❌', style: TextStyle(fontSize: 24)),
                   const SizedBox(height: 4),
-                  Text(c.name, style: const TextStyle(fontSize: 12)),
+                  Text(c.name, style: TextStyle(fontSize: 12)),
                 ],
               );
             }).toList(),
@@ -3903,9 +3921,9 @@ class _SweetnessCalibrationSlideState
           const SizedBox(height: 12),
           Text(
             'Подбери ${_cocktails[_selectedCocktailIndex].name}: ${_selectedSyrup}, ${_dosageMl.toInt()} мл — оптимально ${_cocktails[_selectedCocktailIndex].optimal.toInt()} мл',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: _inkMuted,
             ),
             textAlign: TextAlign.center,
           ),
@@ -3917,13 +3935,22 @@ class _SweetnessCalibrationSlideState
 
 class _BitterCalibrationSlide extends StatefulWidget {
   final LessonSlide slide;
-  const _BitterCalibrationSlide({required this.slide});
+  final JohnSchoolRoom? schoolRoom;
+
+  const _BitterCalibrationSlide({required this.slide, this.schoolRoom});
   @override
   State<_BitterCalibrationSlide> createState() =>
       _BitterCalibrationSlideState();
 }
 
 class _BitterCalibrationSlideState extends State<_BitterCalibrationSlide> {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
+  Color get _accent => _roomStyle.accent;
   static final _cocktails = <Map<String, dynamic>>[
     {
       'name': 'Old Fashioned',
@@ -3988,282 +4015,304 @@ class _BitterCalibrationSlideState extends State<_BitterCalibrationSlide> {
   Widget build(BuildContext context) {
     final c = _cocktails[_idx];
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideTypeIcon(type: widget.slide.type),
-          const SizedBox(height: 16),
-          Text(widget.slide.title,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 8),
-          Text(widget.slide.content,
-              style: const TextStyle(
-                  fontSize: 14, color: AppColors.textSecondary, height: 1.5)),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.divider)),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<int>(
-                value: _idx,
-                isExpanded: true,
-                icon: const Icon(Icons.keyboard_arrow_down,
-                    color: AppColors.primary),
-                items: _cocktails
-                    .asMap()
-                    .entries
-                    .map((e) => DropdownMenuItem(
-                          value: e.key,
-                          child: Row(children: [
-                            Text(e.value['emoji'] as String,
-                                style: const TextStyle(fontSize: 20)),
-                            const SizedBox(width: 12),
-                            Expanded(
-                                child: Text(e.value['name'] as String,
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.textPrimary))),
-                          ]),
-                        ))
-                    .toList(),
-                onChanged: (v) {
-                  if (v != null)
-                    setState(() {
-                      _idx = v;
-                      _reset();
-                    });
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  AppColors.primary.withAlpha(40),
-                  AppColors.primary.withAlpha(20)
-                ]),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.primary.withAlpha(80))),
-            child: Column(children: [
-              Row(children: [
-                Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Text(c['emoji'] as String,
-                        style: const TextStyle(fontSize: 28))),
-                const SizedBox(width: 16),
-                Expanded(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                      Text(c['name'] as String,
-                          style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary)),
-                      const SizedBox(height: 4),
-                      Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                              color: AppColors.primary.withAlpha(30),
-                              borderRadius: BorderRadius.circular(12)),
-                          child: Text(
-                              '${c['bitter']}: ${c['min']}-${c['max']} дэша',
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w500))),
-                    ])),
-                Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                        color: Color.lerp(const Color(0xFFE8D4B8),
-                            const Color(0xFF8B4513), (_dashes - 0.5) / 2.5)!,
-                        borderRadius: BorderRadius.circular(40),
-                        border: Border.all(color: AppColors.divider, width: 3)),
-                    child: Center(
-                        child: Text(_face(),
-                            style: const TextStyle(fontSize: 40)))),
-              ]),
+        padding: const EdgeInsets.all(24),
+        child: JohnWoodPanel(
+          room: widget.schoolRoom ?? JohnSchoolRoom.flavorLab,
+          highlighted: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SlideTypeIcon(type: widget.slide.type),
               const SizedBox(height: 16),
+              Text(widget.slide.title,
+                  style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 8),
+              Text(widget.slide.content,
+                  style:
+                      TextStyle(fontSize: 14, color: _inkMuted, height: 1.5)),
+              const SizedBox(height: 24),
               Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                      color: _color().withAlpha(30),
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                    color: _roomStyle.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: _roomStyle.accent.withAlpha(90))),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: _idx,
+                    isExpanded: true,
+                    icon: Icon(Icons.keyboard_arrow_down, color: _accent),
+                    items: _cocktails
+                        .asMap()
+                        .entries
+                        .map((e) => DropdownMenuItem(
+                              value: e.key,
+                              child: Row(children: [
+                                Text(e.value['emoji'] as String,
+                                    style: TextStyle(fontSize: 20)),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                    child: Text(e.value['name'] as String,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: _ink))),
+                              ]),
+                            ))
+                        .toList(),
+                    onChanged: (v) {
+                      if (v != null)
+                        setState(() {
+                          _idx = v;
+                          _reset();
+                        });
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [_accent.withAlpha(40), _accent.withAlpha(20)]),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: _accent.withAlpha(80))),
+                child: Column(children: [
+                  Row(children: [
+                    Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            color: _accent,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Text(c['emoji'] as String,
+                            style: TextStyle(fontSize: 28))),
+                    const SizedBox(width: 16),
+                    Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          Text(c['name'] as String,
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: _ink)),
+                          const SizedBox(height: 4),
+                          Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                  color: _accent.withAlpha(30),
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Text(
+                                  '${c['bitter']}: ${c['min']}-${c['max']} дэша',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: _accent,
+                                      fontWeight: FontWeight.w500))),
+                        ])),
+                    Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                            color: Color.lerp(
+                                const Color(0xFFE8D4B8),
+                                const Color(0xFF8B4513),
+                                (_dashes - 0.5) / 2.5)!,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(
+                                color: _roomStyle.accent.withAlpha(90),
+                                width: 3)),
+                        child: Center(
+                            child:
+                                Text(_face(), style: TextStyle(fontSize: 40)))),
+                  ]),
+                  const SizedBox(height: 16),
+                  Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          color: _color().withAlpha(30),
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                                _dashes >= (c['min'] as double) &&
+                                        _dashes <= (c['max'] as double)
+                                    ? Icons.check_circle
+                                    : Icons.warning,
+                                color: _color(),
+                                size: 20),
+                            const SizedBox(width: 8),
+                            // Описание зоны бывает длинным — отдаём ему всю
+                            // оставшуюся ширину, иначе строка вылезает
+                            // за карточку штриховкой overflow.
+                            Expanded(
+                              child: Text(_desc(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: _color(),
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          ])),
+                ]),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    color: _roomStyle.surface,
+                    borderRadius: BorderRadius.circular(16)),
+                child: Column(children: [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                            _dashes >= (c['min'] as double) &&
-                                    _dashes <= (c['max'] as double)
-                                ? Icons.check_circle
-                                : Icons.warning,
-                            color: _color(),
-                            size: 20),
-                        const SizedBox(width: 8),
-                        // Описание зоны бывает длинным — даём ему сжиматься,
-                        // иначе строка вылезает на 89 px.
+                        // Заголовок сжимается, бейдж со значением держит размер:
+                        // иначе пара не помещалась и вылезала на 145 px.
                         Flexible(
-                          child: Text(_desc(),
+                          child: Text('🌿 Дэши биттеров',
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 16,
-                                  color: _color(),
-                                  fontWeight: FontWeight.bold)),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: _ink)),
                         ),
-                      ])),
-            ]),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(16)),
-            child: Column(children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                // Заголовок сжимается, бейдж со значением держит размер:
-                // иначе пара не помещалась и вылезала на 145 px.
-                const Flexible(
-                  child: Text('🌿 Дэши биттеров',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary)),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                        color: _color().withAlpha(30),
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text('${_dashes.toStringAsFixed(1)} дэша',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: _color()))),
-              ]),
-              const SizedBox(height: 20),
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: _color(),
-                    inactiveTrackColor: AppColors.divider,
-                    thumbColor: _color(),
-                    overlayColor: _color().withAlpha(30),
-                    trackHeight: 8),
-                child: Slider(
-                    value: _dashes,
-                    min: 0.5,
-                    max: 3,
-                    divisions: 5,
-                    onChanged: (v) => setState(() => _dashes = v)),
-              ),
-              const SizedBox(height: 8),
-              const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Мягко',
-                        style: TextStyle(
-                            fontSize: 11, color: AppColors.textSecondary)),
-                    Text('Насыщенно',
-                        style: TextStyle(
-                            fontSize: 11, color: AppColors.textSecondary)),
-                  ]),
-            ]),
-          ),
-          const SizedBox(height: 20),
-          Row(children: [
-            Expanded(
-                child: OutlinedButton.icon(
-                    onPressed: _reset,
-                    icon: const Icon(Icons.refresh, size: 18),
-                    label: const Text('Сброс'),
-                    style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textSecondary,
-                        side: const BorderSide(color: AppColors.divider),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12))))),
-            const SizedBox(width: 12),
-            Expanded(
-                child: ElevatedButton.icon(
-                    onPressed: _check,
-                    icon: const Icon(Icons.check_circle, size: 18),
-                    label: const Text('Проверить'),
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12))))),
-          ]),
-          if (_show) ...[
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  color: Colors.orange.withAlpha(30),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.orange, width: 2)),
-              child: Column(children: [
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Icon(Icons.info, color: Colors.orange, size: 28),
-                  const SizedBox(width: 12),
-                  Text(
-                      'Текущий: ${_dashes.toStringAsFixed(1)} дэша — оптимально ${c['opt']} дэша',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange)),
+                        const SizedBox(width: 8),
+                        Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                                color: _color().withAlpha(30),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Text('${_dashes.toStringAsFixed(1)} дэша',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: _color()))),
+                      ]),
+                  const SizedBox(height: 20),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: _color(),
+                        inactiveTrackColor: _roomStyle.accent.withAlpha(90),
+                        thumbColor: _color(),
+                        overlayColor: _color().withAlpha(30),
+                        trackHeight: 8),
+                    child: Slider(
+                        value: _dashes,
+                        min: 0.5,
+                        max: 3,
+                        divisions: 5,
+                        onChanged: (v) => setState(() => _dashes = v)),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Мягко',
+                            style: TextStyle(fontSize: 11, color: _inkMuted)),
+                        Text('Насыщенно',
+                            style: TextStyle(fontSize: 11, color: _inkMuted)),
+                      ]),
                 ]),
-                const SizedBox(height: 12),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: _cocktails.map((x) {
+              ),
+              const SizedBox(height: 20),
+              Row(children: [
+                Expanded(
+                    child: OutlinedButton.icon(
+                        onPressed: _reset,
+                        icon: Icon(Icons.refresh, size: 18),
+                        label: const Text('Сброс'),
+                        style: OutlinedButton.styleFrom(
+                            foregroundColor: _inkMuted,
+                            side: BorderSide(
+                                color: _roomStyle.accent.withAlpha(90)),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12))))),
+                const SizedBox(width: 12),
+                Expanded(
+                    child: ElevatedButton.icon(
+                        onPressed: _check,
+                        icon: Icon(Icons.check_circle, size: 18),
+                        label: const Text('Проверить'),
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12))))),
+              ]),
+              if (_show) ...[
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      color: Colors.orange.withAlpha(30),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.orange, width: 2)),
+                  child: Column(children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Icon(Icons.info, color: Colors.orange, size: 28),
+                      const SizedBox(width: 12),
+                      // Текст в Row без Expanded вылезал за карточку
+                      // на 10 px при узком экране — даём ему переноситься.
+                      Expanded(
+                        child: Text(
+                            'Текущий: ${_dashes.toStringAsFixed(1)} дэша — оптимально ${c['opt']} дэша',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange)),
+                      ),
+                    ]),
+                    const SizedBox(height: 12),
+                    // Три колонки в Row без Expanded вылезали за карточку
+                    // на 10 px: названия коктейлей длиннее своей доли.
+                    Row(
+                        children: _cocktails.map((x) {
                       final ok = _dashes >= (x['min'] as double) &&
                           _dashes <= (x['max'] as double);
-                      return Column(children: [
-                        Text(ok ? '✅' : '❌',
-                            style: const TextStyle(fontSize: 24)),
-                        const SizedBox(height: 4),
-                        Text(x['name'] as String,
-                            style: const TextStyle(fontSize: 12))
-                      ]);
+                      return Expanded(
+                        child: Column(children: [
+                          Text(ok ? '✅' : '❌', style: TextStyle(fontSize: 24)),
+                          const SizedBox(height: 4),
+                          Text(x['name'] as String,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 12))
+                        ]),
+                      );
                     }).toList()),
-              ]),
-            ),
-          ],
-        ],
-      ),
-    );
+                  ]),
+                ),
+              ],
+            ],
+          ),
+        ));
   }
 }
 
 class _StationBuilderSlide extends StatefulWidget {
   final LessonSlide slide;
-  const _StationBuilderSlide({required this.slide});
+  final JohnSchoolRoom? schoolRoom;
+
+  const _StationBuilderSlide({required this.slide, this.schoolRoom});
   @override
   State<_StationBuilderSlide> createState() => _StationBuilderSlideState();
 }
 
 class _StationBuilderSlideState extends State<_StationBuilderSlide> {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
   static final _elements = <Map<String, String>>[
     {'name': 'Angostura bitters', 'zone': 'bitter', 'icon': '🌿'},
     {'name': 'Лёд кубики', 'zone': 'ice', 'icon': '🧊'},
@@ -4277,13 +4326,16 @@ class _StationBuilderSlideState extends State<_StationBuilderSlide> {
     {'name': 'Мята', 'zone': 'garnish', 'icon': '🌿'},
   ];
 
+  // Цвета зон подобраны в тёплой палитре комнаты: раньше лёд был
+  // холодно-голубым, а инструменты — серо-синими, и зоны читались как
+  // плашки из старого фиолетового приложения.
   static final _zones = <Map<String, dynamic>>[
-    {'id': 'ice', 'name': '🧊 Лёд', 'color': 0xFF4FC3F7},
+    {'id': 'ice', 'name': '🧊 Лёд', 'color': 0xFFD8E4E0},
     {'id': 'bitter', 'name': '🌿 Биттеры', 'color': 0xFF8D6E63},
     {'id': 'syrup', 'name': '🍯 Сиропы', 'color': 0xFFFFB74D},
-    {'id': 'citrus', 'name': '🍋 Цитрус', 'color': 0xFFFFEB3B},
-    {'id': 'tools', 'name': '⚗️ Инструменты', 'color': 0xFF90A4AE},
-    {'id': 'garnish', 'name': '🌸 Гарниры', 'color': 0xFF81C784},
+    {'id': 'citrus', 'name': '🍋 Цитрус', 'color': 0xFFE8D9A0},
+    {'id': 'tools', 'name': '⚗️ Инструменты', 'color': 0xFFB09A7A},
+    {'id': 'garnish', 'name': '🌸 Гарниры', 'color': 0xFFA5C08A},
   ];
 
   final Map<String, String> _placements = {};
@@ -4307,146 +4359,146 @@ class _StationBuilderSlideState extends State<_StationBuilderSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideTypeIcon(type: widget.slide.type),
-          const SizedBox(height: 16),
-          Text(widget.slide.title,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 8),
-          Text(widget.slide.content,
-              style: const TextStyle(
-                  fontSize: 14, color: AppColors.textSecondary, height: 1.5)),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                color: Colors.green.withAlpha(30),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.green)),
-            child: Row(children: [
-              Icon(Icons.emoji_events, color: Colors.green, size: 32),
-              const SizedBox(width: 12),
-              Expanded(
+        padding: const EdgeInsets.all(24),
+        child: JohnWoodPanel(
+          room: widget.schoolRoom ?? JohnSchoolRoom.flavorLab,
+          highlighted: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SlideTypeIcon(type: widget.slide.type),
+              const SizedBox(height: 16),
+              Text(widget.slide.title,
+                  style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 8),
+              Text(widget.slide.content,
+                  style:
+                      TextStyle(fontSize: 14, color: _inkMuted, height: 1.5)),
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                    color: Colors.green.withAlpha(30),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.green)),
+                child: Row(children: [
+                  Icon(Icons.emoji_events, color: Colors.green, size: 32),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        const Text('Цель: расставить все элементы по зонам',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('Результат: ${_score()}%',
+                            style: TextStyle(
+                                color: _score() >= 80
+                                    ? Colors.green
+                                    : Colors.orange,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18)),
+                      ])),
+                ]),
+              ),
+              const SizedBox(height: 20),
+              Text('Элементы:',
+                  style: TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _elements.map((e) {
+                  final selected = _placements[e['name']!]!;
+                  final isCorrect =
+                      selected.isNotEmpty && selected == e['zone'];
+                  final isWrong = selected.isNotEmpty && selected != e['zone'];
+                  return GestureDetector(
+                    onTap: () => _showZoneSelector(e['name']!, e['zone']!),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isCorrect
+                            ? Colors.green.withAlpha(30)
+                            : (isWrong
+                                ? Colors.red.withAlpha(30)
+                                : _roomStyle.surface),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: isCorrect
+                                ? Colors.green
+                                : (isWrong
+                                    ? Colors.red
+                                    : _roomStyle.accent.withAlpha(90)),
+                            width: 2),
+                      ),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Text(e['icon']!, style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 6),
+                        Text(e['name']!,
+                            style: TextStyle(
+                                color: _ink,
+                                fontWeight: isCorrect
+                                    ? FontWeight.bold
+                                    : FontWeight.normal)),
+                        if (selected.isNotEmpty) ...[
+                          const SizedBox(width: 6),
+                          Icon(isCorrect ? Icons.check_circle : Icons.close,
+                              color: isCorrect ? Colors.green : Colors.red,
+                              size: 16),
+                        ],
+                      ]),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 24),
+              Text('Зоны станции:',
+                  style: TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 12),
+              ..._zones.map((z) {
+                final items = _elements
+                    .where((e) => _placements[e['name']!] == z['id'])
+                    .toList();
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Color(z['color'] as int).withAlpha(30),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Color(z['color'] as int)),
+                  ),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    const Text('Цель: расставить все элементы по зонам',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('Результат: ${_score()}%',
-                        style: TextStyle(
-                            color:
-                                _score() >= 80 ? Colors.green : Colors.orange,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18)),
-                  ])),
-            ]),
+                        Text(z['name'] as String,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(z['color'] as int))),
+                        if (items.isEmpty)
+                          Text('Пусто',
+                              style: TextStyle(color: _inkMuted, fontSize: 12))
+                        else
+                          Wrap(
+                              spacing: 6,
+                              children: items
+                                  .map((e) => Chip(
+                                        label: Text('${e['icon']} ${e['name']}',
+                                            style: TextStyle(fontSize: 11)),
+                                        backgroundColor: _roomStyle.surface,
+                                        padding: EdgeInsets.zero,
+                                        visualDensity: VisualDensity.compact,
+                                      ))
+                                  .toList()),
+                      ]),
+                );
+              }),
+            ],
           ),
-          const SizedBox(height: 20),
-          const Text('Элементы:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _elements.map((e) {
-              final selected = _placements[e['name']!]!;
-              final isCorrect = selected.isNotEmpty && selected == e['zone'];
-              final isWrong = selected.isNotEmpty && selected != e['zone'];
-              return GestureDetector(
-                onTap: () => _showZoneSelector(e['name']!, e['zone']!),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isCorrect
-                        ? Colors.green.withAlpha(30)
-                        : (isWrong
-                            ? Colors.red.withAlpha(30)
-                            : AppColors.surface),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: isCorrect
-                            ? Colors.green
-                            : (isWrong ? Colors.red : AppColors.divider),
-                        width: 2),
-                  ),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Text(e['icon']!, style: const TextStyle(fontSize: 16)),
-                    const SizedBox(width: 6),
-                    Text(e['name']!,
-                        style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontWeight: isCorrect
-                                ? FontWeight.bold
-                                : FontWeight.normal)),
-                    if (selected.isNotEmpty) ...[
-                      const SizedBox(width: 6),
-                      Icon(isCorrect ? Icons.check_circle : Icons.close,
-                          color: isCorrect ? Colors.green : Colors.red,
-                          size: 16),
-                    ],
-                  ]),
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
-          const Text('Зоны станции:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 12),
-          ..._zones.map((z) {
-            final items = _elements
-                .where((e) => _placements[e['name']!] == z['id'])
-                .toList();
-            return Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Color(z['color'] as int).withAlpha(30),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Color(z['color'] as int)),
-              ),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(z['name'] as String,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(z['color'] as int))),
-                    if (items.isEmpty)
-                      const Text('Пусто',
-                          style: TextStyle(
-                              color: AppColors.textSecondary, fontSize: 12))
-                    else
-                      Wrap(
-                          spacing: 6,
-                          children: items
-                              .map((e) => Chip(
-                                    label: Text('${e['icon']} ${e['name']}',
-                                        style: const TextStyle(fontSize: 11)),
-                                    backgroundColor: AppColors.surface,
-                                    padding: EdgeInsets.zero,
-                                    visualDensity: VisualDensity.compact,
-                                  ))
-                              .toList()),
-                  ]),
-            );
-          }),
-        ],
-      ),
-    );
+        ));
   }
 
   void _showZoneSelector(String name, String correctZone) {
@@ -4459,8 +4511,7 @@ class _StationBuilderSlideState extends State<_StationBuilderSlide> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Выбери зону для $name',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               Wrap(
                   spacing: 8,
@@ -4490,13 +4541,22 @@ class _StationBuilderSlideState extends State<_StationBuilderSlide> {
 
 class _JiggerMeasurementSlide extends StatefulWidget {
   final LessonSlide slide;
-  const _JiggerMeasurementSlide({required this.slide});
+  final JohnSchoolRoom? schoolRoom;
+
+  const _JiggerMeasurementSlide({required this.slide, this.schoolRoom});
   @override
   State<_JiggerMeasurementSlide> createState() =>
       _JiggerMeasurementSlideState();
 }
 
 class _JiggerMeasurementSlideState extends State<_JiggerMeasurementSlide> {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
+  Color get _accent => _roomStyle.accent;
   double _fillLevel = 0;
   final int _target = 30;
   bool _checked = false;
@@ -4521,164 +4581,169 @@ class _JiggerMeasurementSlideState extends State<_JiggerMeasurementSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideTypeIcon(type: widget.slide.type),
-          const SizedBox(height: 16),
-          Text(widget.slide.title,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 8),
-          Text(widget.slide.content.split('Цель:')[0],
-              style: const TextStyle(
-                  fontSize: 14, color: AppColors.textSecondary, height: 1.5)),
-          const SizedBox(height: 24),
-          Center(
-            child: Column(
-              children: [
-                Container(
-                  width: 120,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.divider, width: 3),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 100),
-                        width: double.infinity,
-                        height: 160 * _fillLevel,
-                        decoration: BoxDecoration(
-                          color: _checked
-                              ? (_correct
-                                  ? Colors.green.withAlpha(180)
-                                  : Colors.red.withAlpha(180))
-                              : const Color(0xFF42A5F5).withAlpha(180),
-                          borderRadius: BorderRadius.circular(9),
-                        ),
+        padding: const EdgeInsets.all(24),
+        child: JohnWoodPanel(
+          room: widget.schoolRoom ?? JohnSchoolRoom.flavorLab,
+          highlighted: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SlideTypeIcon(type: widget.slide.type),
+              const SizedBox(height: 16),
+              Text(widget.slide.title,
+                  style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 8),
+              Text(widget.slide.content.split('Цель:')[0],
+                  style:
+                      TextStyle(fontSize: 14, color: _inkMuted, height: 1.5)),
+              const SizedBox(height: 24),
+              Center(
+                child: Column(
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        color: _roomStyle.surface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color: _roomStyle.accent.withAlpha(90), width: 3),
                       ),
-                      Center(
-                        child: Text(
-                          '$_current мл',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: _fillLevel > 0.5
-                                ? Colors.white
-                                : AppColors.textPrimary,
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            width: double.infinity,
+                            height: 160 * _fillLevel,
+                            decoration: BoxDecoration(
+                              color: _checked
+                                  ? (_correct
+                                      ? Colors.green.withAlpha(180)
+                                      : Colors.red.withAlpha(180))
+                                  : _accent.withAlpha(180),
+                              borderRadius: BorderRadius.circular(9),
+                            ),
                           ),
+                          Center(
+                            child: Text(
+                              '$_current мл',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: _fillLevel > 0.5 ? Colors.white : _ink,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('0',
+                            style: TextStyle(color: _inkMuted, fontSize: 12)),
+                        const SizedBox(width: 8),
+                        Text('🧪 60 мл',
+                            style: TextStyle(color: _inkMuted, fontSize: 12)),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text('Потяни, чтобы налить:',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: _ink)),
+                    const SizedBox(height: 12),
+                    Slider(
+                      value: _fillLevel,
+                      min: 0,
+                      max: 1,
+                      divisions: 60,
+                      activeColor: _checked
+                          ? (_correct ? Colors.green : Colors.red)
+                          : _accent,
+                      onChanged: (v) {
+                        setState(() {
+                          _fillLevel = v;
+                          _checked = false;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Цель: $_target мл (±3 мл)',
+                      style: TextStyle(color: _inkMuted, fontSize: 14),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _check,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _checked
+                            ? (_correct ? Colors.green : Colors.red)
+                            : _accent,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                      ),
+                      child: Text(_checked
+                          ? (_correct ? '✓ Верно!' : 'Попробуй ещё')
+                          : 'Проверить'),
+                    ),
+                    if (_checked && !_correct) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            color: Colors.orange.withAlpha(30),
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          'Твоя оценка: $_current мл. Нужно: $_target мл. Разница: ${(_current - _target).abs()} мл.',
+                          style: TextStyle(fontSize: 13, color: Colors.orange),
                         ),
                       ),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('0',
-                        style: TextStyle(
-                            color: AppColors.textSecondary, fontSize: 12)),
-                    const SizedBox(width: 8),
-                    const Text('🧪 60 мл',
-                        style: TextStyle(
-                            color: AppColors.textSecondary, fontSize: 12)),
+                    if (_checked && _correct) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            color: Colors.green.withAlpha(30),
+                            borderRadius: BorderRadius.circular(8)),
+                        child: const Text(
+                          'Отлично! Ты попал в цель ±3 мл. Это профессиональная точность!',
+                          style: TextStyle(fontSize: 13, color: Colors.green),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-                const SizedBox(height: 20),
-                const Text('Потяни, чтобы налить:',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary)),
-                const SizedBox(height: 12),
-                Slider(
-                  value: _fillLevel,
-                  min: 0,
-                  max: 1,
-                  divisions: 60,
-                  activeColor: _checked
-                      ? (_correct ? Colors.green : Colors.red)
-                      : const Color(0xFF42A5F5),
-                  onChanged: (v) {
-                    setState(() {
-                      _fillLevel = v;
-                      _checked = false;
-                    });
-                  },
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Цель: $_target мл (±3 мл)',
-                  style: const TextStyle(
-                      color: AppColors.textSecondary, fontSize: 14),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _check,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _checked
-                        ? (_correct ? Colors.green : Colors.red)
-                        : AppColors.primary,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
-                  ),
-                  child: Text(_checked
-                      ? (_correct ? '✓ Верно!' : 'Попробуй ещё')
-                      : 'Проверить'),
-                ),
-                if (_checked && !_correct) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        color: Colors.orange.withAlpha(30),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Text(
-                      'Твоя оценка: $_current мл. Нужно: $_target мл. Разница: ${(_current - _target).abs()} мл.',
-                      style:
-                          const TextStyle(fontSize: 13, color: Colors.orange),
-                    ),
-                  ),
-                ],
-                if (_checked && _correct) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        color: Colors.green.withAlpha(30),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: const Text(
-                      'Отлично! Ты попал в цель ±3 мл. Это профессиональная точность!',
-                      style: TextStyle(fontSize: 13, color: Colors.green),
-                    ),
-                  ),
-                ],
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
 class _ShakeTimingSlide extends StatefulWidget {
   final LessonSlide slide;
-  const _ShakeTimingSlide({required this.slide});
+  final JohnSchoolRoom? schoolRoom;
+
+  const _ShakeTimingSlide({required this.slide, this.schoolRoom});
   @override
   State<_ShakeTimingSlide> createState() => _ShakeTimingSlideState();
 }
 
 class _ShakeTimingSlideState extends State<_ShakeTimingSlide>
     with SingleTickerProviderStateMixin {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
+  Color get _accent => _roomStyle.accent;
   bool _isShaking = false;
   int _count = 0;
   DateTime? _startTime;
@@ -4731,153 +4796,155 @@ class _ShakeTimingSlideState extends State<_ShakeTimingSlide>
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideTypeIcon(type: widget.slide.type),
-          const SizedBox(height: 16),
-          Text(widget.slide.title,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 8),
-          Text(
-            widget.slide.content
-                .split('Попробуй')[0]
-                .replaceAll('Тренируй ритм!', ''),
-            style: const TextStyle(
-                fontSize: 14, color: AppColors.textSecondary, height: 1.5),
-          ),
-          const SizedBox(height: 24),
-          Center(
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: _tap,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _isShaking
-                          ? const Color(0xFF42A5F5)
-                          : AppColors.surface,
-                      border: Border.all(
-                        color: _isShaking
-                            ? const Color(0xFF42A5F5)
-                            : AppColors.divider,
-                        width: 4,
-                      ),
-                      boxShadow: _isShaking
-                          ? [
-                              BoxShadow(
-                                color: const Color(0xFF42A5F5).withAlpha(100),
-                                blurRadius: 20,
-                                spreadRadius: 5,
+        padding: const EdgeInsets.all(24),
+        child: JohnWoodPanel(
+          room: widget.schoolRoom ?? JohnSchoolRoom.flavorLab,
+          highlighted: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SlideTypeIcon(type: widget.slide.type),
+              const SizedBox(height: 16),
+              Text(widget.slide.title,
+                  style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 8),
+              Text(
+                widget.slide.content
+                    .split('Попробуй')[0]
+                    .replaceAll('Тренируй ритм!', ''),
+                style: TextStyle(fontSize: 14, color: _inkMuted, height: 1.5),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: _tap,
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _isShaking ? _accent : _roomStyle.surface,
+                          border: Border.all(
+                            color: _isShaking
+                                ? _accent
+                                : _roomStyle.accent.withAlpha(90),
+                            width: 4,
+                          ),
+                          boxShadow: _isShaking
+                              ? [
+                                  BoxShadow(
+                                    color: _accent.withAlpha(100),
+                                    blurRadius: 20,
+                                    spreadRadius: 5,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                _isShaking ? '$_count' : '🥃',
+                                style: TextStyle(
+                                  fontSize: _isShaking ? 48 : 64,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isShaking ? Colors.white : _ink,
+                                ),
                               ),
-                            ]
-                          : null,
+                              if (_isShaking)
+                                const Text('движений',
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 14)),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            _isShaking ? '$_count' : '🥃',
-                            style: TextStyle(
-                              fontSize: _isShaking ? 48 : 64,
-                              fontWeight: FontWeight.bold,
-                              color: _isShaking
-                                  ? Colors.white
-                                  : AppColors.textPrimary,
+                    const SizedBox(height: 24),
+                    Text(
+                      'Нажимай на шейкер, имитируя движения\n10-15 раз — идеальный shake!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: _inkMuted),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (!_isShaking)
+                          ElevatedButton.icon(
+                            onPressed: _startShake,
+                            icon: Icon(Icons.play_arrow),
+                            label: const Text('Начать shake'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _accent,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 14),
+                            ),
+                          )
+                        else
+                          ElevatedButton.icon(
+                            onPressed: _stopShake,
+                            icon: Icon(Icons.stop),
+                            label: const Text('Стоп'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 14),
                             ),
                           ),
-                          if (_isShaking)
-                            const Text('движений',
-                                style: TextStyle(
-                                    color: Colors.white70, fontSize: 14)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: _roomStyle.surface,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          Text('Формула идеального shake:',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, color: _ink)),
+                          SizedBox(height: 4),
+                          Text('12-15 движений за 10-15 секунд',
+                              style: TextStyle(color: _inkMuted)),
+                          Text('≈ движение каждые 0.8-1 секунда',
+                              style: TextStyle(color: _inkMuted, fontSize: 12)),
                         ],
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Нажимай на шейкер, имитируя движения\n10-15 раз — идеальный shake!',
-                  textAlign: TextAlign.center,
-                  style:
-                      TextStyle(fontSize: 14, color: AppColors.textSecondary),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (!_isShaking)
-                      ElevatedButton.icon(
-                        onPressed: _startShake,
-                        icon: const Icon(Icons.play_arrow),
-                        label: const Text('Начать shake'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 14),
-                        ),
-                      )
-                    else
-                      ElevatedButton.icon(
-                        onPressed: _stopShake,
-                        icon: const Icon(Icons.stop),
-                        label: const Text('Стоп'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 14),
-                        ),
-                      ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Column(
-                    children: [
-                      Text('Формула идеального shake:',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary)),
-                      SizedBox(height: 4),
-                      Text('12-15 движений за 10-15 секунд',
-                          style: TextStyle(color: AppColors.textSecondary)),
-                      Text('≈ движение каждые 0.8-1 секунда',
-                          style: TextStyle(
-                              color: AppColors.textSecondary, fontSize: 12)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
 class _DilutionCalculatorSlide extends StatefulWidget {
   final LessonSlide slide;
-  const _DilutionCalculatorSlide({required this.slide});
+  final JohnSchoolRoom? schoolRoom;
+
+  const _DilutionCalculatorSlide({required this.slide, this.schoolRoom});
   @override
   State<_DilutionCalculatorSlide> createState() =>
       _DilutionCalculatorSlideState();
 }
 
 class _DilutionCalculatorSlideState extends State<_DilutionCalculatorSlide> {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
+  Color get _accent => _roomStyle.accent;
   int _selectedIce = 30;
   String _selectedMethod = 'shake';
   final Map<String, int> _dilutionMap = {
@@ -4889,143 +4956,144 @@ class _DilutionCalculatorSlideState extends State<_DilutionCalculatorSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideTypeIcon(type: widget.slide.type),
-          const SizedBox(height: 16),
-          Text(widget.slide.title,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 8),
-          Text(
-            widget.slide.content.split('Цель:')[0],
-            style: const TextStyle(
-                fontSize: 14, color: AppColors.textSecondary, height: 1.5),
-          ),
-          const SizedBox(height: 24),
-          Center(
-            child: Column(
-              children: [
-                const Text('Выбери метод приготовления:',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary)),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        padding: const EdgeInsets.all(24),
+        child: JohnWoodPanel(
+          room: widget.schoolRoom ?? JohnSchoolRoom.flavorLab,
+          highlighted: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SlideTypeIcon(type: widget.slide.type),
+              const SizedBox(height: 16),
+              Text(widget.slide.title,
+                  style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 8),
+              Text(
+                widget.slide.content.split('Цель:')[0],
+                style: TextStyle(fontSize: 14, color: _inkMuted, height: 1.5),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: Column(
                   children: [
-                    _MethodButton(
-                      label: 'Shake',
-                      icon: '🥤',
-                      selected: _selectedMethod == 'shake',
-                      onTap: () => setState(() {
-                        _selectedMethod = 'shake';
-                        _dilutionMap['shake'] = 30;
-                      }),
+                    Text('Выбери метод приготовления:',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: _ink)),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _MethodButton(
+                          label: 'Shake',
+                          icon: '🥤',
+                          selected: _selectedMethod == 'shake',
+                          style: _roomStyle,
+                          onTap: () => setState(() {
+                            _selectedMethod = 'shake';
+                            _dilutionMap['shake'] = 30;
+                          }),
+                        ),
+                        const SizedBox(width: 8),
+                        _MethodButton(
+                          label: 'Stir',
+                          icon: '🥄',
+                          selected: _selectedMethod == 'stir',
+                          style: _roomStyle,
+                          onTap: () => setState(() {
+                            _selectedMethod = 'stir';
+                            _dilutionMap['stir'] = 25;
+                          }),
+                        ),
+                        const SizedBox(width: 8),
+                        _MethodButton(
+                          label: 'Build',
+                          icon: '🧊',
+                          selected: _selectedMethod == 'build',
+                          style: _roomStyle,
+                          onTap: () => setState(() {
+                            _selectedMethod = 'build';
+                            _dilutionMap['build'] = 0;
+                          }),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    _MethodButton(
-                      label: 'Stir',
-                      icon: '🥄',
-                      selected: _selectedMethod == 'stir',
-                      onTap: () => setState(() {
-                        _selectedMethod = 'stir';
-                        _dilutionMap['stir'] = 25;
-                      }),
+                    const SizedBox(height: 24),
+                    Text('Количество льда:',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: _ink)),
+                    const SizedBox(height: 8),
+                    Slider(
+                      value: _selectedIce.toDouble(),
+                      min: 10,
+                      max: 50,
+                      divisions: 8,
+                      label: '$_selectedIce кусков',
+                      onChanged: (v) =>
+                          setState(() => _selectedIce = v.round()),
                     ),
-                    const SizedBox(width: 8),
-                    _MethodButton(
-                      label: 'Build',
-                      icon: '🧊',
-                      selected: _selectedMethod == 'build',
-                      onTap: () => setState(() {
-                        _selectedMethod = 'build';
-                        _dilutionMap['build'] = 0;
-                      }),
+                    Text('$_selectedIce кусков льда',
+                        style: TextStyle(color: _inkMuted)),
+                    const SizedBox(height: 24),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: _accent.withAlpha(30),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: _accent),
+                      ),
+                      child: Column(
+                        children: [
+                          Text('💧 Dilution',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: _accent)),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${_calculateDilution()} мл',
+                            style: TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
+                                color: _accent),
+                          ),
+                          Text('талой воды',
+                              style: TextStyle(color: _inkMuted)),
+                          const SizedBox(height: 12),
+                          _DilutionIndicator(dilution: _calculateDilution()),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          color: _roomStyle.surface,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Column(
+                        children: [
+                          Text('Справка:',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, color: _ink)),
+                          const SizedBox(height: 4),
+                          Text(
+                              'Shake (10-15 сек): ~30 мл | Stir (30-40 об.): ~25 мл | Build: 0 мл',
+                              style: TextStyle(color: _inkMuted, fontSize: 12)),
+                          Text('Цель: 20-25% dilution от объёма коктейля',
+                              style: TextStyle(color: _inkMuted, fontSize: 12)),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                const Text('Количество льда:',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary)),
-                const SizedBox(height: 8),
-                Slider(
-                  value: _selectedIce.toDouble(),
-                  min: 10,
-                  max: 50,
-                  divisions: 8,
-                  label: '$_selectedIce кусков',
-                  onChanged: (v) => setState(() => _selectedIce = v.round()),
-                ),
-                Text('$_selectedIce кусков льда',
-                    style: const TextStyle(color: AppColors.textSecondary)),
-                const SizedBox(height: 24),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF42A5F5).withAlpha(30),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFF42A5F5)),
-                  ),
-                  child: Column(
-                    children: [
-                      const Text('💧 Dilution',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF42A5F5))),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${_calculateDilution()} мл',
-                        style: const TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF42A5F5)),
-                      ),
-                      const Text('талой воды',
-                          style: TextStyle(color: AppColors.textSecondary)),
-                      const SizedBox(height: 12),
-                      _DilutionIndicator(dilution: _calculateDilution()),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Column(
-                    children: [
-                      const Text('Справка:',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary)),
-                      const SizedBox(height: 4),
-                      Text(
-                          'Shake (10-15 сек): ~30 мл | Stir (30-40 об.): ~25 мл | Build: 0 мл',
-                          style: const TextStyle(
-                              color: AppColors.textSecondary, fontSize: 12)),
-                      const Text('Цель: 20-25% dilution от объёма коктейля',
-                          style: TextStyle(
-                              color: AppColors.textSecondary, fontSize: 12)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   int _calculateDilution() {
@@ -5041,12 +5109,14 @@ class _MethodButton extends StatelessWidget {
   final String icon;
   final bool selected;
   final VoidCallback onTap;
+  final JohnRoomStyle style;
 
   const _MethodButton(
       {required this.label,
       required this.icon,
       required this.selected,
-      required this.onTap});
+      required this.onTap,
+      required this.style});
 
   @override
   Widget build(BuildContext context) {
@@ -5055,10 +5125,10 @@ class _MethodButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF42A5F5) : AppColors.surface,
+          color: selected ? style.accent : style.surfaceLight,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: selected ? const Color(0xFF42A5F5) : AppColors.divider),
+              color: selected ? style.accent : style.accent.withAlpha(90)),
         ),
         child: Column(
           children: [
@@ -5066,7 +5136,8 @@ class _MethodButton extends StatelessWidget {
             const SizedBox(height: 4),
             Text(label,
                 style: TextStyle(
-                    color: selected ? Colors.white : AppColors.textPrimary,
+                    // На золотой плашке нужен тёмный текст комнаты.
+                    color: selected ? style.ink : style.onDark,
                     fontWeight: FontWeight.bold)),
           ],
         ),
@@ -5107,12 +5178,21 @@ class _DilutionIndicator extends StatelessWidget {
 
 class _CocktailBuilderSlide extends StatefulWidget {
   final LessonSlide slide;
-  const _CocktailBuilderSlide({required this.slide});
+  final JohnSchoolRoom? schoolRoom;
+
+  const _CocktailBuilderSlide({required this.slide, this.schoolRoom});
   @override
   State<_CocktailBuilderSlide> createState() => _CocktailBuilderSlideState();
 }
 
 class _CocktailBuilderSlideState extends State<_CocktailBuilderSlide> {
+  // Палитра комнаты урока: тренажёры раньше были на старой фиолетово-синей
+  // теме `AppColors` и на дереве читались как экран из другой версии.
+  JohnRoomStyle get _roomStyle =>
+      JohnRoomStyle.forRoom(widget.schoolRoom ?? JohnSchoolRoom.flavorLab);
+  Color get _ink => _roomStyle.onDark;
+  Color get _inkMuted => _roomStyle.onDark.withAlpha(190);
+  Color get _accent => _roomStyle.accent;
   int _currentStep = 0;
   bool _showResult = false;
 
@@ -5152,174 +5232,171 @@ class _CocktailBuilderSlideState extends State<_CocktailBuilderSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SlideTypeIcon(type: widget.slide.type),
-          const SizedBox(height: 16),
-          Text(widget.slide.title,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 8),
-          Text('Собери коктейль пошагово!',
-              style: const TextStyle(
-                  fontSize: 14, color: AppColors.textSecondary, height: 1.5)),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF42A5F5).withAlpha(30),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF42A5F5)),
-            ),
-            child: Column(
-              children: [
-                const Text('🍸 Прогресс',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF42A5F5))),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: (_currentStep) / _cocktailSteps.length,
-                  backgroundColor: Colors.grey.withAlpha(50),
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(Color(0xFF42A5F5)),
-                ),
-                const SizedBox(height: 4),
-                Text('Шаг ${_currentStep + 1} из ${_cocktailSteps.length}',
-                    style: const TextStyle(color: AppColors.textSecondary)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Text('Порядок сборки:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary)),
-          const SizedBox(height: 12),
-          ...List.generate(_cocktailSteps.length, (index) {
-            final step = _cocktailSteps[index];
-            final isCompleted = index < _currentStep;
-            final isCurrent = index == _currentStep;
-            return Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: isCompleted
-                    ? Colors.green.withAlpha(30)
-                    : (isCurrent
-                        ? const Color(0xFF42A5F5).withAlpha(30)
-                        : AppColors.surface),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isCompleted
-                      ? Colors.green
-                      : (isCurrent
-                          ? const Color(0xFF42A5F5)
-                          : AppColors.divider),
-                  width: isCurrent ? 2 : 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: isCompleted
-                          ? Colors.green
-                          : (isCurrent ? const Color(0xFF42A5F5) : Colors.grey),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: isCompleted
-                          ? const Icon(Icons.check,
-                              color: Colors.white, size: 18)
-                          : Text('${index + 1}',
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                      child: Text(step,
-                          style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontWeight: isCurrent
-                                  ? FontWeight.bold
-                                  : FontWeight.normal))),
-                ],
-              ),
-            );
-          }),
-          const SizedBox(height: 24),
-          if (!_showResult)
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    if (_currentStep < _cocktailSteps.length - 1) {
-                      _currentStep++;
-                    } else {
-                      _showResult = true;
-                    }
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF42A5F5),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                ),
-                child: Text(_currentStep < _cocktailSteps.length - 1
-                    ? 'Следующий шаг →'
-                    : 'Готово! 🎉'),
-              ),
-            )
-          else
-            Center(
-              child: Container(
-                padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
+        child: JohnWoodPanel(
+          room: widget.schoolRoom ?? JohnSchoolRoom.flavorLab,
+          highlighted: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SlideTypeIcon(type: widget.slide.type),
+              const SizedBox(height: 16),
+              Text(widget.slide.title,
+                  style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 8),
+              Text('Собери коктейль пошагово!',
+                  style:
+                      TextStyle(fontSize: 14, color: _inkMuted, height: 1.5)),
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.green.withAlpha(30),
+                  color: _accent.withAlpha(30),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.green),
+                  border: Border.all(color: _accent),
                 ),
                 child: Column(
                   children: [
-                    const Text('🎉', style: TextStyle(fontSize: 48)),
-                    const SizedBox(height: 8),
-                    const Text('Коктейль собран!',
+                    Text('🍸 Прогресс',
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green)),
+                            color: _accent)),
                     const SizedBox(height: 8),
-                    Text('Ты знаешь правильную последовательность!',
-                        style: TextStyle(color: AppColors.textSecondary)),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _currentStep = 0;
-                          _showResult = false;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
-                      child: const Text('Повторить'),
+                    LinearProgressIndicator(
+                      value: (_currentStep) / _cocktailSteps.length,
+                      backgroundColor: _roomStyle.accent.withAlpha(60),
+                      valueColor: AlwaysStoppedAnimation<Color>(_accent),
                     ),
+                    const SizedBox(height: 4),
+                    Text('Шаг ${_currentStep + 1} из ${_cocktailSteps.length}',
+                        style: TextStyle(color: _inkMuted)),
                   ],
                 ),
               ),
-            ),
-        ],
-      ),
-    );
+              const SizedBox(height: 24),
+              Text('Порядок сборки:',
+                  style: TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold, color: _ink)),
+              const SizedBox(height: 12),
+              ...List.generate(_cocktailSteps.length, (index) {
+                final step = _cocktailSteps[index];
+                final isCompleted = index < _currentStep;
+                final isCurrent = index == _currentStep;
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isCompleted
+                        ? Colors.green.withAlpha(30)
+                        : (isCurrent
+                            ? _accent.withAlpha(30)
+                            : _roomStyle.surface),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isCompleted
+                          ? Colors.green
+                          : (isCurrent
+                              ? _accent
+                              : _roomStyle.accent.withAlpha(90)),
+                      width: isCurrent ? 2 : 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: isCompleted
+                              ? Colors.green
+                              : (isCurrent ? _accent : Colors.grey),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: isCompleted
+                              ? Icon(Icons.check, color: Colors.white, size: 18)
+                              : Text('${index + 1}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                          child: Text(step,
+                              style: TextStyle(
+                                  color: _ink,
+                                  fontWeight: isCurrent
+                                      ? FontWeight.bold
+                                      : FontWeight.normal))),
+                    ],
+                  ),
+                );
+              }),
+              const SizedBox(height: 24),
+              if (!_showResult)
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (_currentStep < _cocktailSteps.length - 1) {
+                          _currentStep++;
+                        } else {
+                          _showResult = true;
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _accent,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
+                    ),
+                    child: Text(_currentStep < _cocktailSteps.length - 1
+                        ? 'Следующий шаг →'
+                        : 'Готово! 🎉'),
+                  ),
+                )
+              else
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withAlpha(30),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.green),
+                    ),
+                    child: Column(
+                      children: [
+                        const Text('🎉', style: TextStyle(fontSize: 48)),
+                        const SizedBox(height: 8),
+                        const Text('Коктейль собран!',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green)),
+                        const SizedBox(height: 8),
+                        Text('Ты знаешь правильную последовательность!',
+                            style: TextStyle(color: _inkMuted)),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _currentStep = 0;
+                              _showResult = false;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green),
+                          child: const Text('Повторить'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ));
   }
 }

@@ -112,6 +112,44 @@ class JohnRoomStyle {
   }
 }
 
+/// Внутренняя карточка тренажёра на дереве комнаты.
+///
+/// Тренажёры уроков (`_BalanceTrainer`, `_Sweetness…`, `_Bitter…` и т.д.)
+/// рисовали плашки цветами старой фиолетово-синей темы `AppColors`, и на
+/// тёплом дереве это выглядело как синие пятна из прошлой версии приложения.
+class JohnTrainerCard extends StatelessWidget {
+  final JohnRoomStyle style;
+  final Widget child;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
+  final double radius;
+  final bool bordered;
+
+  const JohnTrainerCard({
+    super.key,
+    required this.style,
+    required this.child,
+    this.padding = const EdgeInsets.all(16),
+    this.margin = EdgeInsets.zero,
+    this.radius = 16,
+    this.bordered = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: margin,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: style.surfaceLight,
+        borderRadius: BorderRadius.circular(radius),
+        border: bordered ? Border.all(color: style.accent.withAlpha(90)) : null,
+      ),
+      child: child,
+    );
+  }
+}
+
 class JohnRoomBackground extends StatelessWidget {
   final JohnSchoolRoom room;
   final Widget child;
