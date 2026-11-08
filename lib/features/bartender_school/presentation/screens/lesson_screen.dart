@@ -96,6 +96,12 @@ class _LessonScreenState extends State<LessonScreen> {
     }
 
     final glossaryTerms = _getGlossaryTermsForLesson(lessonTerms);
+    // Шторка живёт в палитре комнаты урока: раньше она была на старом
+    // фиолетово-синем `AppColors.background`/`surface` и на фоне тёплого
+    // урока читалась как экран из прошлой версии приложения.
+    final style = JohnRoomStyle.forRoom(
+      JohnRoomStyle.roomForBlock(widget.lesson.blockId),
+    );
 
     showModalBottomSheet(
       context: context,
@@ -106,9 +112,16 @@ class _LessonScreenState extends State<LessonScreen> {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [style.surfaceLight, style.surface],
+            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: Border(
+              top: BorderSide(color: style.accent.withAlpha(120), width: 1.2),
+            ),
           ),
           child: Column(
             children: [
@@ -117,7 +130,7 @@ class _LessonScreenState extends State<LessonScreen> {
                 width: 56,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.divider,
+                  color: style.accent.withAlpha(120),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -128,8 +141,9 @@ class _LessonScreenState extends State<LessonScreen> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(30),
+                        color: style.accent.withAlpha(30),
                         borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: style.accent.withAlpha(110)),
                       ),
                       child: Image.asset(
                         'images/ui_icon_book_theory.png',
@@ -143,19 +157,20 @@ class _LessonScreenState extends State<LessonScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Словарик урока',
                             style: TextStyle(
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: 'serif',
+                              color: style.onDark,
                             ),
                           ),
                           Text(
                             '${glossaryTerms.length} терминов',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: AppColors.textSecondary,
+                              color: style.onDark.withAlpha(190),
                             ),
                           ),
                         ],
@@ -163,13 +178,12 @@ class _LessonScreenState extends State<LessonScreen> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close,
-                          color: AppColors.textSecondary),
+                      icon: Icon(Icons.close, color: style.onDark),
                     ),
                   ],
                 ),
               ),
-              const Divider(color: AppColors.divider, height: 1),
+              Divider(color: style.accent.withAlpha(70), height: 1),
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
@@ -177,7 +191,7 @@ class _LessonScreenState extends State<LessonScreen> {
                   itemCount: glossaryTerms.length,
                   itemBuilder: (context, index) {
                     final term = glossaryTerms[index];
-                    return _LessonTermCard(term: term);
+                    return _LessonTermCard(term: term, style: style);
                   },
                 ),
               ),
@@ -1193,8 +1207,9 @@ class _SlideWidget extends StatelessWidget {
 
 class _LessonTermCard extends StatelessWidget {
   final GlossaryTerm term;
+  final JohnRoomStyle style;
 
-  const _LessonTermCard({required this.term});
+  const _LessonTermCard({required this.term, required this.style});
 
   @override
   Widget build(BuildContext context) {
@@ -1202,9 +1217,9 @@ class _LessonTermCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: style.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: style.accent.withAlpha(90)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1215,13 +1230,14 @@ class _LessonTermCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.accent.withAlpha(30),
+                  color: style.accent.withAlpha(34),
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: style.accent.withAlpha(110)),
                 ),
                 child: Text(
                   term.term,
-                  style: const TextStyle(
-                    color: AppColors.accent,
+                  style: TextStyle(
+                    color: style.accent,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
@@ -1232,8 +1248,8 @@ class _LessonTermCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             term.definition,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: style.onDark,
               fontSize: 14,
               height: 1.4,
             ),
@@ -1243,8 +1259,9 @@ class _LessonTermCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.surfaceLight,
+                color: style.surfaceLight,
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: style.accent.withAlpha(50)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1260,7 +1277,7 @@ class _LessonTermCard extends StatelessWidget {
                     child: Text(
                       term.example,
                       style: TextStyle(
-                        color: AppColors.textSecondary.withAlpha(200),
+                        color: style.onDark.withAlpha(190),
                         fontSize: 12,
                         fontStyle: FontStyle.italic,
                         height: 1.3,
