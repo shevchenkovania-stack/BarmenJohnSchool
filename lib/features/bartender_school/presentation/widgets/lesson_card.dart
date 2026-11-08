@@ -70,24 +70,28 @@ class LessonCard extends StatelessWidget {
   }
 
   LinearGradient _cardGradient() {
+    // Все блоки — непрозрачные. У A/B/C стояла альфа 0xF0–0xF2 (~94%), и
+    // фоновая иллюстрация блока (бутылки, доска, травы) просвечивала
+    // сквозь карточку урока: карточки выглядели «стеклянными», а текст
+    // спорил с картинкой. D/E/F уже были сплошными — выровняли остальные.
     switch (lesson.blockId) {
       case 'A':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xF04A3B20), Color(0xF22F301C), Color(0xF05A431F)],
+          colors: [Color(0xFF4A3B20), Color(0xFF2F301C), Color(0xFF5A431F)],
         );
       case 'B':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xF20E282C), Color(0xF21A3B3E), Color(0xF2293430)],
+          colors: [Color(0xFF0E282C), Color(0xFF1A3B3E), Color(0xFF293430)],
         );
       case 'C':
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xF22E0E15), Color(0xF24D1822), Color(0xF236181A)],
+          colors: [Color(0xFF2E0E15), Color(0xFF4D1822), Color(0xFF36181A)],
         );
       case 'D':
         return const LinearGradient(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// The rooms of John's school share materials, but each keeps its own mood.
 enum JohnSchoolRoom {
@@ -40,8 +40,8 @@ class JohnRoomStyle {
           backgroundAsset: 'images/john_room_school_hall.jpg',
           accent: _gold,
           accentSoft: Color(0xFF775B28),
-          surface: Color(0xEB24160F),
-          surfaceLight: Color(0xEE3A261A),
+          surface: Color(0xFF24160F),
+          surfaceLight: Color(0xFF3A261A),
           ink: Color(0xFF2E1B10),
           onDark: _cream,
         ),
@@ -49,8 +49,8 @@ class JohnRoomStyle {
           backgroundAsset: 'images/john_room_flavor_lab.jpg',
           accent: Color(0xFFD69B32),
           accentSoft: Color(0xFF6D7A35),
-          surface: Color(0xEE342916),
-          surfaceLight: Color(0xF34F3C1C),
+          surface: Color(0xFF342916),
+          surfaceLight: Color(0xFF4F3C1C),
           ink: Color(0xFF352617),
           onDark: Color(0xFFFFEBC0),
         ),
@@ -58,8 +58,8 @@ class JohnRoomStyle {
           backgroundAsset: 'images/john_room_tool_bench.jpg',
           accent: Color(0xFFC99A45),
           accentSoft: Color(0xFF2D7780),
-          surface: Color(0xEE102D31),
-          surfaceLight: Color(0xF21B4145),
+          surface: Color(0xFF102D31),
+          surfaceLight: Color(0xFF1B4145),
           ink: Color(0xFF102326),
           onDark: Color(0xFFE7E0C7),
         ),
@@ -67,8 +67,8 @@ class JohnRoomStyle {
           backgroundAsset: 'images/john_room_classics_lounge.jpg',
           accent: Color(0xFFD2A550),
           accentSoft: Color(0xFF8F3040),
-          surface: Color(0xEE351116),
-          surfaceLight: Color(0xF2571C28),
+          surface: Color(0xFF351116),
+          surfaceLight: Color(0xFF571C28),
           ink: Color(0xFF351116),
           onDark: Color(0xFFFFE8C0),
         ),
@@ -76,8 +76,8 @@ class JohnRoomStyle {
           backgroundAsset: 'images/john_room_workshop.jpg',
           accent: Color(0xFFD0A24C),
           accentSoft: Color(0xFF7F5B2B),
-          surface: Color(0xEC21150F),
-          surfaceLight: Color(0xF13C271B),
+          surface: Color(0xFF21150F),
+          surfaceLight: Color(0xFF3C271B),
           ink: Color(0xFF29170D),
           onDark: Color(0xFFF7E7C0),
         ),
@@ -85,8 +85,8 @@ class JohnRoomStyle {
           backgroundAsset: 'images/john_room_recipe_archive.jpg',
           accent: Color(0xFFCDA14E),
           accentSoft: Color(0xFF496B50),
-          surface: Color(0xEE13271E),
-          surfaceLight: Color(0xF1223F31),
+          surface: Color(0xFF13271E),
+          surfaceLight: Color(0xFF223F31),
           ink: Color(0xFF24331F),
           onDark: Color(0xFFF5E7BF),
         ),
@@ -94,8 +94,8 @@ class JohnRoomStyle {
           backgroundAsset: 'images/john_room_honors_hall.jpg',
           accent: Color(0xFFD4A84E),
           accentSoft: Color(0xFF8E2833),
-          surface: Color(0xEE2D0E13),
-          surfaceLight: Color(0xF24D1821),
+          surface: Color(0xFF2D0E13),
+          surfaceLight: Color(0xFF4D1821),
           ink: Color(0xFF321016),
           onDark: Color(0xFFFFE9BF),
         ),
@@ -185,6 +185,10 @@ class JohnWoodPanel extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
+        // Панель непрозрачная: раньше `surface`/`surfaceLight` шли с альфой
+        // 0xEB–0xF3 (92–95%), и фон комнаты (лимоны, травы, бутылки)
+        // просвечивал сквозь текст урока. Теперь цвета сплошные, и глубина
+        // дерева держится градиентом и обводкой, а не прозрачностью.
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
