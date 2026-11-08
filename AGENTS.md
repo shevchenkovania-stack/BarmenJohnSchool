@@ -118,6 +118,43 @@ adb -s 2b4a6e3e0205 shell screencap -p /sdcard/s.png
 adb -s 2b4a6e3e0205 pull /sdcard/s.png "$env:TEMP\s.png"
 ```
 
+## QA всех уровней (сделано)
+
+Полный аудит уровней 1 и 2 пройден. Что найдено и починено:
+
+| Баг | Было | Стало |
+|---|---|---|
+| Слайды `observation` / `choice` / `silence` | нет в `SlideType` — 17 слайдов молча рисовались как `theory`, варианты выбора терялись | типы добавлены, `choices` разбирается, есть `_WisdomChoiceCard` |
+| Шкала джиггера | `0..120`, зона 120±20 упиралась в правый край — точную дозу налить было нельзя | `0..150` (`_headroomMl = 30`) |
+| Номера уроков | `C_12` = №13 и `D_13` = №13 — два бейджа «13» на карточках | Level 2 перенумерован 14..25 (id не трогали, unlock — по id) |
+| Практика на фото стойки | заголовки шагов и чипы полупрозрачные — текст терялся | `_StepHeader` на плашке + `Flexible` со скроллом под список |
+| `lesson_C_12` (экзамен) | `terms: []` — словарь пополнялся на 11 уроках из 12 | добавлены Аэрация / Белый ром / Двойное процеживание |
+| Debug print | `level1_screen` и `quiz_screen` печатали в консоль на каждый кадр | удалено; остались только в data-слое (лог загрузки) |
+| Архив Level 3 | файлы звались `lessons_level3*` и давали ложные `ORPHAN-QUIZ` | переименованы в `legacy_*`, docs обновлены |
+| l10n | сборка ругалась “21 untranslated” для ru и ro | ключи `aiRecipe*` переведены |
+
+Проверка в этот раз:
+
+- `test/qa/all_levels_layout_test.dart` — 32 урока × 3 размера (411x891 / 360x640 / 320x568): все слайды,
+  карточки, каждый вопрос квиза, каждый шаг практики. Пишет `test/qa/LAYOUT_ALL.txt`.
+  Добавил новый экран — добавь сессию сюда.
+- `flutter test test/bartender_school/level1 test/bartender_school/level2 test/bartender_school/level3 test/qa`
+  → 77 тестов, 0 падений. `flutter analyze` по `lib/features/bartender_school` → 0 error, 0 warning.
+- Golden-шоты (`test/qa/shots`) снимаются на подменённом шрифте и шумные в краях: перед «починкой»
+  смотреть глазами `test/qa/failures/*_masterImage.png` и `*_testImage.png`.
+- Клипы на карточках в Chrome подсказывают: `flutter test test/qa/school_walkthrough_test.dart` —
+  в обычном прогоне проходит, а `--update-goldens` оставляет за собой изменённое состояние;
+  после `--update-goldens` обязательно гонять весь сьют, а не один файл.
+
+## Осталось решить (продуктовое, не баг)
+
+- `[LEVEL-DUPE]`: 8 коктейлей практикуются и в Level 1, и в Level 2 (Margarita, Whiskey Sour,
+  Old Fashioned, Moscow Mule, Aperol Spritz, Bloody Mary, Espresso Martini, Negroni).
+  Звёзды общие → Level 2 частично теряет новизну.
+- `[DUP-CARD-ART]`: `lesson_B_05` и `lesson_B_09` используют одну картинку
+  `images/lesson_b_05_setup.jpg`. Нужен отдельный арт для «Твоя станция».
+- Эмодзи в текстах контента (≈97) — текущий визуальный стиль, менять только осознанно.
+
 ## Известные ловушки
 
 - `Lost connection to device` в логе `flutter run` — часто **не** падение: Android
