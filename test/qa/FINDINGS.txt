@@ -1,22 +1,22 @@
 всего проблем: 22
 - [Lesson A_01] после последнего слайда: кнопка «К тесту»=true
-- [layout][post-shot:08_quiz_q1] Golden "shots/08_quiz_q1.png": Pixel test failed, 62.10%, 2046800px diff detected. 
-- [Quiz A_01] вопрос 1: слайдер (3 шт)
-- [layout][post-shot:08_quiz_q1_answered] Golden "shots/08_quiz_q1_answered.png": Pixel test failed, 77.32%, 2548195px diff detected. 
-- [layout][post-shot:08_quiz_q2_answered] Golden "shots/08_quiz_q2_answered.png": Pixel test failed, 79.01%, 2603895px diff detected. 
-- [layout][post-shot:08_quiz_q3_answered] Golden "shots/08_quiz_q3_answered.png": Pixel test failed, 25.07%, 826105px diff detected. 
-- [Quiz A_01] вопрос 5: matching (4 пар)
-- [layout][post-shot:08_quiz_q5_answered] Golden "shots/08_quiz_q5_answered.png": Pixel test failed, 52.32%, 1724352px diff detected. 
-- [layout][post-shot:08_quiz_q6_answered] Golden "shots/08_quiz_q6_answered.png": Pixel test failed, 77.32%, 2548195px diff detected. 
-- [layout][post-shot:08_quiz_q7_answered] Golden "shots/08_quiz_q7_answered.png": Pixel test failed, 76.13%, 2509235px diff detected. 
-- [layout][post-shot:08_quiz_q8_answered] Golden "shots/08_quiz_q8_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q9_answered] Golden "shots/08_quiz_q9_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q10_answered] Golden "shots/08_quiz_q10_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q11_answered] Golden "shots/08_quiz_q11_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:08_quiz_q12_answered] Golden "shots/08_quiz_q12_answered.png": Pixel test failed, 25.73%, 847964px diff detected. 
-- [layout][post-shot:09_quiz_result] Golden "shots/09_quiz_result.png": Pixel test failed, 25.73%, 847964px diff detected. 
+- [layout][post-shot:08_quiz_q1] Golden "shots/08_quiz_q1.png": Pixel test failed, 24.70%, 814020px diff detected. 
+- [layout][post-shot:08_quiz_q1_answered] Golden "shots/08_quiz_q1_answered.png": Pixel test failed, 25.86%, 852205px diff detected. 
+- [layout][post-shot:08_quiz_q2_answered] Golden "shots/08_quiz_q2_answered.png": Pixel test failed, 79.09%, 2606504px diff detected. 
+- [Quiz A_01] вопрос 3: matching (4 пар)
+- [layout][post-shot:08_quiz_q3_answered] Golden "shots/08_quiz_q3_answered.png": Pixel test failed, 76.99%, 2537598px diff detected. 
+- [Quiz A_01] вопрос 4: sequence/ReorderableListView
+- [layout][post-shot:08_quiz_q4_answered] Golden "shots/08_quiz_q4_answered.png": Pixel test failed, 86.02%, 2835073px diff detected. 
+- [layout][post-shot:08_quiz_q6_answered] Golden "shots/08_quiz_q6_answered.png": Pixel test failed, 79.23%, 2611220px diff detected. 
+- [layout][post-shot:08_quiz_q7_answered] Golden "shots/08_quiz_q7_answered.png": Pixel test failed, 79.66%, 2625306px diff detected. 
+- [layout][post-shot:08_quiz_q8_answered] Golden "shots/08_quiz_q8_answered.png": Pixel test failed, 16.73%, 551517px diff detected. 
+- [layout][post-shot:08_quiz_q9_answered] Golden "shots/08_quiz_q9_answered.png": Pixel test failed, 16.73%, 551517px diff detected. 
+- [layout][post-shot:08_quiz_q10_answered] Golden "shots/08_quiz_q10_answered.png": Pixel test failed, 16.73%, 551517px diff detected. 
+- [layout][post-shot:08_quiz_q11_answered] Golden "shots/08_quiz_q11_answered.png": Pixel test failed, 16.73%, 551517px diff detected. 
+- [layout][post-shot:08_quiz_q12_answered] Golden "shots/08_quiz_q12_answered.png": Pixel test failed, 16.73%, 551517px diff detected. 
+- [layout][post-shot:09_quiz_result] Golden "shots/09_quiz_result.png": Pixel test failed, 16.73%, 551517px diff detected. 
 - [Quiz A_01] статус урока после квиза: LessonStatus.available
-- [layout][post-shot:10_quiz_fail] Golden "shots/10_quiz_fail.png": Pixel test failed, 76.70%, 2527972px diff detected. 
+- [layout][post-shot:10_quiz_fail] Golden "shots/10_quiz_fail.png": Pixel test failed, 76.17%, 2510261px diff detected. 
 - [Quiz fail] статус урока после провала: LessonStatus.available (должен быть НЕ completed)
 - [Workshop] блоков практики в списке: A, B, C, D, E, F (всего заданий: 32)
 - [Practice Mojito] вариантов ингредиентов на экране: 1

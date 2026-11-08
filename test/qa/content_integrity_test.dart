@@ -15,8 +15,14 @@ import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 // добавлен в SlideType, он автоматически считается поддержанным.
 final _slideTypes = SlideType.values.map((e) => e.name).toSet();
 const _questionTypes = {
-  'singleChoice', 'multipleChoice', 'trueFalse', 'imageMatch', 'dragOrder',
-  'matching', 'slider', 'sequence',
+  'singleChoice',
+  'multipleChoice',
+  'trueFalse',
+  'imageMatch',
+  'dragOrder',
+  'matching',
+  'slider',
+  'sequence',
 };
 
 final List<String> report = [];
@@ -32,25 +38,29 @@ List<Map<String, dynamic>> _loadList(String path) {
 }
 
 void main() {
+  // Файлы с префиксом legacy_ — архив Level 3. Они на диске лежат для истории
+  // контента, но приложение их не читает: loadLevel3() нигде не вызывается.
+  // Раньше они назывались lessons_level3*.json / quizzes_level3*.json и давали
+  // ложные [ORPHAN-QUIZ] на каждый урок архива.
   final lessonFiles = {
     'L1-A/B': 'data/content/lessons_level1_part1.json',
     'L1-C': 'data/content/lessons_level1_part2.json',
     'L2': 'data/content/lessons_level2.json',
-    'L3-legacy': 'data/content/lessons_level3.json',
-    'L3-part1': 'data/content/lessons_level3_part1.json',
+    'L3-legacy': 'data/content/legacy_lessons_level3.json',
+    'L3-part1': 'data/content/legacy_lessons_level3_part1.json',
     'wisdom': 'data/content/lessons_wisdom.json',
   };
   final quizFiles = {
     'L1-A/B': 'data/content/quizzes_level1_part1.json',
     'L1-C': 'data/content/quizzes_level1_part2.json',
     'L2': 'data/content/quizzes_level2.json',
-    'L3': 'data/content/quizzes_level3.json',
-    'L3-part1': 'data/content/quizzes_level3_part1.json',
+    'L3': 'data/content/legacy_quizzes_level3.json',
+    'L3-part1': 'data/content/legacy_quizzes_level3_part1.json',
   };
 
   // Файлы, которые реально загружает приложение (main.dart:
   // LessonRepository()..loadCoreCurriculum()..loadWisdom()). loadLevel3()
-  // нигде не вызывается, поэтому lessons_level3.json / _part1.json — это
+  // нигде не вызывается, поэтому legacy_lessons_level3*.json — это
   // МЁРТВЫЙ legacy-контент: он не попадает в _lessons и не может ни с кем
   // конфликтовать в рантайме. Сверку ID, нумерации блоков и цепочек
   // unlockCondition (то, что ломает живой Level 1/2) ведём только по активным
@@ -93,6 +103,13 @@ void main() {
     for (final e in quizFiles.entries) {
       final f = File(e.value);
       if (!f.existsSync()) continue;
+      // Квизы архива не подмешиваем: их уроков в рантайме нет,
+      // иначе каждый такой квиз даёт ложный [ORPHAN-QUIZ].
+      if (!activeLessonFiles.contains(e.key)) {
+        say('[LEGACY-SKIPPED] квизы ${e.key} (${e.value}): '
+            '${_loadList(e.value).length} шт — архив, в рантайме не грузится');
+        continue;
+      }
       try {
         for (final q in _loadList(e.value)) {
           final id = q['lessonId'] as String;
@@ -113,17 +130,46 @@ void main() {
     }
     say('── полка уроков по блокам ──');
     for (final b in byBlock.keys.toList()..sort()) {
-      final list = byBlock[b]!..sort((x, y) => (x['lessonNumber'] as int).compareTo(y['lessonNumber'] as int));
+      final list = byBlock[b]!
+        ..sort((x, y) =>
+            (x['lessonNumber'] as int).compareTo(y['lessonNumber'] as int));
       final nums = list.map((l) => l['lessonNumber']).join(',');
       say('блок $b: ${list.length} уроков, номера [$nums] (${list.map((l) => l['id']).join(' ')})');
       for (var i = 1; i < list.length; i++) {
-        if ((list[i]['lessonNumber'] as int) - (list[i - 1]['lessonNumber'] as int) != 1) {
+        if ((list[i]['lessonNumber'] as int) -
+                (list[i - 1]['lessonNumber'] as int) !=
+            1) {
           say('[GAP] блок $b: разрыв в нумерации уроков ${list[i - 1]['lessonNumber']} → ${list[i]['lessonNumber']}');
         }
       }
     }
 
     // ── 2. Цепочка разблокировки ──────────────────────────────────────────
+
+    // Номера уроков видны ученику как бейдж «01», «14» на карточке.
+    // Один и тот же номер у двух уроков вылезает как путаница в прогрессии
+    // (было: C_12 = №13 и D_13 = №13). Блок W — отдельная полка «Записки
+    // Джона» со своей нумерацией 1..7, по ней сверку не ведём.
+    final byNumber = <int, List<String>>{};
+    for (final l in lessons.values) {
+      if (l['blockId'] == 'W') continue;
+      byNumber
+          .putIfAbsent(l['lessonNumber'] as int, () => [])
+          .add(l['id'] as String);
+    }
+    byNumber.forEach((num, ids) {
+      if (ids.length > 1) {
+        say('[DUP-NUMBER] номер урока $num у нескольких уроков: ${ids.join(', ')} '
+            '→ на карточках два одинаковых бейджа');
+      }
+    });
+    final allNumbers = byNumber.keys.toList()..sort();
+    for (var i = 1; i < allNumbers.length; i++) {
+      if (allNumbers[i] - allNumbers[i - 1] != 1) {
+        say('[NUM-GAP] между ${allNumbers[i - 1]} и ${allNumbers[i]} нет урока '
+            '→ в прогрессии появилось пустое место');
+      }
+    }
     for (final l in lessons.values) {
       final cond = l['unlockCondition'];
       if (cond == null) continue;
@@ -149,7 +195,8 @@ void main() {
       }
       if (slides.isEmpty) say('[EMPTY] ${l['id']}: ноль слайдов');
       final kp = (l['keyPoints'] as List?) ?? [];
-      if (kp.length != 3) say('[KEYPOINTS] ${l['id']}: ${kp.length} тезисов на лицевой стороне карточки (дизайн-стандарт — 3)');
+      if (kp.length != 3)
+        say('[KEYPOINTS] ${l['id']}: ${kp.length} тезисов на лицевой стороне карточки (дизайн-стандарт — 3)');
       if ((l['terms'] as List?)?.isEmpty ?? true) {
         say('[NO-TERMS] ${l['id']}: нет терминов → бейдж «0/N» на карточке пустой, словарь не пополняется');
       }
@@ -158,13 +205,15 @@ void main() {
     for (final t in typeCensus.keys) {
       if (!_slideTypes.contains(t)) continue;
       if (t == 'balanceTrainer' || t == 'interactive') {
-        say('[INTERACTIVE] тип "$t" (${typeCensus[t]} шт) — требует сбора и оценки ответа');
+        say('[INTERACTIVE] тип "$t" (${typeCensus[t]} шт) — ответ собирается и оценивается в lesson_screen');
       }
     }
 
     // ── 4. Урок ↔ квиз ────────────────────────────────────────────────────
     say('── связка урок ↔ квиз ──');
-    for (final l in lessons.values.where((l) => ['A', 'B', 'C'].contains(l['blockId']))) {
+    final interactiveCensus = <String, int>{};
+    for (final l in lessons.values
+        .where((l) => ['A', 'B', 'C'].contains(l['blockId']))) {
       final q = quizzes[l['id']];
       if (q == null) {
         say('[NO-QUIZ] ${l['id']}: квиза нет → после «К тесту» экран «Вопросы пока недоступны», урок незавершаем');
@@ -208,11 +257,18 @@ void main() {
           }
         }
         if (type == 'sequence' || type == 'slider' || type == 'matching') {
-          final payload = question[type == 'sequence' ? 'sequence' : type == 'slider' ? 'sliders' : 'pairs'];
+          final payload = question[type == 'sequence'
+              ? 'sequence'
+              : type == 'slider'
+                  ? 'sliders'
+                  : 'pairs'];
           if (payload == null) {
             say('[Q-BROKEN] $id: тип "$type" без полезной нагрузки');
           } else {
-            say('[Q-INTERACTIVE] $id (${l['id']}): тип "$type" — в AGENTS.md запрещено, пока UI не оценивает');
+            // UI реально собирает и оценивает все три типа:
+            // quiz_screen.dart (_buildMatchingQuestion / _buildSequenceQuestion /
+            // _buildSliderQuestion) + QuizAnswerEvaluator.is*AnswerCorrect.
+            interactiveCensus[type] = (interactiveCensus[type] ?? 0) + 1;
           }
         }
         final ex = question['explanation'];
@@ -230,6 +286,9 @@ void main() {
         say('[ORPHAN-QUIZ] квиз на "$qid", урока с таким id нет');
       }
     }
+    say('интерактивные типы вопросов: '
+        '${interactiveCensus.entries.map((e) => "${e.key}=${e.value}").join(', ')} '
+        '(все оцениваются в quiz_screen через QuizAnswerEvaluator)');
 
     // ── 5. Практика ───────────────────────────────────────────────────────
     say('── практика ↔ уроки ──');
@@ -244,7 +303,8 @@ void main() {
       if (overlap.isNotEmpty) {
         say('[PRACTICE-BUG] ${c.id}: ингредиент есть одновременно в правильных и в ложных: $overlap');
       }
-      if (correct.length < 2) say('[PRACTICE-THIN] ${c.id}: всего ${correct.length} правильных ингредиента');
+      if (correct.length < 2)
+        say('[PRACTICE-THIN] ${c.id}: всего ${correct.length} правильных ингредиента');
       for (final k in c.proportions.keys) {
         if (!correct.contains(k)) {
           say('[PRACTICE-BUG] ${c.id}: пропорция задана для «$k», которого нет в правильном списке');
@@ -255,20 +315,23 @@ void main() {
           say('[PRACTICE-GAP] ${c.id}: для «$k» нет цели пропорции → шаг «Настрой пропорции» для него нечем оценить');
         }
       }
-      // Шаг джиггера: Slider(min 0, max 120, divisions 120) → шаг 1мл.
+      // Шаг джиггера: Slider(min 0, max 150, divisions 150) → шаг 1мл.
+      // Шкала шире максимума цели на 30 мл запаса, иначе цель 120±20
+      // упиралась в правый край и точную дозу нельзя было налить.
+      const jiggerMax = 150;
       for (final p in c.proportions.entries) {
         final lo = p.value.targetMl - p.value.toleranceMl;
         final hi = p.value.targetMl + p.value.toleranceMl;
-        final reachable = [for (var ml = 0; ml <= 120; ml += 1) ml]
+        final reachable = [for (var ml = 0; ml <= jiggerMax; ml += 1) ml]
             .where((ml) => ml >= lo && ml <= hi)
             .toList();
         if (reachable.isEmpty) {
           say('[3★-UNREACHABLE] ${c.id}: «${p.key}» цель ${p.value.targetMl}мл ±'
               '${p.value.toleranceMl} → зона ${lo}..${hi}мл пуста на шкале '
-              '0..120мл с шагом 1мл — 3★ не выдаётся никогда');
-        } else if (lo < 0 || hi > 120) {
+              '0..${jiggerMax}мл с шагом 1мл — 3★ не выдаётся никогда');
+        } else if (lo < 0 || hi > jiggerMax) {
           say('[PROP-EDGE] ${c.id}: «${p.key}» зона ${lo}..${hi}мл вылезает за '
-              'шкалу 0..120мл');
+              'шкалу 0..${jiggerMax}мл');
         }
       }
       if (!methods.contains(c.correctMethod)) {
@@ -287,8 +350,14 @@ void main() {
         say('[PRACTICE-SPOILER] ${c.id}: все правильные (${lastCorrectIdx + 1} шт.) идут в начале, первый ложный только на $firstWrongIdx — ответ угадывается по позиции');
       }
     }
-    final l1Lessons = lessons.values.where((l) => ['A', 'B', 'C'].contains(l['blockId'])).map((l) => l['id'] as String).toSet();
-    final covered = allPracticeChallenges.where((c) => l1Lessons.contains(c.lessonId)).map((c) => c.lessonId).toSet();
+    final l1Lessons = lessons.values
+        .where((l) => ['A', 'B', 'C'].contains(l['blockId']))
+        .map((l) => l['id'] as String)
+        .toSet();
+    final covered = allPracticeChallenges
+        .where((c) => l1Lessons.contains(c.lessonId))
+        .map((c) => c.lessonId)
+        .toSet();
     final uncovered = l1Lessons.where((id) => !covered.contains(id)).toList();
     say('уроки Level 1 без практики: ${uncovered.join(', ')} (всего уроков ${l1Lessons.length}, покрыто ${covered.length})');
     final byLesson = <String, List<String>>{};
@@ -304,8 +373,11 @@ void main() {
       final block = c.blockId;
       byCocktail.putIfAbsent(c.cocktailName, () => {}).add(block);
     }
-    final dupes = byCocktail.entries.where((e) => e.value.length > 1)
-        .where((e) => e.value.any((b) => ['A', 'B', 'C'].contains(b)) && e.value.any((b) => ['D', 'E', 'F'].contains(b)))
+    final dupes = byCocktail.entries
+        .where((e) => e.value.length > 1)
+        .where((e) =>
+            e.value.any((b) => ['A', 'B', 'C'].contains(b)) &&
+            e.value.any((b) => ['D', 'E', 'F'].contains(b)))
         .toList();
     if (dupes.isNotEmpty) {
       final parts = dupes.map((e) {
@@ -315,7 +387,7 @@ void main() {
       say('[LEVEL-DUPE] один и тот же коктейль практикуется и в Level 1, и в Level 2: '
           '$parts — прогресс звёзд общий, Level 2 теряет новизну');
     }
-    say('практика: шаг джиггера 1мл (Slider 0..120, divisions 120), зелёная зона '
+    say('практика: шаг джиггера 1мл (Slider 0..150, divisions 150), зелёная зона '
         'отсчитывается от фактического трека (отступ = радиус оверлея 16px)');
     for (final id in level1DiplomaChallengeIds) {
       if (!allPracticeChallenges.any((c) => c.id == id)) {
@@ -331,7 +403,8 @@ void main() {
     // ── 7. Термины ↔ гейт основного квиза ─────────────────────────────────
     say('── терминологический гейт (lesson → TermQuiz → Quiz) ──');
     final termService = TermService();
-    for (final l in lessons.values.where((l) => ['A', 'B', 'C'].contains(l['blockId']))) {
+    for (final l in lessons.values
+        .where((l) => ['A', 'B', 'C'].contains(l['blockId']))) {
       final id = l['id'] as String;
       final terms = ((l['terms'] as List?) ?? []).cast<String>();
       if (terms.isEmpty) continue;
@@ -365,8 +438,11 @@ void main() {
     }
 
     // ── 7b. Картинки карточек уроков ───────────────────────────────────
-    final cardSrc = File('lib/features/bartender_school/presentation/widgets/lesson_card.dart').readAsStringSync();
-    final mapped = RegExp(r"case '(lesson_[^']+)':\s*return '([^']+)'").allMatches(cardSrc);
+    final cardSrc = File(
+            'lib/features/bartender_school/presentation/widgets/lesson_card.dart')
+        .readAsStringSync();
+    final mapped = RegExp(r"case '(lesson_[^']+)':\s*return '([^']+)'")
+        .allMatches(cardSrc);
     final mapping = {for (final m in mapped) m.group(1)!: m.group(2)!};
     final usedPaths = <String, List<String>>{};
     for (final e in mapping.entries) {
@@ -398,8 +474,10 @@ void main() {
     if (latinTitleLessons.isNotEmpty) {
       say('[I18N] заголовки уроков без кириллицы: ${latinTitleLessons.join(' | ')}');
     }
-    final emojiFields = lessons.values.where((l) => ['A', 'B', 'C'].contains(l['blockId']))
-        .where((l) => (l['emoji'] as String?)?.isNotEmpty ?? false).length;
+    final emojiFields = lessons.values
+        .where((l) => ['A', 'B', 'C'].contains(l['blockId']))
+        .where((l) => (l['emoji'] as String?)?.isNotEmpty ?? false)
+        .length;
     say('[DESIGN] эмодзи как иконка уроков: $emojiFields из ${l1Lessons.length} (плюс methodDescriptions и quiz-фидбэк)');
 
     File('test/qa/INTEGRITY.txt').writeAsStringSync(report.join('\n'));

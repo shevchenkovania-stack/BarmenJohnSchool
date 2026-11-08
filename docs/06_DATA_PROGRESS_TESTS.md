@@ -7,11 +7,12 @@
 - `data/content/lessons_level1_part1.json`
 - `data/content/lessons_level1_part2.json`
 - `data/content/lessons_level2.json`
-- `data/content/lessons_level3.json`
+- `data/content/lessons_wisdom.json`
 - `data/content/quizzes_level1_part1.json`
 - `data/content/quizzes_level1_part2.json`
 - `data/content/quizzes_level2.json`
-- `data/content/quizzes_level3.json`
+
+Архив Level 3 с префиксом `legacy_` лежит в той же папке, но в рантайм не попадает.
 
 Эти файлы подключены как assets через `pubspec.yaml`:
 

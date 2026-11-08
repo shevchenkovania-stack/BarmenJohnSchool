@@ -53,12 +53,10 @@ class _QuizScreenState extends State<QuizScreen> {
     _isLoadingQuestions = true;
 
     try {
-      print('📝 QuizScreen: Loading questions for lesson ${widget.lessonId}');
       final quizRepo = Provider.of<QuizRepository>(context, listen: false);
 
       // Wait for quizzes to load if still loading
       if (quizRepo.isLoading) {
-        print('   ⏳ Waiting for quizzes to load...');
         _isLoadingQuestions = false;
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) _loadQuestions();
@@ -66,15 +64,10 @@ class _QuizScreenState extends State<QuizScreen> {
         return;
       }
 
-      print('   quizRepo available lessons: ${quizRepo.availableLessonIds}');
-
       _questions = quizRepo.getQuestionsForLesson(widget.lessonId);
       _prepareCurrentInteractiveQuestion();
-      print('✅ Loaded ${_questions.length} questions');
 
       if (_questions.isEmpty) {
-        print('⚠️ No questions available for ${widget.lessonId}');
-        print('   Available: ${quizRepo.availableLessonIds}');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -86,10 +79,7 @@ class _QuizScreenState extends State<QuizScreen> {
           );
         }
       }
-    } catch (e, stackTrace) {
-      print('❌ Error loading quiz questions: $e');
-      print('Stack trace: $stackTrace');
-
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -1121,9 +1111,8 @@ class _QuizScreenState extends State<QuizScreen> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: inRange
-                              ? Colors.green
-                              : AppColors.textSecondary,
+                          color:
+                              inRange ? Colors.green : AppColors.textSecondary,
                         ),
                       ),
                       if (!_answered && inRange)

@@ -104,6 +104,12 @@ class LessonSlide {
   final String? mentorNote;
   final String? author;
 
+  /// Варианты сценарного выбора (`choice`).
+  ///
+  /// У слайдов Мудрости это готовая сцена с тремя ходами и разбором
+  /// каждого. Раньше поле не парсилось, и варианты молча терялись.
+  final List<SlideChoice>? choices;
+
   LessonSlide({
     required this.type,
     required this.title,
@@ -112,6 +118,7 @@ class LessonSlide {
     this.bulletPoints,
     this.mentorNote,
     this.author,
+    this.choices,
   });
 
   factory LessonSlide.fromJson(Map<String, dynamic> json) {
@@ -126,6 +133,34 @@ class LessonSlide {
       bulletPoints: (json['bulletPoints'] as List?)?.cast<String>(),
       mentorNote: json['mentorNote'] as String?,
       author: json['author'] as String?,
+      choices: (json['choices'] as List?)
+          ?.whereType<Map>()
+          .map((c) => SlideChoice.fromJson(c.cast<String, dynamic>()))
+          .toList(),
+    );
+  }
+}
+
+/// Один ход в сценарном слайде `choice`.
+class SlideChoice {
+  final String id;
+  final String text;
+  final bool isCorrect;
+  final String explanation;
+
+  const SlideChoice({
+    required this.id,
+    required this.text,
+    required this.isCorrect,
+    required this.explanation,
+  });
+
+  factory SlideChoice.fromJson(Map<String, dynamic> json) {
+    return SlideChoice(
+      id: json['id'] as String? ?? '',
+      text: json['text'] as String? ?? '',
+      isCorrect: json['isCorrect'] as bool? ?? false,
+      explanation: json['explanation'] as String? ?? '',
     );
   }
 }
@@ -142,4 +177,7 @@ enum SlideType {
   interactive, // Interactive calibration with sliders (acid dose)
   failure, // «Моя ошибка» — личная история-провал Джона
   quote, // «Золотое правило» — цитата с автором
+  observation, // Наблюдение за гостем («барменский радар»)
+  choice, // Сцена с выбором хода и разбором
+  silence, // Пауза-вдох без задания
 }

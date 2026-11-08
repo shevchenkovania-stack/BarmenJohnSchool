@@ -13,8 +13,10 @@ void main() {
     late List<Map<String, dynamic>> quizzes;
 
     setUpAll(() {
-      lessons = _readJson('data/content/lessons_level3_part1.json');
-      quizzes = _readJson('data/content/quizzes_level3_part1.json');
+      // Архив Level 3 лежит с префиксом legacy_: приложение его не загружает,
+      // но валидация содержимого остаётся полезной.
+      lessons = _readJson('data/content/legacy_lessons_level3_part1.json');
+      quizzes = _readJson('data/content/legacy_quizzes_level3_part1.json');
     });
 
     test('contains the three G lessons in order', () {
@@ -29,6 +31,8 @@ void main() {
     });
 
     test('keeps a strict unlock chain from Level 2 into block G', () {
+      // unlockCondition ссылается на id урока, а не на номер,
+      // поэтому перенумерация Level 2 (24 → 25) цепочку не ломает.
       expect(lessons.first['unlockCondition'], 'lesson_F_24');
       for (var index = 1; index < lessons.length; index++) {
         expect(

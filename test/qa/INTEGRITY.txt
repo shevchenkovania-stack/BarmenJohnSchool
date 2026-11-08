@@ -1,55 +1,21 @@
-[LEGACY-SKIPPED] L3-legacy (data/content/lessons_level3.json): 7 уроков не загружаются в рантайме (loadLevel3 не вызывается) — вне сверки живого прогресса
-[LEGACY-SKIPPED] L3-part1 (data/content/lessons_level3_part1.json): 3 уроков не загружаются в рантайме (loadLevel3 не вызывается) — вне сверки живого прогресса
+[LEGACY-SKIPPED] L3-legacy (data/content/legacy_lessons_level3.json): 7 уроков не загружаются в рантайме (loadLevel3 не вызывается) — вне сверки живого прогресса
+[LEGACY-SKIPPED] L3-part1 (data/content/legacy_lessons_level3_part1.json): 3 уроков не загружаются в рантайме (loadLevel3 не вызывается) — вне сверки живого прогресса
+[LEGACY-SKIPPED] квизы L3 (data/content/legacy_quizzes_level3.json): 6 шт — архив, в рантайме не грузится
+[LEGACY-SKIPPED] квизы L3-part1 (data/content/legacy_quizzes_level3_part1.json): 3 шт — архив, в рантайме не грузится
 ── полка уроков по блокам ──
 блок A: 4 уроков, номера [1,2,3,4] (lesson_A_01 lesson_A_02 lesson_A_03 lesson_A_04)
 блок B: 5 уроков, номера [5,6,7,8,9] (lesson_B_05 lesson_B_06 lesson_B_07 lesson_B_08 lesson_B_09)
 блок C: 4 уроков, номера [10,11,12,13] (lesson_C_09 lesson_C_10 lesson_C_11 lesson_C_12)
-блок D: 4 уроков, номера [13,14,15,16] (lesson_D_13 lesson_D_14 lesson_D_15 lesson_D_16)
-блок E: 4 уроков, номера [17,18,19,20] (lesson_E_17 lesson_E_18 lesson_E_19 lesson_E_20)
-блок F: 4 уроков, номера [21,22,23,24] (lesson_F_21 lesson_F_22 lesson_F_23 lesson_F_24)
+блок D: 4 уроков, номера [14,15,16,17] (lesson_D_13 lesson_D_14 lesson_D_15 lesson_D_16)
+блок E: 4 уроков, номера [18,19,20,21] (lesson_E_17 lesson_E_18 lesson_E_19 lesson_E_20)
+блок F: 4 уроков, номера [22,23,24,25] (lesson_F_21 lesson_F_22 lesson_F_23 lesson_F_24)
 блок W: 7 уроков, номера [1,2,3,4,5,6,7] (lesson_W_01 lesson_W_02 lesson_W_03 lesson_W_04 lesson_W_05 lesson_W_06 lesson_W_07)
-[NO-TERMS] lesson_C_12: нет терминов → бейдж «0/N» на карточке пустой, словарь не пополняется
-[UNKNOWN-SLIDE] lesson_W_01: тип "observation" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_01: тип "choice" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_01: тип "silence" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_02: тип "choice" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_02: тип "observation" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_02: тип "silence" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_03: тип "choice" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_03: тип "observation" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_04: тип "choice" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_04: тип "observation" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_04: тип "silence" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_05: тип "choice" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_05: тип "observation" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_06: тип "observation" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_06: тип "choice" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_06: тип "silence" не в enum → молча отрисуется как theory
-[UNKNOWN-SLIDE] lesson_W_07: тип "observation" не в enum → молча отрисуется как theory
 типы слайдов: theory=72, balanceTrainer=1, checklist=13, toolVisual=9, interactive=11, termAnimation=1, practice=28, failure=8, quote=8, barTip=11, observation=7, choice=6, silence=4
-[INTERACTIVE] тип "balanceTrainer" (1 шт) — требует сбора и оценки ответа
-[INTERACTIVE] тип "interactive" (11 шт) — требует сбора и оценки ответа
+[INTERACTIVE] тип "balanceTrainer" (1 шт) — ответ собирается и оценивается в lesson_screen
+[INTERACTIVE] тип "interactive" (11 шт) — ответ собирается и оценивается в lesson_screen
 ── связка урок ↔ квиз ──
-[Q-INTERACTIVE] q_01_02 (lesson_A_01): тип "matching" — в AGENTS.md запрещено, пока UI не оценивает
-[Q-INTERACTIVE] q_01_06 (lesson_A_01): тип "sequence" — в AGENTS.md запрещено, пока UI не оценивает
-[Q-INTERACTIVE] q_01_07 (lesson_A_01): тип "slider" — в AGENTS.md запрещено, пока UI не оценивает
-[Q-INTERACTIVE] q_05_05 (lesson_B_05): тип "matching" — в AGENTS.md запрещено, пока UI не оценивает
-[Q-INTERACTIVE] q_08_02 (lesson_B_08): тип "slider" — в AGENTS.md запрещено, пока UI не оценивает
-[Q-INTERACTIVE] q_b09_05 (lesson_B_09): тип "sequence" — в AGENTS.md запрещено, пока UI не оценивает
-[Q-INTERACTIVE] q_b09_07 (lesson_B_09): тип "matching" — в AGENTS.md запрещено, пока UI не оценивает
-[ORPHAN-QUIZ] квиз на "lesson_E_01", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_E_02", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_E_03", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_E_04", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_E_05", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_E_06", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_G_25", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_G_26", урока с таким id нет
-[ORPHAN-QUIZ] квиз на "lesson_G_27", урока с таким id нет
+интерактивные типы вопросов: matching=3, sequence=2, slider=2 (все оцениваются в quiz_screen через QuizAnswerEvaluator)
 ── практика ↔ уроки ──
-[PROP-EDGE] practice_moscow_mule: «Ginger beer» зона 100..140мл вылезает за шкалу 0..120мл
-[PROP-EDGE] level2_hot_toddy: «Hot water» зона 100..140мл вылезает за шкалу 0..120мл
-[PROP-EDGE] level2_moscow_mule: «Ginger beer» зона 105..135мл вылезает за шкалу 0..120мл
 уроки Level 1 без практики: lesson_A_01, lesson_B_09 (всего уроков 13, покрыто 11)
 практика на lesson_A_02: Margarita | Whiskey Sour | Penicillin
 практика на lesson_A_03: Tom Collins | Cosmopolitan
@@ -63,7 +29,7 @@
 практика на lesson_C_11: Negroni | Boulevardier
 практика на lesson_C_12: Pisco Sour | Mai Tai
 [LEVEL-DUPE] один и тот же коктейль практикуется и в Level 1, и в Level 2: Margarita([A, E]), Whiskey Sour([A, E]), Old Fashioned([A, E]), Moscow Mule([B, F]), Aperol Spritz([B, F]), Bloody Mary([B, F]), Espresso Martini([B, F]), Negroni([C, D]) — прогресс звёзд общий, Level 2 теряет новизну
-практика: шаг джиггера 1мл (Slider 0..120, divisions 120), зелёная зона отсчитывается от фактического трека (отступ = радиус оверлея 16px)
+практика: шаг джиггера 1мл (Slider 0..150, divisions 150), зелёная зона отсчитывается от фактического трека (отступ = радиус оверлея 16px)
 ── терминологический гейт (lesson → TermQuiz → Quiz) ──
 [DUP-CARD-ART] lesson_B_05 и lesson_B_09 используют одну картинку lesson_B_05 → images/lesson_b_05_setup.jpg
 маппинг картинок карточек: 25 уроков

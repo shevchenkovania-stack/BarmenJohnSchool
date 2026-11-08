@@ -21,18 +21,24 @@
 - `lessons_level1_part1.json`
 - `lessons_level1_part2.json`
 - `lessons_level2.json`
-- `lessons_level3.json`
+- `lessons_wisdom.json`
 - `quizzes_level1_part1.json`
 - `quizzes_level1_part2.json`
 - `quizzes_level2.json`
-- `quizzes_level3.json`
+
+Архив Level 3 (в рантайме не загружается, `loadLevel3()` нигде не вызывается):
+
+- `legacy_lessons_level3.json`
+- `legacy_lessons_level3_part1.json`
+- `legacy_quizzes_level3.json`
+- `legacy_quizzes_level3_part1.json`
 
 Код загрузки:
 
 - `lib/features/bartender_school/data/lesson_repository.dart`
 - `lib/features/bartender_school/data/quiz_repository.dart`
 
-Важно: Level 2 и Level 3 уже присутствуют в данных и коде, но первый релиз должен быть сфокусирован на качественном Level 1.
+Важно: Level 2 уже подключён к экрану, а старый Level 3 — нет: его файлы лежат как `legacy_*` и не читаются. Первый релиз должен быть сфокусирован на качественном Level 1.
 
 ## Level 1
 

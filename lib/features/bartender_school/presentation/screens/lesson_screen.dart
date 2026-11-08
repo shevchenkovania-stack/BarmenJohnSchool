@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
@@ -680,6 +680,9 @@ class _SlideWidget extends StatelessWidget {
       case SlideType.barTip:
       case SlideType.failure:
       case SlideType.quote:
+      case SlideType.observation:
+      case SlideType.silence:
+      case SlideType.choice:
         return 'images/barista_john_teach.png';
     }
   }
@@ -904,6 +907,9 @@ class _SlideWidget extends StatelessWidget {
       SlideType.interactive => 'images/ui_icon_play_card.png',
       SlideType.failure => 'images/ui_icon_book_theory.png',
       SlideType.quote => 'images/ui_icon_term_medal.png',
+      SlideType.observation => 'images/ui_icon_balance_precision.png',
+      SlideType.choice => 'images/ui_icon_play_card.png',
+      SlideType.silence => 'images/ui_icon_tip_citrus.png',
     };
 
     return SingleChildScrollView(
@@ -1041,6 +1047,17 @@ class _SlideWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                ],
+                // Сцена выбора: без этого блока варианты терялись и
+                // слайд читался как обычная теория с вопросом в конце.
+                if (slide.choices != null && slide.choices!.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  ...slide.choices!.asMap().entries.map(
+                        (e) => _WisdomChoiceCard(
+                          index: e.key + 1,
+                          choice: e.value,
+                        ),
+                      ),
                 ],
               ],
             ),
@@ -1454,6 +1471,120 @@ class _WisdomMentorNoteCard extends StatelessWidget {
   }
 }
 
+/// Карточка одного хода в сценарном слайде Мудрости (`SlideType.choice`).
+///
+/// Варианты не оцениваются в прогресс: это размышление перед уроком.
+/// Нажатие раскрывает разбор, чтобы ученик сначала сделал выбор.
+class _WisdomChoiceCard extends StatefulWidget {
+  final int index;
+  final SlideChoice choice;
+
+  const _WisdomChoiceCard({required this.index, required this.choice});
+
+  @override
+  State<_WisdomChoiceCard> createState() => _WisdomChoiceCardState();
+}
+
+class _WisdomChoiceCardState extends State<_WisdomChoiceCard> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final open = _open;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => setState(() => _open = !_open),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: open
+                ? WisdomPalette.oldGold.withAlpha(26)
+                : Colors.white.withAlpha(90),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: WisdomPalette.oldGold.withAlpha(open ? 130 : 80),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 22,
+                    height: 22,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: WisdomPalette.oldGold.withAlpha(60),
+                    ),
+                    child: Text(
+                      '${widget.index}',
+                      style: const TextStyle(
+                        color: WisdomPalette.ink,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      widget.choice.text,
+                      style: const TextStyle(
+                        color: WisdomPalette.ink,
+                        fontSize: 15,
+                        height: 1.45,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Icon(
+                    open ? Icons.expand_less : Icons.expand_more,
+                    size: 18,
+                    color: WisdomPalette.oldGold,
+                  ),
+                ],
+              ),
+              if (open && widget.choice.explanation.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      widget.choice.isCorrect
+                          ? Icons.check_circle_outline
+                          : Icons.info_outline,
+                      size: 16,
+                      color: widget.choice.isCorrect
+                          ? const Color(0xFF2F6B3A)
+                          : WisdomPalette.wax,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        widget.choice.explanation,
+                        style: const TextStyle(
+                          color: WisdomPalette.ink,
+                          fontSize: 13.5,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Slide type icon.
 class _SlideTypeIcon extends StatelessWidget {
   final SlideType type;
@@ -1493,6 +1624,15 @@ class _SlideTypeIcon extends StatelessWidget {
         break;
       case SlideType.quote:
         assetPath = 'images/ui_icon_term_medal.png';
+        break;
+      case SlideType.observation:
+        assetPath = 'images/ui_icon_balance_precision.png';
+        break;
+      case SlideType.choice:
+        assetPath = 'images/ui_icon_play_card.png';
+        break;
+      case SlideType.silence:
+        assetPath = 'images/ui_icon_tip_citrus.png';
         break;
     }
 

@@ -117,8 +117,6 @@ class _Level1ScreenState extends State<Level1Screen> {
 
   @override
   Widget build(BuildContext context) {
-    print('🔵 Level1Screen: build called');
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: JohnThemedAppBar(
@@ -165,12 +163,7 @@ class _Level1ScreenState extends State<Level1Screen> {
         room: JohnSchoolRoom.foyer,
         child: Consumer<LessonRepository>(
           builder: (context, lessonRepo, _) {
-            print('🔵 Level1Screen: Consumer rebuild');
-            print('   isLoading: ${lessonRepo.isLoading}');
-            print('   lessons count: ${lessonRepo.lessons.length}');
-
             if (lessonRepo.isLoading) {
-              print('⏳ Level1Screen: showing loading spinner');
               return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -185,7 +178,6 @@ class _Level1ScreenState extends State<Level1Screen> {
 
             final lessons = lessonRepo.lessons;
             if (lessons.isEmpty) {
-              print('❌ Level1Screen: lessons is EMPTY!');
               return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -203,8 +195,6 @@ class _Level1ScreenState extends State<Level1Screen> {
                 ),
               );
             }
-            print('✅ Level1Screen: showing ${lessons.length} lessons');
-
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(

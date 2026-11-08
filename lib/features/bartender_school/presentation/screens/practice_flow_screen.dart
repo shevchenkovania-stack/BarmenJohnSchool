@@ -401,6 +401,52 @@ class _IntroStep extends StatelessWidget {
 
 // ── Step 1: Ingredients ─────────────────────────────────────────────────────
 
+/// Заголовок шага на плашке.
+///
+/// Шаги практики живут поверх фото стойки: без подложки белый заголовок
+/// терялся на светлых участках снимка (стаканы, лёд, бумага).
+class _StepHeader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+
+  const _StepHeader({required this.title, required this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.background.withAlpha(200),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.divider.withAlpha(60)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+              height: 1.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _IngredientsStep extends StatelessWidget {
   final PracticeChallenge challenge;
   final Set<String> selected;
@@ -423,72 +469,78 @@ class _IngredientsStep extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Выбери ингредиенты',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary),
+          _StepHeader(
+            title: 'Выбери ингредиенты',
+            subtitle: 'Нажми на те, что нужны для ${challenge.cocktailName}',
           ),
-          const SizedBox(height: 6),
-          Text(
-            'Нажми на те, что нужны для ${challenge.cocktailName}',
-            style:
-                const TextStyle(fontSize: 13, color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 20),
-
-          Expanded(
-            child: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: options.map((ing) {
-                final isSelected = selected.contains(ing);
-                return GestureDetector(
-                  onTap: () => onToggle(ing),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColors.primary.withAlpha(30)
-                          : AppColors.surface.withAlpha(80),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.primary
-                            : AppColors.divider.withAlpha(100),
-                        width: isSelected ? 2 : 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (isSelected)
-                          const Padding(
-                            padding: EdgeInsets.only(right: 6),
-                            child: Icon(Icons.check_circle,
-                                size: 16, color: AppColors.primary),
-                          ),
-                        Text(
-                          ing,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w500,
+          const SizedBox(height: 12),
+          // Плашка под списком: чипы полупрозрачные, и на фото стойки
+          // подписи теряли контраст. Фон под ними делает текст читаемым.
+          // Flexible + InnerScroll: если вариантов много и экран низкий,
+          // чипы скроллятся, а заголовок и кнопка остаются на месте.
+          Flexible(
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.background.withAlpha(200),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.divider.withAlpha(60)),
+                ),
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: options.map((ing) {
+                    final isSelected = selected.contains(ing);
+                    return GestureDetector(
+                      onTap: () => onToggle(ing),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.primary.withAlpha(30)
+                              : AppColors.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
                             color: isSelected
                                 ? AppColors.primary
-                                : AppColors.textPrimary,
+                                : AppColors.divider.withAlpha(100),
+                            width: isSelected ? 2 : 1,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (isSelected)
+                              const Padding(
+                                padding: EdgeInsets.only(right: 6),
+                                child: Icon(Icons.check_circle,
+                                    size: 16, color: AppColors.primary),
+                              ),
+                            Text(
+                              ing,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: isSelected
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
             ),
           ),
+          const SizedBox(height: 16),
 
           // Кнопка
           SizedBox(
@@ -538,19 +590,11 @@ class _MethodStep extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Выбери метод',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary),
+          const _StepHeader(
+            title: 'Выбери метод',
+            subtitle: 'Как будешь готовить?',
           ),
-          const SizedBox(height: 6),
-          const Text(
-            'Как будешь готовить?',
-            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
 
           Expanded(
             child: GridView.count(
@@ -570,7 +614,7 @@ class _MethodStep extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppColors.primary.withAlpha(25)
-                          : AppColors.surface.withAlpha(60),
+                          : AppColors.surface,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: isSelected
@@ -663,19 +707,12 @@ class _ProportionsStep extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Настрой пропорции',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary),
+          const _StepHeader(
+            title: 'Настрой пропорции',
+            subtitle:
+                'Потяни слайсер — зелёная зона показывает правильный диапазон',
           ),
-          const SizedBox(height: 6),
-          const Text(
-            'Потяни слаймер — зелёная зона показывает правильный диапазон',
-            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           Expanded(
             child: ListView.separated(
@@ -693,7 +730,7 @@ class _ProportionsStep extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
-                    color: AppColors.surface.withAlpha(60),
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: inRange
@@ -798,7 +835,14 @@ class _JiggerSlider extends StatelessWidget {
     required this.onChanged,
   });
 
-  static const double _maxMl = 120;
+  /// Запас шкалы сверх максимума цели.
+  ///
+  /// Задания вроде Moscow Mule и Hot Toddy целятся в 120 мл с допуском
+  /// ±15–20. При шкале ровно 120 зона упиралась в правый край, и половина
+  /// допуска была недостижима — точную дозу нельзя было налить в принципе.
+  /// Даём 30 мл запаса: цель всегда стоит внутри шкалы.
+  static const double _headroomMl = 30;
+  static const double _maxMl = 120 + _headroomMl;
   static const double _minMl = 0;
 
   /// Трек `Slider` врезан с обеих сторон на радиус оверлея (max(overlay,
@@ -810,7 +854,8 @@ class _JiggerSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rangeLow = (targetMl - tolerance).clamp(_minMl.toInt(), _maxMl.toInt());
+    final rangeLow =
+        (targetMl - tolerance).clamp(_minMl.toInt(), _maxMl.toInt());
     final rangeHigh =
         (targetMl + tolerance).clamp(_minMl.toInt(), _maxMl.toInt());
 
