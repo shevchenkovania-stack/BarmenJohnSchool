@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/practice_challenges.dart';
-import 'package:coin/features/bartender_school/data/room_mood.dart';
 import 'package:coin/features/bartender_school/presentation/screens/practice_flow_screen.dart';
 import 'package:coin/features/bartender_school/domain/entities/progress.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';

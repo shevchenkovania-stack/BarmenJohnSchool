@@ -128,13 +128,16 @@ class _QuestSceneViewState extends State<QuestSceneView> {
   List<Widget> _buildBeats(JohnRoomStyle style) {
     final beats = widget.scene.beats.take(_beatsShown).toList();
     return [
-      for (final beat in beats)
+      for (var i = 0; i < beats.length; i++)
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: _BeatBubble(
-            beat: beat,
+            // Ключ по индексу: иначе вторая реплика переиспользует
+            // State первой и появляется сразу целиком, без печати.
+            key: ValueKey('beat_$i'),
+            beat: beats[i],
             style: style,
-            animate: beat == beats.last && !_typingDone,
+            animate: i == beats.length - 1 && !_typingDone,
             onTyped: () {
               if (mounted) setState(() => _typingDone = true);
             },
@@ -146,17 +149,25 @@ class _QuestSceneViewState extends State<QuestSceneView> {
   List<Widget> _buildDialogue(JohnRoomStyle style) {
     final asked = _state.askedProbes;
     return [
-      for (final probe in asked) ...[
-        _PlayerLine(text: probe.label, style: style),
+      for (var i = 0; i < asked.length; i++) ...[
+        _PlayerLine(text: asked[i].label, style: style),
         const SizedBox(height: 6),
         _BeatBubble(
-          beat: QuestBeat(speaker: _guestName, text: probe.response),
+          key: ValueKey('reply_${asked[i].id}'),
+          beat: QuestBeat(speaker: _guestName, text: asked[i].response),
           style: style,
-          animate: probe == asked.last && !_typingDone,
+          animate: i == asked.length - 1 && !_typingDone,
           onTyped: () {
             if (mounted) setState(() => _typingDone = true);
           },
         ),
+        // Что игрок понял из этого ответа. Без этой строки вопросы
+        // читаются как кнопки «дай подсказку»: ответ есть, а вывода нет.
+        if (asked[i].insight.trim().isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _InsightLine(text: asked[i].insight, style: style),
+          ),
         const SizedBox(height: 10),
       ],
     ];
@@ -225,6 +236,15 @@ class _QuestSceneViewState extends State<QuestSceneView> {
           ),
         ],
         const SizedBox(height: 20),
+        // Сводка того, что игрок уже понял: перед выбором видно, на что
+        // он опирается — или что ещё не спросил.
+        _InsightSummary(
+          insights: _state.insights,
+          asked: _state.askedProbes.length,
+          total: widget.scene.probes.length,
+          style: style,
+        ),
+        const SizedBox(height: 16),
         _SectionLabel(text: 'Что нальёшь?', style: style),
         const SizedBox(height: 10),
         // Действие открывается после первого вопроса: без единого
@@ -244,6 +264,13 @@ class _QuestSceneViewState extends State<QuestSceneView> {
 
     // Вопросы заданы все, но выбора ещё нет.
     return [
+      _InsightSummary(
+        insights: _state.insights,
+        asked: _state.askedProbes.length,
+        total: widget.scene.probes.length,
+        style: style,
+      ),
+      const SizedBox(height: 16),
       _SectionLabel(text: 'Ты услышал достаточно. Что нальёшь?', style: style),
       const SizedBox(height: 10),
       for (final option in widget.scene.answers)
@@ -327,6 +354,7 @@ class _BeatBubble extends StatelessWidget {
   final VoidCallback onTyped;
 
   const _BeatBubble({
+    super.key,
     required this.beat,
     required this.style,
     required this.animate,
@@ -346,8 +374,10 @@ class _BeatBubble extends StatelessWidget {
     final body = animate
         ? TypewriterText(
             beat.text,
-            key: const Key('quest_typewriter'),
             style: textStyle,
+            // Гость не отвечает мгновенно: пауза перед репликой даёт
+            // ощущение живого разговора, а не печати готового текста.
+            delay: isAuthor ? Duration.zero : const Duration(milliseconds: 420),
             onDone: onTyped,
           )
         : Text(beat.text, style: textStyle);
@@ -483,6 +513,96 @@ class _ProbeButton extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Вывод игрока из ответа гостя. Отдельная строка с галочкой: это
+/// не речь персонажа, а то, что игрок понял сам.
+class _InsightLine extends StatelessWidget {
+  final String text;
+  final JohnRoomStyle style;
+
+  const _InsightLine({required this.text, required this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      key: const Key('quest_insight'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.check_circle_outline,
+            size: 14, color: style.accent.withAlpha(200)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 13,
+              height: 1.4,
+              fontStyle: FontStyle.italic,
+              color: style.onDark.withAlpha(175),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Сводка: сколько игрок услышал и что именно.
+class _InsightSummary extends StatelessWidget {
+  final List<String> insights;
+  final int asked;
+  final int total;
+  final JohnRoomStyle style;
+
+  const _InsightSummary({
+    required this.insights,
+    required this.asked,
+    required this.total,
+    required this.style,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (insights.isEmpty) return const SizedBox.shrink();
+    return Container(
+      key: const Key('quest_insight_summary'),
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: style.surface.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: style.accent.withAlpha(70)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Ты услышал $asked из $total',
+            style: TextStyle(
+              fontSize: 11,
+              letterSpacing: 1.0,
+              fontWeight: FontWeight.w800,
+              color: style.accent,
+            ),
+          ),
+          const SizedBox(height: 8),
+          for (final insight in insights)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text(
+                '· $insight',
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.4,
+                  color: style.onDark.withAlpha(195),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

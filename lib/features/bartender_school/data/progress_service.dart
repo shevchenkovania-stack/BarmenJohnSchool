@@ -24,6 +24,10 @@ class ProgressService extends ChangeNotifier {
   int get totalXP => _progress.totalXP;
   int get coins => _progress.coins;
   int get streak => _progress.streak;
+
+  /// Когда занимался в последний раз. null — ещё ни разу.
+  DateTime? get lastStudyDate => _progress.lastStudyDate;
+
   bool get hasSeenLevel1Prologue =>
       _prefs.getBool('bartender_school_seen_level1_prologue') ?? false;
 
@@ -131,7 +135,8 @@ class ProgressService extends ChangeNotifier {
   /// based on lesson progress (not coins).
   int get wisdomLevel {
     int count = 0;
-    for (final entry in BartenderSchoolConfig.wisdomLessonRequirements.entries) {
+    for (final entry
+        in BartenderSchoolConfig.wisdomLessonRequirements.entries) {
       if (completedRegularLessons >= entry.value) count++;
     }
     return count;
@@ -205,9 +210,8 @@ class ProgressService extends ChangeNotifier {
   /// Проверить, завершён ли весь блок (все уроки блока пройдены).
   bool isBlockCompleted(String blockId) {
     if (_lessonRepo == null) return false;
-    final blockLessons = _lessonRepo.lessons
-        .where((l) => l.blockId == blockId)
-        .toList();
+    final blockLessons =
+        _lessonRepo.lessons.where((l) => l.blockId == blockId).toList();
     if (blockLessons.isEmpty) return false;
     return blockLessons.every(
       (l) => getLessonStatus(l.id) == LessonStatus.completed,
@@ -441,6 +445,28 @@ class ProgressService extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ── Quiz failures ────────────────────────────────────────────────────────
+
+  /// Сколько раз квиз этого урока был провален.
+  ///
+  /// Нужно не для наказания: по счётчику Джон на второй и третий раз
+  /// говорит по-другому, а не повторяет ту же фразу.
+  int getQuizFailures(String lessonId) {
+    return _prefs.getInt('quiz_failures_$lessonId') ?? 0;
+  }
+
+  /// Запоминает ещё один провал и возвращает новое число.
+  int registerQuizFailure(String lessonId) {
+    final next = getQuizFailures(lessonId) + 1;
+    _prefs.setInt('quiz_failures_$lessonId', next);
+    return next;
+  }
+
+  /// Квиз сдан — счётчик провалов больше не нужен.
+  Future<void> resetQuizFailures(String lessonId) async {
+    await _prefs.remove('quiz_failures_$lessonId');
+  }
+
   // ── Daily Cocktail Tracking ──────────────────────────────────────────────
 
   /// Check if user marked a cocktail as "I made this"
@@ -618,7 +644,8 @@ class ProgressService extends ChangeNotifier {
     }
 
     // Начисляем монеты за практику: 25 монет за каждую новую звезду
-    final coinsEarned = improvedStars * BartenderSchoolConfig.coinsPerPracticeStar;
+    final coinsEarned =
+        improvedStars * BartenderSchoolConfig.coinsPerPracticeStar;
     if (coinsEarned > 0) {
       _progress.coins += coinsEarned;
     }

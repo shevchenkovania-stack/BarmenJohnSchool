@@ -62,17 +62,23 @@ Future<void> _pump(
   bool disableAnimations = true,
   void Function(QuestOption)? onFinished,
   VoidCallback? onContinue,
+  Key? key,
 }) async {
   await tester.pumpWidget(
-    MediaQuery(
-      data: MediaQueryData(disableAnimations: disableAnimations),
-      child: MaterialApp(
-        home: Scaffold(
-          body: QuestSceneView(
-            scene: _scene,
-            onFinished: onFinished,
-            onContinue: onContinue,
-          ),
+    MaterialApp(
+      // MediaQuery обязательно внутри MaterialApp: снаружи его затирают
+      // данные окна, и disableAnimations в тесте не применяется.
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context)
+            .copyWith(disableAnimations: disableAnimations),
+        child: child!,
+      ),
+      home: Scaffold(
+        body: QuestSceneView(
+          key: key,
+          scene: _scene,
+          onFinished: onFinished,
+          onContinue: onContinue,
         ),
       ),
     ),
@@ -127,6 +133,36 @@ void main() {
     // Тот же вопрос исчез из списка доступных, появился следующий.
     expect(find.byKey(const Key('quest_probe_p1')), findsNothing);
     expect(find.byKey(const Key('quest_probe_p2')), findsOneWidget);
+  });
+
+  testWidgets('после ответа видно, что игрок понял', (tester) async {
+    await _pump(tester);
+    await _tapVisible(tester, const Key('quest_next_beat'));
+    await _tapVisible(tester, const Key('quest_probe_p1'));
+
+    // Вывод из ответа — отдельной строкой, иначе вопросы читаются
+    // как кнопки «дай подсказку». На экране он дважды: под ответом
+    // гостя и в сводке перед выбором.
+    expect(find.byKey(const Key('quest_insight')), findsWidgets);
+    expect(find.textContaining('Вчера было горько'), findsWidgets);
+  });
+
+  testWidgets('выводы копятся в сводке по мере вопросов', (tester) async {
+    await _pump(tester);
+    await _tapVisible(tester, const Key('quest_next_beat'));
+
+    // До первого вопроса сводки нет.
+    expect(find.byKey(const Key('quest_insight_summary')), findsNothing);
+
+    await _tapVisible(tester, const Key('quest_probe_p1'));
+    expect(find.byKey(const Key('quest_insight_summary')), findsOneWidget);
+    expect(find.textContaining('Ты услышал 1 из 3'), findsOneWidget);
+
+    await _tapVisible(tester, const Key('quest_probe_p2'));
+    expect(find.textContaining('Ты услышал 2 из 3'), findsOneWidget);
+
+    await _tapVisible(tester, const Key('quest_probe_p3'));
+    expect(find.textContaining('Ты услышал 3 из 3'), findsOneWidget);
   });
 
   testWidgets('после первого вопроса действие открывается', (tester) async {
@@ -184,5 +220,78 @@ void main() {
 
     expect(find.textContaining('Вопросов осталось'), findsNothing);
     expect(find.byKey(const Key('quest_answer_a_right')), findsOneWidget);
+  });
+
+  testWidgets('вслепую и с расспросом — доходишь до конца в обоих случаях',
+      (tester) async {
+    final finished = <QuestOption>[];
+
+    // Вслепую: один вопрос и сразу решение.
+    await _pump(tester, onFinished: finished.add);
+    await _tapVisible(tester, const Key('quest_next_beat'));
+    await _tapVisible(tester, const Key('quest_probe_p1'));
+    await _tapVisible(tester, const Key('quest_answer_a_right'));
+
+    expect(finished.map((o) => o.id), ['a_right']);
+    expect(find.byKey(const Key('quest_result')), findsOneWidget);
+    // Спрошен только один — остальных выводов у игрока нет.
+    expect(find.textContaining('Он один и никуда'), findsNothing);
+    expect(find.textContaining('Времени много'), findsNothing);
+
+    // С расспросом: все три вопроса, потом то же действие.
+    await tester.pumpWidget(const SizedBox());
+    await _pump(tester, key: const Key('second_run'), onFinished: finished.add);
+    await _tapVisible(tester, const Key('quest_next_beat'));
+    for (final id in ['p1', 'p2', 'p3']) {
+      await _tapVisible(tester, Key('quest_probe_$id'));
+      // После каждого ответа у игрока появляется вывод.
+      expect(find.byKey(const Key('quest_insight')), findsWidgets);
+    }
+    expect(find.textContaining('Вчера было горько'), findsWidgets);
+    // Под ответом гостя и в сводке — до двух вхождений на вывод.
+    expect(find.textContaining('Он один и никуда'), findsWidgets);
+    expect(find.textContaining('Времени много'), findsWidgets);
+
+    await _tapVisible(tester, const Key('quest_answer_a_right'));
+    expect(finished.map((o) => o.id), ['a_right', 'a_right']);
+    expect(find.byKey(const Key('quest_result')), findsOneWidget);
+  });
+
+  testWidgets('сцена дышит: гость отвечает с паузой, текст печатается',
+      (tester) async {
+    const authorLine = 'Бар на восемь мест. Дождь.';
+    await _pump(tester, disableAnimations: false);
+
+    // Авторская реплика печатается посимвольно, а не падает целиком.
+    await tester.pump(const Duration(milliseconds: 60));
+    expect(find.text(authorLine), findsNothing);
+
+    // Когда она дописана — появляется кнопка «Дальше».
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text(authorLine), findsOneWidget);
+
+    // Гость не отвечает в тот же кадр: сцена держит паузу.
+    await _tapVisible(tester, const Key('quest_next_beat'));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.textContaining('Мне как вчера'), findsNothing);
+
+    // Через паузу реплика гостя начинает появляться — но не целиком:
+    // печать идёт посимвольно.
+    await tester.pump(const Duration(milliseconds: 450));
+    final partial =
+        tester.widget<Text>(find.textContaining('Мне как вчера').first);
+    expect(
+      partial.data!.length,
+      lessThan('Мне как вчера. Только не как вчера.'.length),
+    );
+
+    // Дописываем реплику до конца. pumpAndSettle здесь не годится:
+    // печать идёт на Timer, а не на кадрах, и settle возвращается раньше.
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Мне как вчера. Только не как вчера.'),
+      findsOneWidget,
+    );
   });
 }
