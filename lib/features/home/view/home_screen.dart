@@ -7,11 +7,9 @@ import 'package:coin/core/models/cocktail.dart';
 import 'package:coin/core/theme/app_theme.dart';
 import 'package:coin/features/home/home_viewmodel.dart';
 import 'package:coin/l10n/app_localizations.dart';
-import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/presentation/screens/level1_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/glossary_screen.dart';
 import 'package:coin/features/bartender_school/presentation/screens/certificates_screen.dart';
-import 'package:coin/features/bartender_school/presentation/widgets/student_name_dialog.dart';
 import 'package:coin/features/settings/view/settings_screen.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
 
@@ -194,13 +192,8 @@ class _LevelCardsRow extends StatelessWidget {
   const _LevelCardsRow();
 
   Future<void> _navigateToSchool(BuildContext context) async {
-    final progress = context.read<ProgressService>();
-    // If name not entered, show dialog first
-    if (!progress.hasEnteredName) {
-      final saved = await StudentNameDialog.show(context);
-      if (!saved) return; // User cancelled
-    }
-    if (!context.mounted) return;
+    // Имя больше не спрашиваем на входе: диалог блокировал путь в школу.
+    // Имя нужно только для диплома и вводится на его экране.
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const Level1Screen()),

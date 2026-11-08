@@ -375,17 +375,8 @@ class CertificateDetailScreen extends StatefulWidget {
 }
 
 class _CertificateDetailScreenState extends State<CertificateDetailScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // If no name entered, show dialog
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final progress = context.read<ProgressService>();
-      if (!progress.hasEnteredName) {
-        StudentNameDialog.show(context);
-      }
-    });
-  }
+  // Автопоказ диалога имени убран: на дипломе есть кнопка «Ввести имя»,
+  // и всплывать поверх документа ему незачем.
 
   Future<void> _showEditNameDialog() async {
     await StudentNameDialog.show(context);
