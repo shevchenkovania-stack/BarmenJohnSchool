@@ -408,68 +408,68 @@ class AppLocalizationsRu extends AppLocalizations {
   String get kioskVenueHint => 'Бар Алхимия';
 
   @override
-  String get aiRecipeModeStarter => '🔰 Starter';
+  String get aiRecipeModeStarter => '🔰 Новичок';
 
   @override
-  String get aiRecipeModeExpert => '🏆 Expert';
+  String get aiRecipeModeExpert => '🏆 Эксперт';
 
   @override
-  String get aiRecipeLoading => 'AI is preparing your recipe...';
+  String get aiRecipeLoading => 'AI готовит твой рецепт...';
 
   @override
-  String get aiRecipeError => 'Failed to load AI recipe';
+  String get aiRecipeError => 'Не удалось загрузить рецепт AI';
 
   @override
-  String get aiRecipeTryAgain => 'Try Again';
+  String get aiRecipeTryAgain => 'Попробовать снова';
 
   @override
-  String get aiRecipeBasicInstructions => 'Basic Instructions';
+  String get aiRecipeBasicInstructions => 'Базовые инструкции';
 
   @override
-  String get aiRecipePreparation => 'Preparation';
+  String get aiRecipePreparation => 'Подготовка';
 
   @override
-  String get aiRecipeToolsNeeded => 'Tools Needed';
+  String get aiRecipeToolsNeeded => 'Нужный инвентарь';
 
   @override
-  String get aiRecipeCommonMistakes => 'Common Mistakes';
+  String get aiRecipeCommonMistakes => 'Частые ошибки';
 
   @override
-  String get aiRecipeProTips => 'Pro Tips';
+  String get aiRecipeProTips => 'Советы профи';
 
   @override
-  String get aiRecipeHistory => 'History';
+  String get aiRecipeHistory => 'История';
 
   @override
-  String get aiRecipeTechniques => 'Techniques';
+  String get aiRecipeTechniques => 'Техники';
 
   @override
-  String get aiRecipePremiumIngredients => 'Premium Recommendations';
+  String get aiRecipePremiumIngredients => 'Премиальные рекомендации';
 
   @override
-  String get aiRecipeProSecrets => 'Chef Secrets';
+  String get aiRecipeProSecrets => 'Секреты шефа';
 
   @override
-  String get aiRecipeVariations => 'Variations';
+  String get aiRecipeVariations => 'Вариации';
 
   @override
-  String get aiRecipeFoodPairing => 'Food Pairing';
+  String get aiRecipeFoodPairing => 'Гастропара';
 
   @override
-  String get aiRecipeCostBreakdown => 'Cost Breakdown';
+  String get aiRecipeCostBreakdown => 'Расчёт себестоимости';
 
   @override
-  String get aiRecipeEstimatedCost => 'Estimated Cost';
+  String get aiRecipeEstimatedCost => 'Себестоимость';
 
   @override
-  String get aiRecipeSuggestedPrice => 'Selling Price';
+  String get aiRecipeSuggestedPrice => 'Цена продажи';
 
   @override
-  String get aiRecipeStartTimer => 'Start Timer';
+  String get aiRecipeStartTimer => 'Запустить таймер';
 
   @override
   String aiRecipeStepOf(int current, int total) {
-    return 'Step $current of $total';
+    return 'Шаг $current из $total';
   }
 
   @override

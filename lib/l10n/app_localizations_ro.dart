@@ -409,68 +409,68 @@ class AppLocalizationsRo extends AppLocalizations {
   String get kioskVenueHint => 'Bar Alchemy';
 
   @override
-  String get aiRecipeModeStarter => '🔰 Starter';
+  String get aiRecipeModeStarter => '🔰 Începător';
 
   @override
   String get aiRecipeModeExpert => '🏆 Expert';
 
   @override
-  String get aiRecipeLoading => 'AI is preparing your recipe...';
+  String get aiRecipeLoading => 'AI-ul îți pregătește rețeta...';
 
   @override
-  String get aiRecipeError => 'Failed to load AI recipe';
+  String get aiRecipeError => 'Nu am putut încărca rețeta AI';
 
   @override
-  String get aiRecipeTryAgain => 'Try Again';
+  String get aiRecipeTryAgain => 'Încearcă din nou';
 
   @override
-  String get aiRecipeBasicInstructions => 'Basic Instructions';
+  String get aiRecipeBasicInstructions => 'Instrucțiuni de bază';
 
   @override
-  String get aiRecipePreparation => 'Preparation';
+  String get aiRecipePreparation => 'Pregătire';
 
   @override
-  String get aiRecipeToolsNeeded => 'Tools Needed';
+  String get aiRecipeToolsNeeded => 'Unelte necesare';
 
   @override
-  String get aiRecipeCommonMistakes => 'Common Mistakes';
+  String get aiRecipeCommonMistakes => 'Greșeli frecvente';
 
   @override
-  String get aiRecipeProTips => 'Pro Tips';
+  String get aiRecipeProTips => 'Sfaturi de profesionist';
 
   @override
-  String get aiRecipeHistory => 'History';
+  String get aiRecipeHistory => 'Istorie';
 
   @override
-  String get aiRecipeTechniques => 'Techniques';
+  String get aiRecipeTechniques => 'Tehnici';
 
   @override
-  String get aiRecipePremiumIngredients => 'Premium Recommendations';
+  String get aiRecipePremiumIngredients => 'Recomandări premium';
 
   @override
-  String get aiRecipeProSecrets => 'Chef Secrets';
+  String get aiRecipeProSecrets => 'Secretele bucătarului șef';
 
   @override
-  String get aiRecipeVariations => 'Variations';
+  String get aiRecipeVariations => 'Variațiuni';
 
   @override
-  String get aiRecipeFoodPairing => 'Food Pairing';
+  String get aiRecipeFoodPairing => 'Asociere gastronomică';
 
   @override
-  String get aiRecipeCostBreakdown => 'Cost Breakdown';
+  String get aiRecipeCostBreakdown => 'Calculul costului';
 
   @override
-  String get aiRecipeEstimatedCost => 'Estimated Cost';
+  String get aiRecipeEstimatedCost => 'Cost estimat';
 
   @override
-  String get aiRecipeSuggestedPrice => 'Selling Price';
+  String get aiRecipeSuggestedPrice => 'Preț de vânzare';
 
   @override
-  String get aiRecipeStartTimer => 'Start Timer';
+  String get aiRecipeStartTimer => 'Pornește cronometrul';
 
   @override
   String aiRecipeStepOf(int current, int total) {
-    return 'Step $current of $total';
+    return 'Pasul $current din $total';
   }
 
   @override
