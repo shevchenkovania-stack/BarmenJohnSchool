@@ -48,6 +48,7 @@ test/qa/failures/
 test/qa/fail.txt
 test/qa/overflows.txt
 test/qa/analyze.txt
+test/qa/FONT_SCALE.txt
 test/qa/fail.txt
 test/qa/overflows.txt
 test/qa/analyze.txt
