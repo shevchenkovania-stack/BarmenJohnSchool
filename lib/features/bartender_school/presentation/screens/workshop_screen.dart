@@ -22,8 +22,11 @@ class WorkshopScreen extends StatelessWidget {
       ),
       body: Consumer<ProgressService>(
         builder: (context, progress, _) {
-          // Группируем задания по блокам (Level 1: A=3, B=3, C=4)
-          const blockLimits = {'A': 3, 'B': 3, 'C': 4};
+          // Группируем задания по блокам. Лимит — это не «сколько есть в
+          // данных», а «сколько можно показать сейчас»: уроки блока A уже
+          // отправляют в Мастерскую по имени коктейля, поэтому все семь
+          // заданий блока должны быть видны.
+          const blockLimits = {'A': 7, 'B': 3, 'C': 4};
           final blocks = <String, List<PracticeChallenge>>{};
           for (final c in allPracticeChallenges) {
             final limit = blockLimits[c.blockId];
