@@ -109,25 +109,31 @@ void main() {
   testWidgets('уроки без сцены открываются как прежде', (tester) async {
     final repo = await _boot(tester, const SizedBox.shrink());
 
-    for (final id in ['lesson_A_02', 'lesson_A_03', 'lesson_B_05']) {
+    for (final id in ['lesson_B_05', 'lesson_B_06', 'lesson_B_07']) {
       final lesson = repo.getLesson(id)!;
       expect(lesson.slides.first.questScene, isNull, reason: id);
     }
 
-    final lesson = repo.getLesson('lesson_A_02')!;
+    final lesson = repo.getLesson('lesson_B_05')!;
     await _boot(tester, LessonScreen(lesson: lesson));
     expect(find.byType(QuestSceneView), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('во всех уроках Level 1 сцена максимум одна', (tester) async {
+  testWidgets('в каждом уроке максимум одна сцена, и она первая',
+      (tester) async {
     final repo = await _boot(tester, const SizedBox.shrink());
     var total = 0;
     for (final lesson in repo.lessons) {
       final scenes = lesson.slides.where((s) => s.questScene != null).length;
       expect(scenes, lessThanOrEqualTo(1), reason: lesson.id);
+      if (scenes == 1) {
+        expect(lesson.slides.first.questScene, isNotNull,
+            reason: 'сцена должна открывать урок: ${lesson.id}');
+      }
       total += scenes;
     }
-    expect(total, 1, reason: 'сцена пока только в A_01');
+    // Блок A — четыре вкуса, у каждого своя сцена.
+    expect(total, 4, reason: 'сцены в A_01…A_04');
   });
 }

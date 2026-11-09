@@ -127,7 +127,7 @@ void main() {
   });
 
   group('остальные уроки не тронуты', () {
-    test('сцена есть только у A_01', () {
+    test('сцена есть ровно у четырёх уроков блока A', () {
       final lessons = _loadLevel1().cast<Map<String, dynamic>>();
       final withScene = <String>[];
       for (final raw in lessons) {
@@ -136,7 +136,21 @@ void main() {
           if (slide.questScene != null) withScene.add(lesson.id);
         }
       }
-      expect(withScene, ['lesson_A_01']);
+      expect(withScene, [
+        'lesson_A_01',
+        'lesson_A_02',
+        'lesson_A_03',
+        'lesson_A_04',
+      ]);
+    });
+
+    test('каждая сцена первая в своём уроке', () {
+      for (final raw in _loadLevel1().cast<Map<String, dynamic>>()) {
+        final lesson = Lesson.fromJson(raw);
+        if (lesson.slides.first.questScene != null) continue;
+        // Если сцены нет — урок не должен внезапно начинаться с неё.
+        expect(lesson.slides.first.questScene, isNull, reason: lesson.id);
+      }
     });
 
     test('все 12 уроков Level 1 читаются и непустые', () {
