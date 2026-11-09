@@ -130,14 +130,41 @@ class RankProgressCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(999),
-                child: LinearProgressIndicator(
-                  value: info.progress,
-                  minHeight: 7,
-                  backgroundColor: style.accent.withAlpha(45),
-                  valueColor: AlwaysStoppedAnimation<Color>(style.accent),
-                ),
+              // XP раньше рос молча: полоска сдвигалась, и никто этого
+              // не замечал. Короткая подсветка при изменении — только
+              // визуальная, логику начисления не трогает.
+              TweenAnimationBuilder<double>(
+                // Ключ зависит от XP: при росте твин проигрывается заново,
+                // при любом другом перестроении — не мигает.
+                key: ValueKey('rank_xp_pulse_${progress.totalXP}'),
+                tween: Tween(begin: 0, end: 1),
+                duration: progress.totalXP == 0
+                    ? Duration.zero
+                    : const Duration(milliseconds: 700),
+                builder: (context, t, child) {
+                  final glow = (t < 0.5 ? t : 1 - t) * 2;
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(999),
+                      boxShadow: [
+                        BoxShadow(
+                          color: style.accent.withAlpha((70 * glow).round()),
+                          blurRadius: 10 * glow,
+                          spreadRadius: 2 * glow,
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        value: info.progress,
+                        minHeight: 7,
+                        backgroundColor: style.accent.withAlpha(45),
+                        valueColor: AlwaysStoppedAnimation<Color>(style.accent),
+                      ),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 6),
               Text(
