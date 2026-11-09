@@ -187,7 +187,13 @@ class _QuestSceneViewState extends State<QuestSceneView> {
 
     if (picked != null) {
       return [
-        _ResultBlock(option: picked, style: style),
+        _ResultBlock(
+          // Текст реакции решает сцена, а не вариант: за пустой стол
+          // и за расспрос гость отвечает по-разному.
+          guestReaction: _state.guestReaction,
+          johnLesson: _state.johnLesson,
+          style: style,
+        ),
         if (widget.onContinue != null) ...[
           const SizedBox(height: 18),
           SizedBox(
@@ -247,18 +253,15 @@ class _QuestSceneViewState extends State<QuestSceneView> {
         const SizedBox(height: 16),
         _SectionLabel(text: 'Что нальёшь?', style: style),
         const SizedBox(height: 10),
-        // Действие открывается после первого вопроса: без единого
-        // вопроса это было бы гадание, после всех — уже не решение.
-        if (!_state.canAnswer)
-          _LockedHint(style: style)
-        else
-          for (final option in widget.scene.answers)
-            _AnswerButton(
-              key: Key('quest_answer_${option.id}'),
-              option: option,
-              style: style,
-              onTap: () => _choose(option),
-            ),
+        // Действие доступно сразу: решить можно и вслепую, но тогда гость
+        // ответит иначе, а Джон скажет, что осталось неслыханным.
+        for (final option in widget.scene.answers)
+          _AnswerButton(
+            key: Key('quest_answer_${option.id}'),
+            option: option,
+            style: style,
+            onTap: () => _choose(option),
+          ),
       ];
     }
 
@@ -608,42 +611,6 @@ class _InsightSummary extends StatelessWidget {
   }
 }
 
-class _LockedHint extends StatelessWidget {
-  final JohnRoomStyle style;
-
-  const _LockedHint({required this.style});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: style.surface.withAlpha(140),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: style.accent.withAlpha(55)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.lock_outline,
-              size: 16, color: style.accent.withAlpha(150)),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              'Сначала спроси — иначе это угадывание.',
-              style: TextStyle(
-                fontSize: 13,
-                height: 1.4,
-                color: style.onDark.withAlpha(170),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _AnswerButton extends StatelessWidget {
   final QuestOption option;
   final JohnRoomStyle style;
@@ -700,10 +667,15 @@ class _AnswerButton extends StatelessWidget {
 
 /// Реакция гостя + вывод Джона. Не «неверно», а «вот что было».
 class _ResultBlock extends StatelessWidget {
-  final QuestOption option;
+  final String guestReaction;
+  final String johnLesson;
   final JohnRoomStyle style;
 
-  const _ResultBlock({required this.option, required this.style});
+  const _ResultBlock({
+    required this.guestReaction,
+    required this.johnLesson,
+    required this.style,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -712,7 +684,7 @@ class _ResultBlock extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _BeatBubble(
-          beat: QuestBeat(speaker: 'Гость', text: option.guestReaction),
+          beat: QuestBeat(speaker: 'Гость', text: guestReaction),
           style: style,
           animate: false,
           onTyped: () {},
@@ -740,7 +712,7 @@ class _ResultBlock extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                option.johnLesson,
+                johnLesson,
                 style: TextStyle(
                   fontSize: 14.5,
                   height: 1.55,

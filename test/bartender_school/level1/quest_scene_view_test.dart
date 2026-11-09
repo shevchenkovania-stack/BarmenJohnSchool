@@ -115,12 +115,18 @@ void main() {
     expect(find.byKey(const Key('quest_probe_p1')), findsOneWidget);
   });
 
-  testWidgets('без вопроса действие закрыто', (tester) async {
+  testWidgets('даже без вопросов выбрать можно — но гость ответит иначе',
+      (tester) async {
     await _pump(tester);
     await _tapVisible(tester, const Key('quest_next_beat'));
 
-    expect(find.textContaining('Сначала спроси'), findsOneWidget);
-    expect(find.byKey(const Key('quest_answer_a_right')), findsNothing);
+    // Ни одно состояние не блокирует финал.
+    expect(find.byKey(const Key('quest_answer_a_right')), findsOneWidget);
+
+    await _tapVisible(tester, const Key('quest_answer_a_right'));
+    expect(find.byKey(const Key('quest_result')), findsOneWidget);
+    // Цена выбора — в ответе, а не в запрете.
+    expect(find.textContaining('какая разница'), findsOneWidget);
   });
 
   testWidgets('вопрос задаётся один раз и даёт ответ гостя', (tester) async {
@@ -179,7 +185,10 @@ void main() {
     QuestOption? finished;
     await _pump(tester, onFinished: (o) => finished = o);
     await _tapVisible(tester, const Key('quest_next_beat'));
-    await _tapVisible(tester, const Key('quest_probe_p1'));
+    // Картина собрана полностью — иначе реакция была бы общей, а не по существу.
+    for (final id in ['p1', 'p2', 'p3']) {
+      await _tapVisible(tester, Key('quest_probe_$id'));
+    }
 
     await _tapVisible(tester, const Key('quest_answer_a_strong'));
 

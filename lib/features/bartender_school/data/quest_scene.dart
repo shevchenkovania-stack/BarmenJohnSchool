@@ -163,6 +163,21 @@ class QuestScene {
 /// - финальное действие доступно при любом числе вопросов;
 /// - после выбора сцена закрыта и второй раз не выбирается.
 class QuestSceneState {
+  /// Гость на выбор, сделанный вслепую: ни одного вопроса не задано.
+  static const String _guestLineForNothing =
+      '…а тебе, собственно, какая разница?';
+
+  /// Гость на выбор, сделанный до того, как картина сложилась.
+  static const String _guestLineForPartial = 'Хм. Ты многого не спросил.';
+
+  /// Джон про раннее решение: не стыдит, называет потерю.
+  static const String _johnLineForNothing =
+      'Ты не спросил ни слова. Налить можно и так, но это уже не разговор.';
+
+  static const String _johnLineForPartial =
+      'Гость ответил, но картина ещё не собралась. Одно решение — из того, '
+      'что успел услышать.';
+
   final QuestScene scene;
 
   final Set<String> _askedProbeIds = <String>{};
@@ -189,11 +204,16 @@ class QuestSceneState {
 
   bool get hasQuestionsLeft => availableProbe != null;
 
-  /// Финальное действие доступно, как только ученик задал хоть один вопрос.
+  /// Финальное действие доступно всегда.
   ///
-  /// Не раньше: без единого вопроса выбор был бы гаданием. Не после всех:
-  /// иначе ошибка стоила бы дешевле, и решения не было бы вовсе.
-  bool get canAnswer => askedProbes.isNotEmpty && _picked == null;
+  /// Нельзя блокировать финал: сцена не проходится иначе, а игроку
+  /// нужна честная обратная связь за раннее решение. Цена выбора — не
+  /// запрет, а другой ответ гостя и другой урок Джона (см. [choose]).
+  bool get canAnswer => _picked == null;
+
+  /// Успел ли игрок всё выяснить.
+  bool get isFullyInformed =>
+      scene.probes.isNotEmpty && askedProbes.length == scene.probes.length;
 
   /// Выбранный вариант (после финала).
   QuestOption? get picked => _picked;
@@ -224,12 +244,39 @@ class QuestSceneState {
 
   /// Выбрать финальное действие. Возвращает выбранный вариант или `null`,
   /// если сцена уже закрыта.
+  ///
+  /// Сам вариант не меняется: [QuestOption.isRight] — это про то, угадал
+  /// ли игрок. А вот что услышит игрок в ответ, зависит от того, сколько
+  /// он успел спросить.
   QuestOption? choose(String optionId) {
     if (!canAnswer) return null;
     final option = scene.answers.where((a) => a.id == optionId).firstOrNull;
     if (option == null) return null;
     _picked = option;
     return option;
+  }
+
+  /// Что гость говорит на выбор.
+  ///
+  /// Один и тот же напиток встречает разный ответ: за пустой стол гость
+  /// спрашивает, какая тебе разница; за неполные сведения — отвечает
+  /// сухо; только после всех вопросов он говорит по существу.
+  String get guestReaction {
+    final pickedOption = _picked;
+    if (pickedOption == null) return '';
+    if (askedProbes.isEmpty) return _guestLineForNothing;
+    if (!isFullyInformed) return _guestLineForPartial;
+    return pickedOption.guestReaction;
+  }
+
+  /// Вывод Джона: на раннее решение он говорит о том, чего игрок лишил себя,
+  /// а не только о том, верно ли выбран напиток.
+  String get johnLesson {
+    final pickedOption = _picked;
+    if (pickedOption == null) return '';
+    if (askedProbes.isEmpty) return _johnLineForNothing;
+    if (!isFullyInformed) return _johnLineForPartial;
+    return pickedOption.johnLesson;
   }
 
   /// Был ли выбор верным (`null` — ещё не выбирали).

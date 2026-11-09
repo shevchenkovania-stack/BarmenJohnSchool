@@ -123,12 +123,12 @@ void main() {
       expect(state.askedProbes.length, 1);
     });
 
-    test('финал недоступен без единого вопроса', () {
+    test('финал доступен всегда, даже без единого вопроса', () {
       final state = QuestSceneState(_scene());
-      expect(state.canAnswer, isFalse);
-      expect(state.choose('a_right'), isNull,
-          reason: 'сначала узнай хоть что-то');
-      expect(state.isFinished, isFalse);
+      expect(state.canAnswer, isTrue,
+          reason: 'ни одно состояние не блокирует финал');
+      expect(state.choose('a_right'), isNotNull);
+      expect(state.isFinished, isTrue);
     });
 
     test('финал доступен после первого вопроса, не после всех', () {
@@ -138,7 +138,7 @@ void main() {
     });
 
     test('финал засчитывается при 0, 1 и 3 вопросах', () {
-      for (final probesAsked in [1, 2, 3]) {
+      for (final probesAsked in [0, 1, 2, 3]) {
         final state = QuestSceneState(_scene());
         for (var i = 0; i < probesAsked; i++) {
           state.ask(state.scene.probes[i].id);
@@ -148,6 +148,33 @@ void main() {
         expect(state.isFinished, isTrue);
         expect(state.wasRight, isFalse);
       }
+    });
+
+    test('ответ гостя зависит от числа заданных вопросов', () {
+      final blind = QuestSceneState(_scene())..choose('a_right');
+      // Ни одного вопроса — гость не рассказывает, а спрашивает сам.
+      expect(blind.guestReaction, contains('какая разница'));
+      expect(blind.guestReaction, isNot(_scene().answers.first.guestReaction));
+
+      final partial = QuestSceneState(_scene())
+        ..ask('p1')
+        ..choose('a_right');
+      expect(partial.guestReaction, isNot(blind.guestReaction));
+
+      final full = QuestSceneState(_scene());
+      for (final probe in _scene().probes) {
+        full.ask(probe.id);
+      }
+      full.choose('a_right');
+      // Всё выяснено — гость отвечает по существу варианта.
+      expect(full.guestReaction, _scene().answers.first.guestReaction);
+      expect(full.guestReaction, isNot(partial.guestReaction));
+    });
+
+    test('вывод Джона на раннее решение говорит о потере, а не о вине', () {
+      final state = QuestSceneState(_scene())..choose('a_right');
+      expect(state.johnLesson, isNot(_scene().answers.first.johnLesson));
+      expect(state.johnLesson, contains('не спросил'));
     });
 
     test('после выбора сцена закрыта: второй выбор не проходит', () {
@@ -183,10 +210,10 @@ void main() {
       expect(state.hasQuestionsLeft, isFalse);
     });
 
-    test('без вопросов финал не имитирует знание', () {
+    test('без вопросов игрок не получил ни одного вывода', () {
       final state = QuestSceneState(_scene());
       expect(state.insights, isEmpty);
-      expect(state.canAnswer, isFalse);
+      expect(state.isFullyInformed, isFalse);
     });
   });
 }

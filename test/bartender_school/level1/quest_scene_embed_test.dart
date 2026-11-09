@@ -89,7 +89,8 @@ void main() {
       await tester.pump();
     }
 
-    expect(find.textContaining('Сначала спроси'), findsOneWidget);
+    // Финал не заперт ни в одном состоянии — иначе урок не пройти.
+    expect(find.byKey(const Key('quest_answer_light_long')), findsOneWidget);
   });
 
   testWidgets('после сцены обычные слайды идут как раньше', (tester) async {
