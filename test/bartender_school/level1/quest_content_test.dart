@@ -44,7 +44,11 @@ void main() {
       expect(lesson.quest, isNotNull);
       expect(flow.isValid, isTrue);
       expect(lesson.slides.first.type, SlideType.choice);
-      expect(lesson.slides.first.questRef, endsWith('.scene'));
+      // A_01 идёт тем же путём, что A_02–A_04: сцена лежит в
+      // questScene первого слайда и рисуется QuestSceneView.
+      expect(lesson.slides.first.questScene, isNotNull);
+      expect(lesson.slides.first.questScene!.probes.length, 3);
+      expect(lesson.slides.first.questScene!.answers.length, 3);
     });
 
     test('ровно 3 вопроса, 3 подачи, 4 правила финала', () {
@@ -111,7 +115,7 @@ void main() {
   });
 
   group('остальные уроки не тронуты', () {
-    test('сцена-квест есть у A_02…A_04, A_01 переведён в квест', () {
+    test('сцена-квест есть у A_01…A_04', () {
       final lessons = _loadLevel1().cast<Map<String, dynamic>>();
       final withScene = <String>[];
       for (final raw in lessons) {
@@ -120,12 +124,14 @@ void main() {
           if (slide.questScene != null) withScene.add(lesson.id);
         }
       }
-      // A_01 стал полным квестом (quest), остальные три остались сценами.
+      // Все четыре вкуса блока A идут одним путём: сцена в questScene.
       expect(withScene, [
+        'lesson_A_01',
         'lesson_A_02',
         'lesson_A_03',
         'lesson_A_04',
       ]);
+      // И A_01 по-прежнему несёт квест: расследование, подачу, правила.
       final a01 = lessons.firstWhere((l) => l['id'] == 'lesson_A_01');
       expect(Lesson.fromJson(a01).quest, isNotNull);
     });

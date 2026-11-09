@@ -72,9 +72,13 @@ void main() {
         reason: 'A_01 должен нести квест, а не плоский список слайдов');
     await _boot(tester, LessonScreen(lesson: lesson));
 
-    // Первый экран квеста — сцена: гость говорит про вчерашний стакан.
+    // Первый экран — сцена: гость говорит про вчерашний стакан.
+    // Текст печатается посимвольно, поэтому искать целую фразу сразу
+    // нельзя: проверяем сам виджет сцены и её данные.
     expect(tester.takeException(), isNull);
-    expect(find.textContaining('вчера'), findsWidgets);
+    expect(find.byType(QuestSceneView), findsOneWidget);
+    expect(lesson.slides.first.questScene!.probes.length, 3);
+    expect(lesson.slides.first.questScene!.answers.length, 3);
   });
 
   testWidgets('слайд расследования показывает вопросы гостю', (tester) async {
@@ -101,11 +105,19 @@ void main() {
     final lesson = repo.getLesson('lesson_A_01')!;
 
     expect(lesson.slides.length, greaterThanOrEqualTo(2));
-    expect(lesson.slides.first.questRef, endsWith('.scene'));
-    // questRef задан только у сценарных слайдов, и их ровно пять.
+    // A_01 идёт путём `questScene`, как A_02–A_04: сцена стоит первым
+    // слайдом, остальные слайды сцены не несут.
+    expect(lesson.slides.first.questScene, isNotNull);
+    final withScene =
+        lesson.slides.where((s) => s.questScene != null).length;
+    expect(withScene, 1,
+        reason: 'сцена только на первом слайде A_01');
+    // questRef остаётся у четырёх сценарных слайдов квеста:
+    // investigation, serve, outcomes, progression.
     final withRef =
         lesson.slides.where((s) => (s.questRef ?? '').isNotEmpty).length;
-    expect(withRef, 5, reason: 'scene, investigation, serve, outcomes, progression');
+    expect(withRef, 4,
+        reason: 'investigation, serve, outcomes, progression');
   });
 
   testWidgets('уроки без сцены открываются как прежде', (tester) async {
@@ -135,8 +147,8 @@ void main() {
       }
       total += scenes;
     }
-    // Блок A — четыре вкуса, у каждого своя сцена.
-    // A_01 переведён в полный квест (quest), поэтому сцен-questScene три.
-    expect(total, 3, reason: 'сцены в A_02…A_04');
+    // Блок A — четыре вкуса, у каждого своя сцена, и все четыре идут
+    // одним путём `questScene`.
+    expect(total, 4, reason: 'сцены в A_01…A_04');
   });
 }

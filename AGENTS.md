@@ -183,6 +183,50 @@ assets/                (подпапки coffee, fonts)
 | `blind_tasting_test.dart` | 5 | слепая дегустация |
 | `quiz_term_block_test.dart` | 2 | выход из блока терминов |
 
+## A_01 переведён на questScene (9 ноября)
+
+Пользователь запустил приложение на телефоне и **не увидел квеста**: первый
+слайд A_01 показывал обычную карточку с абзацем текста.
+
+**Причина.** В проекте два разных механизма с похожими именами:
+
+| Механизм | Где лежит | У кого был |
+|---|---|---|
+| `questScene` — сцена слайда | поле слайда, рисует `QuestSceneView` | A_02, A_03, A_04 |
+| `quest` — расследование | отдельный блок урока, рисует `QuestInvestigationView` / `QuestServeView` | только A_01 |
+
+Коммит `4a8ecda` объявил в A_01 блок `quest` со сценой `quest.scene`, а первый
+слайд сделал `type: choice` **без поля `choices`** и с `questRef:
+quest_A_01.scene`. Ветки рендера для `.scene` не было — слайд проваливался в
+обычный `SlideType.choice` (аккордеон Мудрости). Но и «дописать ветку» было
+неверно: у A_01 не было `questScene`, то есть он шёл не тем путём, что
+остальные три урока блока A.
+
+**Решение (по выбору пользователя):** A_01 идёт тем же путём, что A_02–A_04.
+
+- `slides[0].questRef` удалён, вместо него `slides[0].questScene`.
+- `questScene` собран из уже существующего материала — новых фактов не
+  придумано: `beats` (9 реплик) из `quest.scene`, `probes` (3) из
+  `quest.investigation.evidence.items`, `answers` (3) из `quest.serve.options`.
+  `followUp` / `followUpInformed` взяты из `feedback` варианта.
+- `quest` у A_01 **сохранён**: расследование, подача и правила финала на месте.
+- Правка JSON точечная (85 строк вставки, 1 удаление) — не перезапись файла
+  через `json.dump`, иначе дифф раздулся бы на весь файл.
+
+**Тесты, которые пришлось поправить** — они фиксировали старое устройство:
+
+| Файл | Было | Стало |
+|---|---|---|
+| `quest_scene_embed_test.dart` | искал слово «вчера» в тексте | проверяет `QuestSceneView` + 3 probes / 3 answers |
+| то же | `questRef` кончается на `.scene` | `questScene` на первом слайде, `questRef` у 4 остальных |
+| то же | сцен ровно 3 | сцен 4 (A_01…A_04) |
+| `quest_content_test.dart` | `questRef` у первого слайда | `questScene`, 3 probes, 3 answers |
+| то же | сцены у A_02…A_04 | у A_01…A_04 |
+
+Проверка: `flutter test test/bartender_school/level1 test/bartender_school/level2`
+→ 150 тестов, 0 падений. `flutter analyze lib/features/bartender_school
+lib/main.dart` → 0 error, 0 warning.
+
 ## История: откат 8 ноября (для справки)
 
 Код был откачен на `16933cd` («Тест терминов: убрать overflow внизу после
