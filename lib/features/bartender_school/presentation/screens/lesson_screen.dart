@@ -5,6 +5,7 @@ import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 import 'package:coin/features/bartender_school/presentation/screens/quiz_screen.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/workshop_bridge.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/quest_scene_view.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/wisdom_visuals.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
@@ -500,6 +501,7 @@ class _LessonScreenState extends State<LessonScreen> {
                       final slide = widget.lesson.slides[index];
                       return _SlideWidget(
                         slide: slide,
+                        lessonId: widget.lesson.id,
                         lessonMentor: widget.lesson.mentor,
                         isFirstSlide: index == 0,
                         isWisdomLesson: isWisdomLesson,
@@ -651,12 +653,17 @@ class _SlideWidget extends StatelessWidget {
   final bool isWisdomLesson;
   final JohnSchoolRoom? schoolRoom;
 
+  /// Урок, которому принадлежит слайд. Нужен мостику в Мастерскую:
+  /// задания фильтруются по `lessonId`.
+  final String lessonId;
+
   /// Перелистнуть на следующий слайд. `null` на последнем слайде: листать
   /// некуда, и сцена не показывает лишнюю кнопку.
   final VoidCallback? onGoNext;
 
   const _SlideWidget({
     required this.slide,
+    required this.lessonId,
     this.lessonMentor,
     this.isFirstSlide = false,
     this.isWisdomLesson = false,
@@ -739,6 +746,12 @@ class _SlideWidget extends StatelessWidget {
           );
         },
         onContinue: onGoNext,
+      );
+    }
+
+    if (slide.type == SlideType.practice) {
+      return _withMentor(
+        WorkshopBridge(lessonId: lessonId, schoolRoom: schoolRoom),
       );
     }
 
@@ -1105,12 +1118,7 @@ class _SlideWidget extends StatelessWidget {
                 // слайд читался как обычная теория с вопросом в конце.
                 if (slide.choices != null && slide.choices!.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  ...slide.choices!.asMap().entries.map(
-                        (e) => _WisdomChoiceCard(
-                          index: e.key + 1,
-                          choice: e.value,
-                        ),
-                      ),
+                  _WisdomChoiceList(choices: slide.choices!),
                 ],
               ],
             ),
@@ -1527,40 +1535,93 @@ class _WisdomMentorNoteCard extends StatelessWidget {
   }
 }
 
-/// Карточка одного хода в сценарном слайде Мудрости (`SlideType.choice`).
+/// Список вариантов одного сценарного слайда Мудрости.
 ///
-/// Варианты не оцениваются в прогресс: это размышление перед уроком.
-/// Нажатие раскрывает разбор, чтобы ученик сначала сделал выбор.
-class _WisdomChoiceCard extends StatefulWidget {
-  final int index;
-  final SlideChoice choice;
+/// Держит единственный выбор на слайд. Раньше каждая карточка
+/// раскрывалась отдельно, и верный ответ можно было просто прочитать.
+class _WisdomChoiceList extends StatefulWidget {
+  final List<SlideChoice> choices;
 
-  const _WisdomChoiceCard({required this.index, required this.choice});
+  const _WisdomChoiceList({required this.choices});
 
   @override
-  State<_WisdomChoiceCard> createState() => _WisdomChoiceCardState();
+  State<_WisdomChoiceList> createState() => _WisdomChoiceListState();
 }
 
-class _WisdomChoiceCardState extends State<_WisdomChoiceCard> {
-  bool _open = false;
+class _WisdomChoiceListState extends State<_WisdomChoiceList> {
+  /// Индекс выбранного варианта. `null` — выбора ещё нет.
+  int? _picked;
 
   @override
   Widget build(BuildContext context) {
-    final open = _open;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < widget.choices.length; i++)
+          _WisdomChoiceCard(
+            key: Key('wisdom_choice_${i + 1}'),
+            index: i + 1,
+            choice: widget.choices[i],
+            isResolved: _picked != null,
+            isPicked: _picked == i,
+            onPick: () => setState(() => _picked = i),
+          ),
+      ],
+    );
+  }
+}
+
+/// Карточка одного хода в сценарном слайде Мудрости (`SlideType.choice`).
+///
+/// Раньше это был аккордеон: можно было раскрыть все варианты и прочитать,
+/// какой верный. Выбора не было — было чтение ответов. Теперь выбор
+/// настоящий: нажал на один — остальные только показывают точку ответа.
+///
+/// В прогресс по-прежнему не идёт: это размышление, а не экзамен.
+class _WisdomChoiceCard extends StatelessWidget {
+  final int index;
+  final SlideChoice choice;
+
+  /// `true`, когда ученик уже сделал выбор на этом слайде.
+  final bool isResolved;
+
+  /// `true`, если выбран именно этот вариант.
+  final bool isPicked;
+
+  final VoidCallback onPick;
+
+  const _WisdomChoiceCard({
+    super.key,
+    required this.index,
+    required this.choice,
+    required this.isResolved,
+    required this.isPicked,
+    required this.onPick,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // До выбора карточка нейтральна: разбор скрыт, чтобы не подсказывать.
+    // После выбора выбранная раскрывается, остальные тускнеют — видно,
+    // что решать уже поздно, а не «попробуй ещё».
+    final dim = isResolved && !isPicked;
+    final open = isPicked && choice.explanation.isNotEmpty;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () => setState(() => _open = !_open),
+        onTap: isResolved ? null : onPick,
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: open
+            color: isPicked
                 ? WisdomPalette.oldGold.withAlpha(26)
-                : Colors.white.withAlpha(90),
+                : Colors.white.withAlpha(dim ? 45 : 90),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: WisdomPalette.oldGold.withAlpha(open ? 130 : 80),
+              color: WisdomPalette.oldGold
+                  .withAlpha(isPicked ? 130 : (dim ? 35 : 80)),
             ),
           ),
           child: Column(
@@ -1575,12 +1636,15 @@ class _WisdomChoiceCardState extends State<_WisdomChoiceCard> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: WisdomPalette.oldGold.withAlpha(60),
+                      color: WisdomPalette.oldGold
+                          .withAlpha(isPicked ? 120 : (dim ? 25 : 60)),
                     ),
                     child: Text(
-                      '${widget.index}',
-                      style: const TextStyle(
-                        color: WisdomPalette.ink,
+                      '$index',
+                      style: TextStyle(
+                        color: dim
+                            ? WisdomPalette.ink.withAlpha(110)
+                            : WisdomPalette.ink,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                       ),
@@ -1589,9 +1653,11 @@ class _WisdomChoiceCardState extends State<_WisdomChoiceCard> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      widget.choice.text,
-                      style: const TextStyle(
-                        color: WisdomPalette.ink,
+                      choice.text,
+                      style: TextStyle(
+                        color: dim
+                            ? WisdomPalette.ink.withAlpha(115)
+                            : WisdomPalette.ink,
                         fontSize: 15,
                         height: 1.45,
                       ),
@@ -1599,30 +1665,35 @@ class _WisdomChoiceCardState extends State<_WisdomChoiceCard> {
                   ),
                   const SizedBox(width: 6),
                   Icon(
-                    open ? Icons.expand_less : Icons.expand_more,
+                    isResolved
+                        ? (isPicked
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked)
+                        : Icons.touch_app_outlined,
                     size: 18,
-                    color: WisdomPalette.oldGold,
+                    color: WisdomPalette.oldGold
+                        .withAlpha(isPicked ? 220 : (dim ? 70 : 160)),
                   ),
                 ],
               ),
-              if (open && widget.choice.explanation.isNotEmpty) ...[
+              if (open) ...[
                 const SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      widget.choice.isCorrect
+                      choice.isCorrect
                           ? Icons.check_circle_outline
                           : Icons.info_outline,
                       size: 16,
-                      color: widget.choice.isCorrect
+                      color: choice.isCorrect
                           ? const Color(0xFF2F6B3A)
                           : WisdomPalette.wax,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        widget.choice.explanation,
+                        choice.explanation,
                         style: const TextStyle(
                           color: WisdomPalette.ink,
                           fontSize: 13.5,
