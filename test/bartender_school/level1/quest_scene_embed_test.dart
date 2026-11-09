@@ -12,6 +12,7 @@ import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/data/quiz_repository.dart';
 import 'package:coin/features/bartender_school/data/weekly_contract.dart';
 import 'package:coin/features/bartender_school/presentation/screens/lesson_screen.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/quest_investigation_view.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/quest_scene_view.dart';
 import 'package:coin/l10n/app_localizations.dart';
 
@@ -63,47 +64,48 @@ Future<LessonRepository> _boot(WidgetTester tester, Widget screen) async {
 }
 
 void main() {
-  testWidgets('урок A_01 начинается со сцены-квеста', (tester) async {
+  testWidgets('урок A_01 открывается сценой квеста', (tester) async {
     final repo = await _boot(tester, const SizedBox.shrink());
     final lesson = repo.getLesson('lesson_A_01')!;
 
+    expect(lesson.quest, isNotNull,
+        reason: 'A_01 должен нести квест, а не плоский список слайдов');
     await _boot(tester, LessonScreen(lesson: lesson));
 
-    expect(find.byType(QuestSceneView), findsOneWidget);
-    expect(find.textContaining('1874'), findsOneWidget);
-    expect(find.textContaining('Пятая авеню'), findsWidgets);
+    // Первый экран квеста — сцена: гость говорит про вчерашний стакан.
+    expect(tester.takeException(), isNull);
+    expect(find.textContaining('вчера'), findsWidgets);
   });
 
-  testWidgets('сцену нельзя пройти без вопроса', (tester) async {
+  testWidgets('слайд расследования показывает вопросы гостю', (tester) async {
     final repo = await _boot(tester, const SizedBox.shrink());
     final lesson = repo.getLesson('lesson_A_01')!;
-    await _boot(tester, LessonScreen(lesson: lesson));
+    final flow = lesson.quest!;
 
-    // Сначала реплики сцены листаются кнопкой «Дальше».
-    final beats = lesson.slides.first.questScene!.beats.length;
-    for (var i = 0; i < beats; i++) {
-      final next = find.byKey(const Key('quest_next_beat'));
-      if (next.evaluate().isEmpty) break;
-      await tester.tap(next);
-      await tester.pump();
-      await tester.pump();
+    await _boot(
+      tester,
+      LessonScreen(lesson: lesson, initialSlide: 1),
+    );
+
+    expect(find.byType(QuestInvestigationView), findsOneWidget);
+    // Вопросы видны все три: их можно задавать в любом порядке.
+    for (final item in flow.investigation.items) {
+      expect(find.byKey(Key('quest_ask_${item.id}')), findsOneWidget,
+          reason: item.id);
     }
-
-    // Финал не заперт ни в одном состоянии — иначе урок не пройти.
-    expect(find.byKey(const Key('quest_answer_light_long')), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
-  testWidgets('после сцены обычные слайды идут как раньше', (tester) async {
+  testWidgets('сцена не протекает в другие слайды', (tester) async {
     final repo = await _boot(tester, const SizedBox.shrink());
     final lesson = repo.getLesson('lesson_A_01')!;
 
-    // Сцена есть только в первом слайде, остальные — обычная теория.
     expect(lesson.slides.length, greaterThanOrEqualTo(2));
-    expect(lesson.slides.first.questScene, isNotNull);
-    for (final slide in lesson.slides.skip(1)) {
-      expect(slide.questScene, isNull,
-          reason: 'сцена не должна протекать в другие слайды');
-    }
+    expect(lesson.slides.first.questRef, endsWith('.scene'));
+    // questRef задан только у сценарных слайдов, и их ровно пять.
+    final withRef =
+        lesson.slides.where((s) => (s.questRef ?? '').isNotEmpty).length;
+    expect(withRef, 5, reason: 'scene, investigation, serve, outcomes, progression');
   });
 
   testWidgets('уроки без сцены открываются как прежде', (tester) async {
@@ -134,6 +136,7 @@ void main() {
       total += scenes;
     }
     // Блок A — четыре вкуса, у каждого своя сцена.
-    expect(total, 4, reason: 'сцены в A_01…A_04');
+    // A_01 переведён в полный квест (quest), поэтому сцен-questScene три.
+    expect(total, 3, reason: 'сцены в A_02…A_04');
   });
 }

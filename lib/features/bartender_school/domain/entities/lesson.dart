@@ -1,4 +1,5 @@
 /// Represents a single lesson in the bartender school.
+import 'package:coin/features/bartender_school/data/quest_flow.dart';
 import 'package:coin/features/bartender_school/data/quest_scene.dart';
 
 class Lesson {
@@ -20,6 +21,11 @@ class Lesson {
   final String? historicalStory;
   final String? nextLessonHook;
 
+  /// Квест урока: расследование, подача и финал по правилам.
+  ///
+  /// Необязательное: уроки без квеста идут прежним путём.
+  final QuestFlow? quest;
+
   Lesson({
     required this.id,
     required this.blockId,
@@ -38,6 +44,7 @@ class Lesson {
     this.mentor,
     this.historicalStory,
     this.nextLessonHook,
+    this.quest,
   });
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
@@ -65,6 +72,10 @@ class Lesson {
           : LessonMentor.fromJson(
               Map<String, dynamic>.from(json['mentor'] as Map),
             ),
+      quest: json['quest'] is Map
+          ? QuestFlow.fromJson(
+              Map<String, dynamic>.from(json['quest'] as Map))
+          : null,
     );
   }
 }
@@ -119,6 +130,11 @@ class LessonSlide {
   /// раньше.
   final QuestScene? questScene;
 
+  /// Ссылка на раздел квеста урока (`questRef`), например
+  /// `quest_A_01.investigation`. Служебное поле: по нему слайд понимает,
+  /// какой именно экран рисовать.
+  final String? questRef;
+
   LessonSlide({
     required this.type,
     required this.title,
@@ -129,6 +145,7 @@ class LessonSlide {
     this.author,
     this.choices,
     this.questScene,
+    this.questRef,
   });
 
   factory LessonSlide.fromJson(Map<String, dynamic> json) {
@@ -151,6 +168,7 @@ class LessonSlide {
           ? QuestScene.fromJson(
               (json['questScene'] as Map).cast<String, dynamic>())
           : null,
+      questRef: json['questRef'] as String?,
     );
   }
 }
@@ -194,4 +212,7 @@ enum SlideType {
   observation, // Наблюдение за гостем («барменский радар»)
   choice, // Сцена с выбором хода и разбором
   silence, // Пауза-вдох без задания
+  investigation, // Расследование: вопросы гостю и факты под ними
+  story, // Реакция гостя — чем кончилось
+  result, // Итог: что заметил Джон, награда за финал
 }

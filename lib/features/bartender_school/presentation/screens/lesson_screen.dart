@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coin/core/theme/app_theme.dart';
+import 'package:coin/features/bartender_school/data/quest_flow.dart';
 import 'package:coin/features/bartender_school/data/guest_echo.dart';
 import 'package:coin/features/bartender_school/data/progress_service.dart';
 import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 import 'package:coin/features/bartender_school/presentation/screens/quiz_screen.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/workshop_bridge.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/quest_investigation_view.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/quest_serve_view.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/quest_scene_view.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/wisdom_visuals.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/john_school_visuals.dart';
@@ -26,17 +29,48 @@ class GlossaryTerm {
 class LessonScreen extends StatefulWidget {
   final Lesson lesson;
 
-  const LessonScreen({super.key, required this.lesson});
+  /// С какого слайда открыть. Нужно тестам и возврату «на тот же экран».
+  final int initialSlide;
+
+  const LessonScreen({
+    super.key,
+    required this.lesson,
+    this.initialSlide = 0,
+  });
 
   @override
   State<LessonScreen> createState() => _LessonScreenState();
 }
 
 class _LessonScreenState extends State<LessonScreen> {
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
   int _currentPage = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    final start = widget.initialSlide;
+    final valid = start > 0 && start < widget.lesson.slides.length;
+    _pageController = PageController(initialPage: valid ? start : 0);
+    _currentPage = valid ? start : 0;
+  }
+
   bool get _isWisdomLesson => widget.lesson.blockId == 'W';
+
+  /// Итог квеста. Финал и итоговый экран — разные слайды, поэтому
+  /// результат живёт здесь, а не внутри экрана подачи.
+  QuestEnding? _questEnding;
+  QuestServeOption? _questOption;
+
+  /// Сколько фактов собрал игрок — для текста итога.
+  int _questEvidence = 0;
+
+  void _onQuestEnding(QuestEnding ending, QuestServeOption option) {
+    setState(() {
+      _questEnding = ending;
+      _questOption = option;
+    });
+  }
 
   @override
   void dispose() {
@@ -502,6 +536,12 @@ class _LessonScreenState extends State<LessonScreen> {
                       return _SlideWidget(
                         slide: slide,
                         lessonId: widget.lesson.id,
+                        quest: widget.lesson.quest,
+                        onQuestEnding: _onQuestEnding,
+                        questEnding: _questEnding,
+                        questOption: _questOption,
+                        questEvidence: _questEvidence,
+                        onQuestEvidence: (n) => setState(() => _questEvidence = n),
                         lessonMentor: widget.lesson.mentor,
                         isFirstSlide: index == 0,
                         isWisdomLesson: isWisdomLesson,
@@ -657,6 +697,22 @@ class _SlideWidget extends StatelessWidget {
   /// задания фильтруются по `lessonId`.
   final String lessonId;
 
+  /// Квест урока. `null` — обычный урок; слайды рисуются как раньше.
+  final QuestFlow? quest;
+
+  /// Итог квеста: нужен финалу и итоговому экрану, которые рисуются
+  /// разными слайдами.
+  final void Function(QuestEnding ending, QuestServeOption option)?
+      onQuestEnding;
+
+  /// Уже выбранный финал. `null` — квест ещё не пройден.
+  final QuestEnding? questEnding;
+  final QuestServeOption? questOption;
+
+  /// Сколько фактов собрано и где об этом сказать.
+  final int questEvidence;
+  final void Function(int count)? onQuestEvidence;
+
   /// Перелистнуть на следующий слайд. `null` на последнем слайде: листать
   /// некуда, и сцена не показывает лишнюю кнопку.
   final VoidCallback? onGoNext;
@@ -664,6 +720,12 @@ class _SlideWidget extends StatelessWidget {
   const _SlideWidget({
     required this.slide,
     required this.lessonId,
+    this.quest,
+    this.onQuestEnding,
+    this.questEnding,
+    this.questOption,
+    this.questEvidence = 0,
+    this.onQuestEvidence,
     this.lessonMentor,
     this.isFirstSlide = false,
     this.isWisdomLesson = false,
@@ -691,7 +753,11 @@ class _SlideWidget extends StatelessWidget {
       case SlideType.balanceTrainer:
       case SlideType.interactive:
         return 'images/barista_john_practice.png';
+      case SlideType.investigation:
+        return 'images/barista_john_practice.png';
       case SlideType.checklist:
+      case SlideType.story:
+      case SlideType.result:
         return 'images/barista_john_exam.png';
       case SlideType.theory:
       case SlideType.termAnimation:
@@ -703,6 +769,192 @@ class _SlideWidget extends StatelessWidget {
       case SlideType.choice:
         return 'images/barista_john_teach.png';
     }
+  }
+
+  /// Финал квеста: что сказал гость и что заметил Джон.
+  ///
+  /// Гость не хвалит. Он может допить и промолчать — это часть истории.
+  Widget _buildQuestStory(QuestFlow flow, JohnSchoolRoom room) {
+    final style = JohnRoomStyle.forRoom(room);
+    final rule = _questRule(flow);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: JohnWoodPanel(
+        room: room,
+        highlighted: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (slide.content.trim().isNotEmpty) ...[
+              Text(
+                slide.content,
+                style: TextStyle(
+                  fontSize: 14.5,
+                  height: 1.55,
+                  color: style.onDark.withAlpha(195),
+                ),
+              ),
+              const SizedBox(height: 18),
+            ],
+            if (rule == null)
+              Text(
+                'Сцена ещё не разыграна.',
+                style: TextStyle(color: style.onDark.withAlpha(150)),
+              )
+            else ...[
+              Container(
+                key: const Key('quest_story_reaction'),
+                width: double.infinity,
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: style.surfaceLight,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    topRight: Radius.circular(15),
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                  ),
+                  border: Border.all(color: style.accent.withAlpha(95)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'ГОСТЬ',
+                      style: TextStyle(
+                        fontSize: 11,
+                        letterSpacing: 1.1,
+                        fontWeight: FontWeight.w800,
+                        color: style.accent,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      rule.guestText,
+                      style: TextStyle(
+                        fontSize: 15.5,
+                        height: 1.6,
+                        color: style.onDark,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                rule.johnText,
+                style: TextStyle(
+                  fontSize: 14.5,
+                  height: 1.6,
+                  fontFamily: 'serif',
+                  color: style.onDark.withAlpha(210),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Итог: метка финала, факты, XP из спеке.
+  Widget _buildQuestResult(QuestFlow flow, JohnSchoolRoom room) {
+    final style = JohnRoomStyle.forRoom(room);
+    final ending = questEnding;
+    final reward = ending == null ? null : flow.rewardFor(ending);
+    final label = _questRule(flow)?.resultLabel ?? '';
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: JohnWoodPanel(
+        room: room,
+        highlighted: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              slide.content,
+              style: TextStyle(
+                fontSize: 14.5,
+                height: 1.55,
+                color: style.onDark.withAlpha(200),
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (ending != null) ...[
+              Container(
+                key: const Key('quest_result_label'),
+                width: double.infinity,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: style.accent.withAlpha(26),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: style.accent.withAlpha(95)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 11,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w900,
+                        color: style.accent,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _ResultRow(
+                      icon: Icons.fact_check_outlined,
+                      text: 'Собрано фактов: $questEvidence из '
+                          '${flow.investigation.items.length}',
+                      style: style,
+                    ),
+                    if (reward != null)
+                      _ResultRow(
+                        icon: Icons.star_border,
+                        text: 'Опыт: +${reward.xp} XP',
+                        style: style,
+                      ),
+                    if (reward != null && reward.journalEntry.isNotEmpty)
+                      _ResultRow(
+                        icon: Icons.menu_book_outlined,
+                        text: reward.journalEntry,
+                        style: style,
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'Урок засчитан. Следующий откроется сразу — плохой финал '
+                'не закрывает курс.',
+                style: TextStyle(
+                  fontSize: 12.5,
+                  height: 1.5,
+                  color: style.onDark.withAlpha(160),
+                ),
+              ),
+            ] else
+              Text(
+                'Итог появится после сцены.',
+                style: TextStyle(color: style.onDark.withAlpha(150)),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Правило, которое сработало — для текстов гостя и Джона.
+  QuestEndingRule? _questRule(QuestFlow flow) {
+    final ending = questEnding;
+    if (ending == null) return null;
+    for (final rule in flow.rules) {
+      if (rule.ending == ending) return rule;
+    }
+    return null;
   }
 
   Widget _withMentor(Widget child) {
@@ -733,6 +985,41 @@ class _SlideWidget extends StatelessWidget {
     // Сцена-квест рисуется своим виджетом: у неё своё состояние
     // (вопросы, выбор, реакция гостя), которого нет у обычной теории.
     // Уроки без сцены идут тем же путём, что и раньше.
+    // Квест урока: расследование, подача, финал по правилам.
+    // Слайды без questRef рисуются как обычно, поэтому теория внутри
+    // квеста попадает в тот же путь, что и раньше.
+    final flow = quest;
+    if (flow != null && flow.isValid) {
+      final ref = slide.questRef ?? '';
+      final room = schoolRoom ?? JohnSchoolRoom.flavorLab;
+      if (slide.type == SlideType.investigation) {
+        return _withMentor(
+          QuestInvestigationView(
+            investigation: flow.investigation,
+            room: room,
+            onProgress: onQuestEvidence,
+            onContinue: onGoNext,
+          ),
+        );
+      }
+      if (ref.endsWith('.serve')) {
+        return _withMentor(
+          QuestServeView(
+            flow: flow,
+            room: room,
+            onFinished: onQuestEnding,
+            onContinue: onGoNext,
+          ),
+        );
+      }
+      if (slide.type == SlideType.story) {
+        return _withMentor(_buildQuestStory(flow, room));
+      }
+      if (slide.type == SlideType.result) {
+        return _withMentor(_buildQuestResult(flow, room));
+      }
+    }
+
     if (slide.questScene != null && slide.questScene!.isValid) {
       return QuestSceneView(
         scene: slide.questScene!,
@@ -975,6 +1262,9 @@ class _SlideWidget extends StatelessWidget {
       SlideType.quote => 'images/ui_icon_term_medal.png',
       SlideType.observation => 'images/ui_icon_balance_precision.png',
       SlideType.choice => 'images/ui_icon_play_card.png',
+      SlideType.investigation => 'images/ui_icon_play_card.png',
+      SlideType.story => 'images/ui_icon_book_theory.png',
+      SlideType.result => 'images/ui_icon_term_medal.png',
       SlideType.silence => 'images/ui_icon_tip_citrus.png',
     };
 
@@ -1745,6 +2035,15 @@ class _SlideTypeIcon extends StatelessWidget {
         break;
       case SlideType.interactive:
         assetPath = 'images/ui_icon_play_card.png';
+        break;
+      case SlideType.investigation:
+        assetPath = 'images/ui_icon_play_card.png';
+        break;
+      case SlideType.story:
+        assetPath = 'images/ui_icon_book_theory.png';
+        break;
+      case SlideType.result:
+        assetPath = 'images/ui_icon_term_medal.png';
         break;
       case SlideType.failure:
         assetPath = 'images/ui_icon_book_theory.png';
@@ -5499,5 +5798,42 @@ class _CocktailBuilderSlideState extends State<_CocktailBuilderSlide> {
             ],
           ),
         ));
+  }
+}
+
+/// Строка в итоговом блоке квеста: иконка и текст.
+class _ResultRow extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final JohnRoomStyle style;
+
+  const _ResultRow({
+    required this.icon,
+    required this.text,
+    required this.style,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 7),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 15, color: style.accent.withAlpha(200)),
+          const SizedBox(width: 9),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 13.5,
+                height: 1.45,
+                color: style.onDark.withAlpha(205),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

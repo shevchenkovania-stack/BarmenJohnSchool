@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:coin/features/bartender_school/data/quest_scene.dart';
+import 'package:coin/features/bartender_school/data/quest_flow.dart';
 import 'package:coin/features/bartender_school/domain/entities/lesson.dart';
 
 /// Слова, которыми Джон стыдит ученика. Тот же список, что проверяет
@@ -31,103 +31,87 @@ Lesson _lesson(String id) {
 }
 
 void main() {
-  group('сцена A_01', () {
-    late LessonSlide sceneSlide;
-    late QuestScene scene;
+  group('квест A_01', () {
+    late Lesson lesson;
+    late QuestFlow flow;
 
     setUpAll(() {
-      final lesson = _lesson('lesson_A_01');
-      sceneSlide = lesson.slides.first;
-      scene = sceneSlide.questScene!;
+      lesson = _lesson('lesson_A_01');
+      flow = lesson.quest!;
     });
 
-    test('сцена стоит первым слайдом урока', () {
-      expect(sceneSlide.type, SlideType.choice);
-      expect(scene, isNotNull);
+    test('квест есть и первый слайд — сцена', () {
+      expect(lesson.quest, isNotNull);
+      expect(flow.isValid, isTrue);
+      expect(lesson.slides.first.type, SlideType.choice);
+      expect(lesson.slides.first.questRef, endsWith('.scene'));
     });
 
-    test('есть титры, реплики и слова гостя', () {
-      expect(scene.timeStamp, contains('1874'));
-      expect(scene.beats.length, greaterThanOrEqualTo(3));
-      expect(
-        scene.beats.any((b) => b.speaker != null && b.speaker!.isNotEmpty),
-        isTrue,
-        reason: 'в сцене должна звучать реплика гостя',
-      );
+    test('ровно 3 вопроса, 3 подачи, 4 правила финала', () {
+      expect(flow.investigation.items.length, 3);
+      expect(flow.serve.options.length, 3);
+      expect(flow.serve.options.where((o) => o.isCorrect).length, 1);
+      expect(flow.rules.length, 4);
+      expect(flow.serve.maxAttempts, 2);
     });
 
-    test('ровно 3 вопроса и 3 действия, верный ровно один', () {
-      expect(scene.probes.length, 3);
-      expect(scene.answers.length, 3);
-      expect(scene.answers.where((a) => a.isRight).length, 1);
-      expect(scene.isValid, isTrue);
-    });
-
-    test('у каждого вопроса есть ответ и вывод', () {
+    test('у каждого вопроса есть ответ и факт', () {
       final ids = <String>{};
-      for (final probe in scene.probes) {
-        expect(probe.id, isNotEmpty);
-        expect(ids.add(probe.id), isTrue, reason: 'id вопросов уникальны');
-        expect(probe.label.trim(), isNotEmpty);
-        expect(probe.response.trim(), isNotEmpty);
-        expect(probe.insight.trim(), isNotEmpty);
+      for (final item in flow.investigation.items) {
+        expect(item.id, isNotEmpty);
+        expect(ids.add(item.id), isTrue, reason: 'id вопросов уникальны');
+        expect(item.label.trim(), isNotEmpty);
+        expect(item.response.trim(), isNotEmpty);
+        expect(item.evidenceText.trim(), isNotEmpty);
       }
     });
 
-    test('у каждого действия есть реакция гостя и вывод Джона', () {
+    test('у каждой подачи есть реакция гостя и слова Джона', () {
       final ids = <String>{};
-      for (final option in scene.answers) {
-        expect(option.id, isNotEmpty);
-        expect(ids.add(option.id), isTrue, reason: 'id действий уникальны');
-        expect(option.text.trim(), isNotEmpty);
-        expect(option.guestReaction.trim(), isNotEmpty);
-        expect(option.johnLesson.trim(), isNotEmpty);
+      for (final o in flow.serve.options) {
+        expect(ids.add(o.id), isTrue, reason: 'id подач уникальны');
+        expect(o.text.trim(), isNotEmpty);
+        expect(o.guestReaction.trim(), isNotEmpty);
+        expect(o.johnComment.trim(), isNotEmpty);
       }
     });
 
-    test('гость отвечает на каждый вопрос по-своему', () {
-      final responses = scene.probes.map((p) => p.response).toSet();
-      expect(responses.length, scene.probes.length,
-          reason: 'иначе вопросы бессмысленны');
+    test('финалы идут по приоритету, последний — запасной', () {
+      for (var i = 1; i < flow.rules.length; i++) {
+        expect(flow.rules[i - 1].priority, lessThan(flow.rules[i].priority));
+      }
+      expect(flow.rules.last.isDefault, isTrue);
+      expect(flow.rules.last.ending, QuestEnding.incomplete);
     });
 
     test('тон без стыда: запрещённых слов нет нигде', () {
       final corpus = [
-        scene.title,
-        scene.timeStamp,
-        ...scene.beats.map((b) => b.text),
-        ...scene.probes.expand((p) => [p.label, p.response, p.insight]),
-        ...scene.answers.expand(
-          (a) => [a.text, a.guestReaction, a.johnLesson],
-        ),
+        flow.mission,
+        ...flow.investigation.items.expand((i) => [i.label, i.response, i.evidenceText]),
+        ...flow.serve.options.expand((o) => [o.text, o.guestReaction, o.johnComment]),
+        ...flow.rules.expand((r) => [r.guestText, r.johnText, r.resultLabel]),
       ].join(' ').toLowerCase();
 
       for (final word in _shaming) {
-        expect(
-          corpus.contains(word),
-          isFalse,
-          reason: 'Джон не стыдит ученика: найдено «$word»',
-        );
+        expect(corpus.contains(word), isFalse,
+            reason: 'Джон не стыдит ученика: найдено «$word»');
       }
     });
 
-    test('реплики короткие: влезают в две строки на 360 px', () {
-      // На 360 px в строку входит примерно 45 символов. Значит две
-      // строки — это до 90. Точные замеры шрифтом в тестах врут:
-      // подменный шрифт рисует каждую букву квадратом.
-      for (final beat in scene.beats) {
-        expect(beat.text.length, lessThanOrEqualTo(90),
-            reason: 'реплика длиннее двух строк: «${beat.text}»');
+    test('тексты короткие: влезают в две строки на 360 px', () {
+      for (final o in flow.serve.options) {
+        expect(o.text.length, lessThanOrEqualTo(90),
+            reason: 'вариант длиннее двух строк: «${o.text}»');
       }
-      for (final option in scene.answers) {
-        expect(option.text.length, lessThanOrEqualTo(90),
-            reason: 'вариант длиннее двух строк: «${option.text}»');
+      for (final i in flow.investigation.items) {
+        expect(i.label.length, lessThanOrEqualTo(90),
+            reason: 'вопрос длиннее двух строк: «${i.label}»');
       }
     });
   });
 
   group('остальные уроки не тронуты', () {
-    test('сцена есть ровно у четырёх уроков блока A', () {
+    test('сцена-квест есть у A_02…A_04, A_01 переведён в квест', () {
       final lessons = _loadLevel1().cast<Map<String, dynamic>>();
       final withScene = <String>[];
       for (final raw in lessons) {
@@ -136,12 +120,14 @@ void main() {
           if (slide.questScene != null) withScene.add(lesson.id);
         }
       }
+      // A_01 стал полным квестом (quest), остальные три остались сценами.
       expect(withScene, [
-        'lesson_A_01',
         'lesson_A_02',
         'lesson_A_03',
         'lesson_A_04',
       ]);
+      final a01 = lessons.firstWhere((l) => l['id'] == 'lesson_A_01');
+      expect(Lesson.fromJson(a01).quest, isNotNull);
     });
 
     test('каждая сцена первая в своём уроке', () {
