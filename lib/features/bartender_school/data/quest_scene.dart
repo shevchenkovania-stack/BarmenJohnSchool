@@ -60,12 +60,25 @@ class QuestOption {
   /// Вывод Джона после сцены.
   final String johnLesson;
 
+  /// Что гость делает дальше — своя ветка для каждого выбора.
+  ///
+  /// Это и есть ветвление: не новый экран, а другой конец разговора.
+  /// Один и тот же напиток можно подать так, что гость уйдёт, или так,
+  /// что останется. Пустая строка — ветки нет, показываем [guestReaction].
+  final String followUp;
+
+  /// Продолжение для той же ветки, когда игрок успел всё выяснить.
+  /// Пустая строка — общего продолжения хватает.
+  final String followUpInformed;
+
   const QuestOption({
     required this.id,
     required this.text,
     required this.isRight,
     required this.guestReaction,
     required this.johnLesson,
+    this.followUp = '',
+    this.followUpInformed = '',
   });
 }
 
@@ -150,6 +163,8 @@ class QuestScene {
           isRight: j['isRight'] as bool? ?? false,
           guestReaction: j['guestReaction'] as String? ?? '',
           johnLesson: j['johnLesson'] as String? ?? '',
+          followUp: j['followUp'] as String? ?? '',
+          followUpInformed: j['followUpInformed'] as String? ?? '',
         ),
       ),
     );
@@ -258,15 +273,41 @@ class QuestSceneState {
 
   /// Что гость говорит на выбор.
   ///
-  /// Один и тот же напиток встречает разный ответ: за пустой стол гость
-  /// спрашивает, какая тебе разница; за неполные сведения — отвечает
-  /// сухо; только после всех вопросов он говорит по существу.
+  /// Здесь начинается ветвление: один и тот же напиток можно подать так,
+  /// что гость уйдёт, или так, что останется. Решает не «угадал или
+  /// нет», а совпало ли действие с тем, что игрок услышал.
+  ///
+  /// Пустой выбор — гость спрашивает сам, какая разница.
   String get guestReaction {
     final pickedOption = _picked;
     if (pickedOption == null) return '';
     if (askedProbes.isEmpty) return _guestLineForNothing;
+    final branch = _branch(pickedOption);
+    if (branch.isNotEmpty) return branch;
     if (!isFullyInformed) return _guestLineForPartial;
     return pickedOption.guestReaction;
+  }
+
+  /// Куда ушла ветка после выбора.
+  ///
+  /// `null` — сцена не закончена. Остальное — один из трёх исходов:
+  /// гость попросил ещё, поблагодарил или ушёл.
+  QuestOutcome? get outcome {
+    final pickedOption = _picked;
+    if (pickedOption == null) return null;
+    if (askedProbes.isEmpty) return QuestOutcome.blind;
+    if (_branch(pickedOption).isNotEmpty) {
+      return pickedOption.isRight ? QuestOutcome.stayed : QuestOutcome.left;
+    }
+    return isFullyInformed ? QuestOutcome.stayed : QuestOutcome.partial;
+  }
+
+  /// Ветка варианта с учётом того, всё ли выяснено.
+  String _branch(QuestOption option) {
+    if (isFullyInformed && option.followUpInformed.isNotEmpty) {
+      return option.followUpInformed;
+    }
+    return option.followUp;
   }
 
   /// Вывод Джона: на раннее решение он говорит о том, чего игрок лишил себя,
@@ -281,4 +322,23 @@ class QuestSceneState {
 
   /// Был ли выбор верным (`null` — ещё не выбирали).
   bool? get wasRight => _picked?.isRight;
+}
+
+/// Чем кончился разговор — ветка сцены.
+enum QuestOutcome {
+  /// Выбрал, ни о чём не спросив. Гость отвечает вопросом.
+  blind('без вопросов'),
+
+  /// Спросил часть и решил. Гость ушёл недовольным.
+  partial('недосказано'),
+
+  /// Всё выяснил и пошёл не туда. Гость ушёл, но без стыда.
+  left('гость ушёл'),
+
+  /// Всё выяснил и попал в то, что человек просил.
+  stayed('гость остался');
+
+  final String label;
+
+  const QuestOutcome(this.label);
 }

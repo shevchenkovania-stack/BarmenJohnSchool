@@ -192,6 +192,7 @@ class _QuestSceneViewState extends State<QuestSceneView> {
           // и за расспрос гость отвечает по-разному.
           guestReaction: _state.guestReaction,
           johnLesson: _state.johnLesson,
+          outcome: _state.outcome,
           style: style,
         ),
         if (widget.onContinue != null) ...[
@@ -669,11 +670,13 @@ class _AnswerButton extends StatelessWidget {
 class _ResultBlock extends StatelessWidget {
   final String guestReaction;
   final String johnLesson;
+  final QuestOutcome? outcome;
   final JohnRoomStyle style;
 
   const _ResultBlock({
     required this.guestReaction,
     required this.johnLesson,
+    this.outcome,
     required this.style,
   });
 
@@ -683,6 +686,34 @@ class _ResultBlock extends StatelessWidget {
       key: const Key('quest_result'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Куда ушла сцена. Это и есть видимое ветвление: разный конец
+        // разговора, а не разная оценка.
+        if (outcome != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              key: const Key('quest_outcome'),
+              children: [
+                Icon(
+                  outcome == QuestOutcome.stayed
+                      ? Icons.nightlight_round
+                      : Icons.logout,
+                  size: 14,
+                  color: style.accent.withAlpha(200),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  outcome!.label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    letterSpacing: 1.1,
+                    fontWeight: FontWeight.w800,
+                    color: style.accent.withAlpha(210),
+                  ),
+                ),
+              ],
+            ),
+          ),
         _BeatBubble(
           beat: QuestBeat(speaker: 'Гость', text: guestReaction),
           style: style,
