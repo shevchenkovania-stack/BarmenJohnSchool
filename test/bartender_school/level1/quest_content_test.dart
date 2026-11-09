@@ -111,14 +111,17 @@ void main() {
       }
     });
 
-    test('реплики не превращаются в простыню', () {
+    test('реплики короткие: влезают в две строки на 360 px', () {
+      // На 360 px в строку входит примерно 45 символов. Значит две
+      // строки — это до 90. Точные замеры шрифтом в тестах врут:
+      // подменный шрифт рисует каждую букву квадратом.
       for (final beat in scene.beats) {
-        expect(beat.text.length, lessThanOrEqualTo(320),
-            reason: 'длинная реплика не влезет в сцену');
+        expect(beat.text.length, lessThanOrEqualTo(90),
+            reason: 'реплика длиннее двух строк: «${beat.text}»');
       }
       for (final option in scene.answers) {
-        expect(option.johnLesson.length, lessThanOrEqualTo(420));
-        expect(option.guestReaction.length, lessThanOrEqualTo(240));
+        expect(option.text.length, lessThanOrEqualTo(90),
+            reason: 'вариант длиннее двух строк: «${option.text}»');
       }
     });
   });

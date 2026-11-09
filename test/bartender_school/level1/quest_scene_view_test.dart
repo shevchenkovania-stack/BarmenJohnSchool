@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:coin/features/bartender_school/data/quest_scene.dart';
 import 'package:coin/features/bartender_school/presentation/widgets/quest_scene_view.dart';
+import 'package:coin/features/bartender_school/presentation/widgets/typewriter_text.dart';
 
 const _scene = QuestScene(
   id: 'widget_scene',
@@ -302,5 +303,24 @@ void main() {
       find.textContaining('Мне как вчера. Только не как вчера.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('тап по печатающемуся тексту дописывает его сразу',
+      (tester) async {
+    const authorLine = 'Бар на восемь мест. Дождь.';
+    await _pump(tester, disableAnimations: false);
+
+    // Текст только начал печататься.
+    await tester.pump(const Duration(milliseconds: 60));
+    expect(find.text(authorLine), findsNothing);
+
+    // Тап по реплике — всё сразу, без ожидания посимвольной печати.
+    // Тапаем именно печатную машинку, а не текст: в начале печати
+    // строки ещё нет.
+    await tester.tap(find.byType(TypewriterText));
+    await tester.pump();
+    expect(find.text(authorLine), findsOneWidget);
+
+    await tester.pumpAndSettle();
   });
 }
