@@ -150,26 +150,38 @@ lib/features/bartender_school lib/main.dart` — 0 ошибок, 0 warnings. С�
 
 ## Незакоммиченное на 9 ноября (проверить перед коммитом)
 
-Новые тесты, ещё не в индексе:
+Тесты закоммичены в `4adc40e` (11 файлов, 70 тестов, все зелёные). Остались
+untracked — перед коммитом выяснить, откуда они взялись и нужны ли в индексе:
 
 ```
-test/bartender_school/level1/blind_tasting_test.dart
-test/bartender_school/level1/evening_light_test.dart
-test/bartender_school/level1/flip_card_navigation_test.dart
-test/bartender_school/level1/guest_echo_test.dart
-test/bartender_school/level1/john_home_moment_test.dart
-test/bartender_school/level1/john_practice_hint_test.dart
-test/bartender_school/level1/john_reactions_test.dart
-test/bartender_school/level1/quiz_term_block_test.dart
-test/bartender_school/level1/rank_progress_test.dart
-test/bartender_school/level1/weekly_contract_test.dart
-test/qa/font_scale_layout_test.dart
-test/qa/FONT_SCALE.txt
+android/app/build.gradle.kts
+android/build.gradle.kts
+android/settings.gradle.kts
+assets/                (подпапки coffee, fonts)
 ```
 
-Плюс untracked `assets/` (подпапки `coffee`, `fonts`) и `android/*.gradle.kts`
-(`app/build.gradle.kts`, `build.gradle.kts`, `settings.gradle.kts`) — перед
-коммитом выяснить, откуда они взялись и нужны ли в индексе.
+`test/qa/FONT_SCALE.txt` — выходной отчёт `font_scale_layout_test`, добавлен
+в `.gitignore` рядом с другими QA-отчётами (`fail.txt`, `overflows.txt`,
+`analyze.txt`).
+
+## Решения по тестам (9 ноября)
+
+Проверяли, нужны ли 11 неотслеживаемых тестов или это разовые пробы. Итог:
+**все 11 — стражи, не пробы**, закоммичены.
+
+| Файл | Тестов | Что охраняет |
+|---|---|---|
+| `rank_progress_test.dart` | 7 | чистая `rankInfoFor`: звание из прогресса, а не из XP; полоса не выходит за 0..1 |
+| `flip_card_navigation_test.dart` | 1 | «Начать урок» открывает урок, а не переворачивает карточку (был баг: в урок попасть нельзя ни с одной карточки) |
+| `font_scale_layout_test.dart` | 1 | `expect(_findings, isEmpty)` — падает при переполнении на шрифте 0.8 / 1.0 / 1.3 / 2.0 |
+| `guest_echo_test.dart` | 5 | возврат гостя через 3+ дня, не чаще раза в день |
+| `john_reactions_test.dart` | 9 | реакции Джона на ответы |
+| `weekly_contract_test.dart` | 8 | недельный контракт |
+| `john_home_moment_test.dart` | 9 | момент Джона на главной |
+| `john_practice_hint_test.dart` | 8 | подсказка в практике |
+| `evening_light_test.dart` | 11 | вечернее освещение |
+| `blind_tasting_test.dart` | 5 | слепая дегустация |
+| `quiz_term_block_test.dart` | 2 | выход из блока терминов |
 
 ## История: откат 8 ноября (для справки)
 
@@ -288,4 +300,11 @@ adb -s 2b4a6e3e0205 pull /sdcard/s.png "$env:TEMP\s.png"
   хотя пуш прошёл. Смотреть строку `xxxxx..yyyyy  branch -> branch`.
 - `SearchReplace` не всегда матчит блоки с маркерами конфликта `<<<<<<<`;
   такие правки надёжнее делать нумерацией строк через PowerShell.
+- `.gitignore` в CP1251: `Read`/`SearchReplace` отказываются с
+  `AI_FILE_ENCODING_UNSAFE`. Править через PowerShell с `-Encoding Default`,
+  потом сверять `git diff --numstat` — должно быть `1 0`, иначе кириллические
+  комментарии перекодировались целиком.
+- Не перезаписывать `AGENTS.md` целиком через `Set-Content -Encoding UTF8`:
+  добавляется BOM и меняются переводы строк, диф превращается в переписывание
+  всего файла. Править точечно, а после — сверять `git diff --numstat`.
 
